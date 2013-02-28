@@ -1,11 +1,7 @@
 @echo off
 
 #CGI Dateien auf XAMPP kopieren
-copy cgi\* C:\xampp\cgi-bin\RocketTS\
+copy cgi\* C:\xampp\cgi-bin\rocket\
 
 #CSS Dateien auf XAMPP kopieren
-copy css\* C:\xampp\htdocs\rocket\css\
-
-#Restliche Dateien auf XAMPP kopieren
-copy sql\* C:\xampp\htdocs\rocket\sql\
-copy doku\* C:\xampp\htdocs\rocket\doku\
+copy css\* C:\xampp\htdocs\css\
