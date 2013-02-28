@@ -1,5 +1,5 @@
 #!"C:\xampp\perl\bin\perl.exe" -w -T
-#Diese Zeile wurde neu hinzugefügt
+
 #Dies soll das Login-Frontend sein
 
 use strict; 
