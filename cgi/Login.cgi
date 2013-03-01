@@ -45,7 +45,11 @@ my $cgi = new CGI;
 	 print "<div class = 'body'>";
 	 print "<h2>Login: </h2>";
 	 
-	 print$cgi->start_form();
+	 print$cgi->start_form({-method => "POST",
+	 						-action => "/cgi-bin/rocket/Login.cgi",
+	 						-target => '_self'
+	 						
+	 });
 	 
 	 print$cgi->hidden(-name=>'Site',
 	 				   -value=>'Login');
