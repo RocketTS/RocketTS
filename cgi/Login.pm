@@ -1,33 +1,31 @@
 #!"C:\xampp\perl\bin\perl.exe" -w 
 
-#Dies soll das Login-Frontend sein
+#Modul Login.pm soll folgende Fumktionen bereitstellen
+#html_login -> Login-Seite ausgeben
+
+package Login;
 
 use strict; 
 use CGI; 
 use CGI::Carp qw(fatalsToBrowser);  	#Zeige die Fehlermeldungen im Browser an
- 
- 
- #----------------------------------------
- #Instanzvariablen
- #----------------------------------------
-my $Parameter;
-my $cgi = new CGI;
+use Exporter;
+
+our @ISA = qw(Exporter);
+
+our @EXPORT_OK = qw(html_login);
 
 
- #-----------------------------------------
- #Funktionen für Darstellung
- #-----------------------------------------
- #Rückgabeparameter (???) muss noch geklärt werden
- sub Login
+ sub html_login
+ #Uebergabeparameter ist das CGI-Objekt, mit dem gearbeitet werden soll.
  {
- 	
+ 	my $cgi = CGI->new($_[0]);	#Uebernehme das alte CGI-Objekt und arbeite damit!
  	
  	print $cgi->header(-type    =>'text/html',
-                   			-expires =>'+1s'
-                   			),
+                   		-expires =>'+1s'
+                   		),
                    			
- 	$cgi->start_html(-title  =>'Ticketsystem Team Rocket!',
-            			-author =>'beispiel@example.org',
+ 	$cgi->start_html(-title  =>'Ticketsystem Team Rocket! Login',
+ 						-author =>'beispiel@example.org',
                        -base   =>'true',
                        -target =>'_blank',
                        -meta   =>{'keywords'   =>'TeamOne, Test',
@@ -75,30 +73,5 @@ my $cgi = new CGI;
 	 print $cgi->end_form();
 	 print $cgi->end_div();
     $cgi->end_html();
+  	1;
  }
- 
-
-
-if(!($cgi->param('Login') && ($cgi->param('Login') ne 'E-Mail Adresse') && $cgi->param('Password')))
-{#Solange keine Email-Adresse und kein Passwort eingegeben wurde, leite auf Login-Seite
-	&Login();
-}
-else
-{#Parameter wurden eingelesen, jetzt müsste der Benutzer überprüft werden
-	print $cgi->header(-type=>'text/html',
-                   	   -expires =>'+1s'),
-                   			
- 	$cgi->start_html(-title  =>'Ticketsystem Team Rocket!',
-            		 -author =>'beispiel@example.org',
-                     -base   =>'true',
-                     -target =>'_blank',
-                     -meta   =>{'keywords'   =>'TeamOne, Test',
-                                'description'=>'Loginseite'},
-                     -style  =>{'src'=>'../../css/Login.css'}
-                      ),
-
-    $cgi->h1('Parameter wurden eingegeben');
-    $cgi->end_html();
-}
-
-
