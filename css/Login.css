@@ -1,4 +1,4 @@
-.header
+#header
 {
 border: 1px #000000 solid;
 background-image:url(Login_Header.jpg);
@@ -12,7 +12,7 @@ left: 50%;
 margin-left: -320px;
 }
 
-.body
+#body
 {
 width: 640px;
 border: 1px #000000 solid;

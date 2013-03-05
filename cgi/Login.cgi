@@ -33,45 +33,47 @@ my $cgi = new CGI;
                        -meta   =>{'keywords'   =>'TeamOne, Test',
                                   'description'=>'Loginseite'},
                        -style  =>{'src'=>'../../css/Login.css'}
-                       ),
+                       );
 
-    $cgi->h1('  ');
      #Ausgabe des Headers
-	 print "<center><div class = 'header'>";
-	 print "<h1>Ticketsystem</h1>";
-	 print "</div>";
-	
+     print $cgi->start_div({-id=>'header'});
+     print $cgi->h1(
+     				$cgi->center("Ticketsystem")
+     				);
+     print $cgi->end_div();
+     
+
 	 #Ausgabe des Einlog-Formulares
-	 print "<div class = 'body'>";
-	 print "<h2>Login: </h2>";
+	 print $cgi->start_div({-id=>'body'});
 	 
-	 print$cgi->start_form({-method => "POST",
+	 print $cgi->h2("Login:");
+	 
+	 print $cgi->start_form({-method => "POST",
 	 						-action => "/cgi-bin/rocket/Login.cgi",
 	 						-target => '_self'
-	 						
-	 });
+	 						 });
 	 
-	 print$cgi->hidden(-name=>'Site',
+	 print $cgi->hidden(-name=>'Site',
 	 				   -value=>'Login');
 	 				   
-	 print$cgi->strong("Benutzer\t");
+	 print $cgi->strong("Benutzer\t");
 	 
-	 print$cgi->textfield(-name=>'Login',
+	 print $cgi->textfield(-name=>'Login',
 	 					  -value=>'E-Mail Adresse',
 	 					  -size=>25,
 	 					  -maxlength=>50);
-	 print("<br>");
+	 print $cgi->br();
 	 
-	 print$cgi->strong("Passwort\t");	
+	 print $cgi->strong("Passwort\t");	
 	 						
-	 print$cgi->password_field(-name=>'Password',
+	 print $cgi->password_field(-name=>'Password',
 	 						   -value=>'',
 	 						   -size=>25,
 	 						   -maxlength=>50);
-	 print("<br>");
-	 print$cgi->submit("Button");
-	 print$cgi->end_form();
-	 print"</div></center>";
+	 print $cgi->br();
+	 print $cgi->submit("Einloggen");
+	 print $cgi->end_form();
+	 print $cgi->end_div();
     $cgi->end_html();
  }
  
