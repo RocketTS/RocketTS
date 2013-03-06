@@ -26,15 +26,15 @@ if(!$cgi->param())
 #}
 else
 {
-	given ($cgi->param('Site')){
+	given ($cgi->param('input_Site')){
 	  when("")								 { Login->html_login(\$cgi); } ##FUNKTIONIERT NICHT VERDAMMTE SCHEISSE
 	  
 	  when('Registration_initialisieren')	 { Login->html_registration(\$cgi); }
 	  
 	  when('Registration_abgeschlossen')	 { Login->html_registration_successfull(\$cgi); }
 	  
-	  when('Login')							 { if(($cgi->param('Login') ne 'E-Mail Adresse') && $cgi->param('Password') ne ""
-	  												&& $cgi->param('Site') eq "Login")								 #Ueberpruefe ob tatsächlich was eingegeben wurde
+	  when('Login')							 { if(($cgi->param('input_Login') ne 'E-Mail Adresse') && $cgi->param('input_Password') ne ""
+	  												&& $cgi->param('input_Site') eq "Login")						 #Ueberpruefe ob tatsächlich was eingegeben wurde
 	  									  		{Login->html_login_successfull(\$cgi);}								 #Ansonsten leite auf die Loginseite um
 	  											else
 	  											{Login->html_login(\$cgi);}

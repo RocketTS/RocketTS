@@ -52,12 +52,12 @@ our @EXPORT_OK = qw(html_login html_registration html_login_successfull html_reg
 	 						-target => '_self'
 	 						 });
 	 
-	 print $cgi->hidden(-name=>'Site',
+	 print $cgi->hidden(-name=>'input_Site',
 	 				   -value=>'Login');
 	 				   
 	 print $cgi->strong("Benutzer\t");
 	 
-	 print $cgi->textfield(-name=>'Login',
+	 print $cgi->textfield(-name=>'input_Login',
 	 					  -value=>'E-Mail Adresse',
 	 					  -size=>25,
 	 					  -maxlength=>50);
@@ -65,7 +65,7 @@ our @EXPORT_OK = qw(html_login html_registration html_login_successfull html_reg
 	 
 	 print $cgi->strong("Passwort\t");	
 	 						
-	 print $cgi->password_field(-name=>'Password',
+	 print $cgi->password_field(-name=>'input_Password',
 	 						   -value=>'',
 	 						   -size=>25,
 	 						   -maxlength=>50);
@@ -80,7 +80,7 @@ our @EXPORT_OK = qw(html_login html_registration html_login_successfull html_reg
 	 						-action => "/cgi-bin/rocket/Rocket.cgi",
 	 						-target => '_self'
 	 						 });
-	 print $cgi->hidden(-name=>'Site',
+	 print $cgi->hidden(-name=>'input_Site',
 	 				   -value=>'Registration_initialisieren');
 	 print $cgi->submit("Registrieren");
 	 
@@ -151,13 +151,13 @@ our @EXPORT_OK = qw(html_login html_registration html_login_successfull html_reg
 	 						-target => '_self'
 	 						 });
 	 
-	 print $cgi->hidden(-name=>'Site',
+	 print $cgi->hidden(-name=>'input_Site',
 	 				   -value=>'Registration_abgeschlossen');
 	 				   
-	&print_register_textfields("Vorname", "Vorname",
-								"Nachname", "Nachname",
-								"Email", "Email",
-								"Passwort", "Passwort");
+	&print_register_textfields("Vorname", "input_Vorname",
+								"Nachname", "input_Nachname",
+								"Email", "input_Email",
+								"Passwort", "input_Passwort");
 	
 	
 	 print $cgi->submit("Registrieren");
