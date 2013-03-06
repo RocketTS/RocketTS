@@ -105,11 +105,21 @@ our @EXPORT_OK = qw(html_login html_registration html_login_successfull html_reg
 	 	print $cgi->strong("$Value");	
  		#Zeige auf das zugehoerigen Namen fuers Textfeld
  		$i++;
- 		$Value = $_[$i];						
-		print $cgi->password_field(-name=>"$Value",
-		 						   -value=>'',
-		 						   -size=>25,
-		 						   -maxlength=>50);
+ 		$Value = $_[$i];
+ 		if($Value =~"Passwort")
+ 		{#Unterscheidung zwischen einem Text und Passwortfeld						
+			print $cgi->password_field(-name=>"$Value",
+			 						   -value=>'',
+			 						   -size=>25,
+			 						   -maxlength=>50);
+ 		}
+ 		else
+ 		{
+ 			print $cgi->textfield(-name=>"$Value",
+			 					  -value=>'',
+			 					  -size=>25,
+								  -maxlength=>50);
+ 		}
 		print $cgi->br();
  	}
  	1;
@@ -157,7 +167,8 @@ our @EXPORT_OK = qw(html_login html_registration html_login_successfull html_reg
 	&print_register_textfields("Vorname", "input_Vorname",
 								"Nachname", "input_Nachname",
 								"Email", "input_Email",
-								"Passwort", "input_Passwort");
+								"Passwort", "input_Passwort1",
+								"Passwort wiederholen", "input_Passwort2");
 	
 	
 	 print $cgi->submit("Registrieren");

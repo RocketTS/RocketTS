@@ -9,7 +9,7 @@ package db_Login;
 use db_access 'valid_Login','insert_User','exist_User';
 use strict; 
 use Exporter;
-use Digest::MD5  qw(md5_hex);
+use Digest::SHA qw(sha256);
 
 our @ISA = qw(Exporter);
 
@@ -23,7 +23,7 @@ our @EXPORT_OK = qw(login_User regist_User);
   #		   3. Wenn alles passt, dann leite auf die "interne Oberflaeche weiter"
   
   my $Username = $_[0];
-  my $Password_hashed = md5_hex($_[1]);
+  my $Password_hashed = sha256_hex($_[1]);
 
   if( db_access->exist_User($Username) )
   {#Username ist vorhanden, jetzt kann getestet werden ob das Passwort dazupasst
@@ -35,4 +35,41 @@ our @EXPORT_OK = qw(login_User regist_User);
   }
   #Username nicht vorhanden
   #Fehlerfall koennte getrennt behandelt werden, aus Datenschutzgruenden wird aber nur "Login fehlgeschlagen angezeigt"
+ }
+ 
+ 
+ sub regist_User
+ {#Uebergabeparameter: 1. Vorname, 2. Nachname, 3. Email, 4. Passwort1, 5. Passwort2
+  #Ablauf: 1. Ueberpruefe ob das Passwort 2mal richtig eingegeben wurde
+  #		   2. Ueberpruefe ob der User schon existiert
+  #		   3. Wenn alles passt, dann leite die Anfrage weiter und erstelle den User
+  my $Vorname = $_[0];
+  my $Nachname = $_[1];
+  my $Email = $_[2];
+  my $Passwort1 = $_[3];
+  my $Passwort2 = $_[3];
+  
+  if($Passwort1 eq $Passwort2)
+  {#Passwort ist identisch
+	  if(! db_access->exist_User($Email) )
+		  {#Benutzer gibt es noch nicht, also darf er erstellt werden
+		  	 if( db_access->insert_User($Nachname, $Vorname, $Email, sha256_hex($Passwort1)) )
+		  	 {#Benutzer wurde erfolgreich hinzugefuegt
+		  	 	
+		  	 }
+		  	 else
+		  	 {#Es trat ein Fehler auf als der Benutzer hinzugefuegt werden sollte
+		  	 	
+		  	 }
+		  }
+		  else
+		  {#Benutzer gibt es leider schon
+		  	
+		  }
+  }
+  else
+  {#Passwort wurde nicht identisch eingegeben
+  	
+  }
+ 	
  }
