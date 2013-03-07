@@ -30,11 +30,14 @@ our @EXPORT_OK = qw(login_User regist_User);
   	if( db_access->valid_User($Username, $Password_hashed) )
   	{#Login erfolgreich, Passwort hat gepasst!
   		#Hier wird auf den "internen Bereich" weitergeleitet
+  		return "Login_valid";
   	}
   	#Passwort stimmte nicht
+  	return "Login_invalid";
   }
   #Username nicht vorhanden
   #Fehlerfall koennte getrennt behandelt werden, aus Datenschutzgruenden wird aber nur "Login fehlgeschlagen angezeigt"
+  return "Login_invalid";
  }
  
  
@@ -55,21 +58,21 @@ our @EXPORT_OK = qw(login_User regist_User);
 		  {#Benutzer gibt es noch nicht, also darf er erstellt werden
 		  	 if( db_access->insert_User($Nachname, $Vorname, $Email, sha256_hex($Passwort1)) )
 		  	 {#Benutzer wurde erfolgreich hinzugefuegt
-		  	 	
+		  	 	return "Registration_successfull";
 		  	 }
 		  	 else
 		  	 {#Es trat ein Fehler auf als der Benutzer hinzugefuegt werden sollte
-		  	 	
+		  	 	return "Registration_failed";
 		  	 }
 		  }
 		  else
 		  {#Benutzer gibt es leider schon
-		  	
+		  	 return "Registration_user_exist_already";
 		  }
   }
   else
   {#Passwort wurde nicht identisch eingegeben
-  	
+  	return "Registration_password_not_equal";
   }
  	
  }

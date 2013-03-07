@@ -13,7 +13,7 @@ use Exporter;
 
 our @ISA = qw(Exporter);
 
-our @EXPORT_OK = qw(html_login html_registration html_login_successfull html_registration_successfull);
+our @EXPORT_OK = qw(html_login html_registration html_login_successfull html_registration_successfull html_testseite);
 
 
  sub html_login
@@ -53,7 +53,7 @@ our @EXPORT_OK = qw(html_login html_registration html_login_successfull html_reg
 	 						 });
 	 
 	 print $cgi->hidden(-name=>'input_Site',
-	 				   -value=>'Login');
+	 				   -value=>'Login_check');
 	 				   
 	 print $cgi->strong("Benutzer\t");
 	 
@@ -81,7 +81,7 @@ our @EXPORT_OK = qw(html_login html_registration html_login_successfull html_reg
 	 						-target => '_self'
 	 						 });
 	 print $cgi->hidden(-name=>'input_Site',
-	 				   -value=>'Registration_initialisieren');
+	 				   -value=>'Registration_init');
 	 print $cgi->submit("Registrieren");
 	 
 	 print $cgi->end_div();
@@ -162,7 +162,7 @@ our @EXPORT_OK = qw(html_login html_registration html_login_successfull html_reg
 	 						 });
 	 
 	 print $cgi->hidden(-name=>'input_Site',
-	 				   -value=>'Registration_abgeschlossen');
+	 				   -value=>'Registration_check');
 	 				   
 	&print_register_textfields("Vorname", "input_Vorname",
 								"Nachname", "input_Nachname",
@@ -178,9 +178,10 @@ our @EXPORT_OK = qw(html_login html_registration html_login_successfull html_reg
   	1;
  }
  
+ 
  sub html_registration_successfull
  {
- my $cgi = CGI->new($_[0]);	#Uebernehme das alte CGI-Objekt und arbeite damit!
+	 my $cgi = CGI->new($_[0]);	#Uebernehme das alte CGI-Objekt und arbeite damit!
  	print $cgi->header(-type    =>'text/html',
                    		-expires =>'+1s'
                    		),
@@ -241,6 +242,42 @@ our @EXPORT_OK = qw(html_login html_registration html_login_successfull html_reg
 	 print $cgi->start_div({-id=>'body'});
 	 
 	 print $cgi->h2("Login war erfolgreich!!!:");
+	 
+	 
+	 print $cgi->end_div();
+    $cgi->end_html();
+  	1;	
+ }
+ 
+ sub html_testseite
+ {#Uebergabeparameter: 1. CGI-Objekt, 2. Der Text, der als Ueberschrift ausgegeben werden soll
+ 	my $cgi = CGI->new($_[0]);	#Uebernehme das alte CGI-Objekt und arbeite damit!
+ 	my $text = $_[1];
+ 	print $cgi->header(-type    =>'text/html',
+                   		-expires =>'+1s'
+                   		),
+                   			
+ 	$cgi->start_html(-title  =>'Ticketsystem Team Rocket! Registration',
+ 						-author =>'beispiel@example.org',
+                       -base   =>'true',
+                       -target =>'_blank',
+                       -meta   =>{'keywords'   =>'TeamOne, Test',
+                                  'description'=>'Loginseite'},
+                       -style  =>{'src'=>'../../css/Login.css'}
+                       );
+
+     #Ausgabe des Headers
+     print $cgi->start_div({-id=>'header'});
+     print $cgi->h1(
+     				$cgi->center("Ticketsystem")
+     				);
+     print $cgi->end_div();
+     
+
+	 #Ausgabe des Bodys
+	 print $cgi->start_div({-id=>'body'});
+	 
+	 print $cgi->h2("$text");
 	 
 	 
 	 print $cgi->end_div();
