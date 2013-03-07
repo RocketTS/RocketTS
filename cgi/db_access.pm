@@ -7,7 +7,7 @@ use DBI;
 use Config::Tiny;			#Modul, um DB-Config aus ini-File auszulesen
 use Exporter;
 our @ISA = qw(Exporter);
-our @EXPORT_OK = qw(db_connect db_disconnect db_select);
+our @EXPORT_OK = qw(valid_Login);
 
 sub db_connect { 
 	#Läd Zugangsdaten aus der INI-Datei
@@ -26,9 +26,25 @@ sub db_disconnect {
 	$dbhandle->disconnect() or warn $dbhandle->errstr;
 }
 
-sub db_select { # db_select(Handle,Befehl);
+sub db_select {
 	my $dbhandle = shift;
 	my $sql = $_[0];
 	my $select = $dbhandle->prepare($sql);
 	return $select;
 }
+
+sub valid_Login { #Aufruf valid_Login($Username,$Password)
+	my($Username,$Password) = @_;
+	
+	my $db = db_connect(); #übergibt DB-Handle
+	my $command = $db->prepare("SELECT sql_valid_Login(\'". $Username. "\',\'". $Password . "\') AS valid;");
+	$command->execute();	
+	my $result = $command->fetchrow_array(); #abrufen des boolschen Wertes der SQL-Abfrage
+	$command->finish();
+	$db = db_disconnect($db);
+	return $result;	
+}
+
+sub insert_User {} 
+
+sub exist_User {}

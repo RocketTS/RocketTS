@@ -1,14 +1,7 @@
 #!perl
 
-use db_access 'db_connect','db_select','db_disconnect';
+use db_access 'valid_Login';
 
 
-my $db = db_connect();
-my $command = db_select($db,"SELECT * FROM user");
-$command->execute();
-
-while(my @ausgabe = $command->fetchrow_array()){
-	print "Datensatz: @ausgabe \n";
-}
-
-$db = db_disconnect($db);
+print "Ausgabe valid_Login('test\@test.test','testtesttest');\n";
+print valid_Login('test@test.test','testtesttestd');
