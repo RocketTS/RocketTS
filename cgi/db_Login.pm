@@ -1,4 +1,4 @@
-#!"C:\xampp\perl\bin\perl.exe" -w 
+#!perl -w 
 
 #Modul db_Login.pm soll folgende Fumktionen bereitstellen
 #login_User -> Loggt den User ein falls vorhanden, ansonsten gibt die Fehlermeldung aus

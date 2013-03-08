@@ -1,4 +1,4 @@
-#!"C:\xampp\perl\bin\perl.exe" -w 
+#!perl -w 
 
 #Dies soll das Login-Frontend sein
 
