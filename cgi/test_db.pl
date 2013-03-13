@@ -1,7 +1,8 @@
 #!perl
 
-use db_access 'valid_Login';
+use db_access 'valid_Login','exist_User';
 
 
-print "Ausgabe valid_Login('test\@test.test','testtesttest');\n";
-print valid_Login('test@test.test','testtesttestd');
+print "Ausgabe exist_User('test\@test.test');\n";
+
+print exist_User('test\@test.test');
