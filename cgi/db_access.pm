@@ -7,7 +7,7 @@ use DBI;
 use Config::Tiny;			#Modul, um DB-Config aus ini-File auszulesen
 use Exporter;
 our @ISA = qw(Exporter);
-our @EXPORT_OK = qw(valid_Login exist_User insert_User);
+our @EXPORT_OK = qw(valid_Login exist_User insert_User get_Hash set_Hash);
 
 sub db_connect { 
 	#Läd Zugangsdaten aus der INI-Datei
@@ -59,6 +59,41 @@ sub exist_User {
 }
 
 sub insert_User {
-	
+	my ($iName,$iVorname,$iEmail,$iPasswort) = @_;
+	my $db = db_connect();
+	my $sql = "CALL sql_insert_User(\'".$iName."\',\'".$iVorname."\',\'".$iEmail."\',\'".$iPasswort."\');";
+	my $command = $db->prepare($sql);
+	$command->execute();
+	$command = $db->prepare("SELECT \@ret;");
+	$command->execute();	
+	my $result = $command->fetchrow_array(); #abrufen des boolschen Wertes der SQL-Abfrage
+	$command->finish();
+	$db = db_disconnect($db);
+	return $result;	
 	
 } 
+
+sub set_Hash {  #liefert bool 
+	my($Username,$Hash) = @_;
+	my $db = db_connect();
+	my $sql = "UPDATE user SET SESSION_ID=\'".$Hash."\' WHERE Email=\'".$Username."\';";
+	my $command = $db->prepare($sql);;
+	$command->execute();	
+	$command->finish();
+	$db = db_disconnect($db);
+	my $getHash = get_Hash($Username);
+	my $result = 0;
+	($result=1) if($Hash eq $getHash);
+	return $result;	
+}
+
+sub get_Hash {  #liefert hash
+	my($Username) = @_;
+	my $db = db_connect();
+	my $command = $db->prepare("SELECT SESSION_ID FROM user WHERE Email=\'". $Username . "\';");
+	$command->execute();	
+	my $result = $command->fetchrow_array(); #abrufen des boolschen Wertes der SQL-Abfrage
+	$command->finish();
+	$db = db_disconnect($db);
+	return $result;	
+}
