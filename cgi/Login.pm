@@ -19,7 +19,7 @@ our @EXPORT_OK = qw(html_login html_registration html_login_successfull html_reg
  sub html_login
  #Uebergabeparameter ist das CGI-Objekt, mit dem gearbeitet werden soll.
  {
- 	my $cgi = CGI->new($_[0]);	#Uebernehme das alte CGI-Objekt und arbeite damit!
+ 	my $cgi = CGI->new();
  	
  	print $cgi->header(-type    =>'text/html',
                    		-expires =>'+1s'
@@ -96,7 +96,7 @@ our @EXPORT_OK = qw(html_login html_registration html_login_successfull html_reg
  #Ausgabetext2, Textfeldname2,
  #Hashmap geht nicht, weil die Reihenfolge der Elemente nicht garantiert statisch ist
  {
- 	my $cgi = CGI->new($_[0]);	#Uebernehme das alte CGI-Objekt und arbeite damit!
+ 	my $cgi = CGI->new();
  	my $AnzahlElemente = @_;
  	my $Value;
  	for(my $i = 0; $i<$AnzahlElemente ; $i++)
@@ -129,7 +129,7 @@ our @EXPORT_OK = qw(html_login html_registration html_login_successfull html_reg
  sub html_registration
  #Uebergabeparameter ist das CGI-Objekt, mit dem gearbeitet werden soll.
  {
- 	my $cgi = CGI->new($_[0]);	#Uebernehme das alte CGI-Objekt und arbeite damit!
+ 	my $cgi = CGI->new();
  	print $cgi->header(-type    =>'text/html',
                    		-expires =>'+1s'
                    		),
@@ -181,7 +181,7 @@ our @EXPORT_OK = qw(html_login html_registration html_login_successfull html_reg
  
  sub html_registration_successfull
  {
-	 my $cgi = CGI->new($_[0]);	#Uebernehme das alte CGI-Objekt und arbeite damit!
+ 	my $cgi = CGI->new();
  	print $cgi->header(-type    =>'text/html',
                    		-expires =>'+1s'
                    		),
@@ -216,7 +216,7 @@ our @EXPORT_OK = qw(html_login html_registration html_login_successfull html_reg
  
  sub html_login_successfull
  {
- my $cgi = CGI->new($_[0]);	#Uebernehme das alte CGI-Objekt und arbeite damit!
+ 	my $cgi = CGI->new();
  	print $cgi->header(-type    =>'text/html',
                    		-expires =>'+1s'
                    		),
@@ -250,9 +250,9 @@ our @EXPORT_OK = qw(html_login html_registration html_login_successfull html_reg
  }
  
  sub html_testseite
- {#Uebergabeparameter: 1. CGI-Objekt, 2. Der Text, der als Ueberschrift ausgegeben werden soll
- 	my $cgi = CGI->new($_[0]);	#Uebernehme das alte CGI-Objekt und arbeite damit!
- 	my $text = $_[1];
+ {#Uebergabeparameter: Der Text, der als Ueberschrift ausgegeben werden soll
+ 	my $cgi = CGI->new();	#Uebernehme das alte CGI-Objekt und arbeite damit!
+ 	my $text = $_[0];
  	print $cgi->header(-type    =>'text/html',
                    		-expires =>'+1s'
                    		),
@@ -277,7 +277,7 @@ our @EXPORT_OK = qw(html_login html_registration html_login_successfull html_reg
 	 #Ausgabe des Bodys
 	 print $cgi->start_div({-id=>'body'});
 	 
-	 print $cgi->h2("$text");
+	 print $cgi->h2($text);
 	 
 	 
 	 print $cgi->end_div();
