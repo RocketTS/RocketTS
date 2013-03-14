@@ -17,7 +17,6 @@ our @EXPORT_OK = qw(html_login html_registration html_login_successfull html_reg
 
 
  sub html_login
- #Uebergabeparameter ist das CGI-Objekt, mit dem gearbeitet werden soll.
  {
  	my $cgi = CGI->new();
  	
@@ -127,7 +126,6 @@ our @EXPORT_OK = qw(html_login html_registration html_login_successfull html_reg
  
  
  sub html_registration
- #Uebergabeparameter ist das CGI-Objekt, mit dem gearbeitet werden soll.
  {
  	my $cgi = CGI->new();
  	print $cgi->header(-type    =>'text/html',
@@ -253,7 +251,7 @@ our @EXPORT_OK = qw(html_login html_registration html_login_successfull html_reg
  sub html_testseite
  {#Uebergabeparameter: Der Text, der als Ueberschrift ausgegeben werden soll
  	my $cgi = CGI->new();	
- 	my $text = $_[1];
+ 	my $text = $_[0];
  	print $cgi->header(-type    =>'text/html',
                    		-expires =>'+1s'
                    		),

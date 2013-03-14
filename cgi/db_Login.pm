@@ -26,9 +26,10 @@ our @EXPORT_OK = qw(login_User regist_User);
   my $Username = $_[0];
   my $Password_hashed = sha256_hex($_[1]);
 
-  if( db_access->exist_User($Username) )
+
+  if( db_access::exist_User($Username) )
   {#Username ist vorhanden, jetzt kann getestet werden ob das Passwort dazupasst
-  	if( db_access->valid_User($Username, $Password_hashed) )
+  	if( db_access::valid_User($Username, $Password_hashed) )
   	{#Login erfolgreich, Passwort hat gepasst!
   		#Hier wird auf den "internen Bereich" weitergeleitet
   		return "Login_valid";
@@ -47,7 +48,6 @@ our @EXPORT_OK = qw(login_User regist_User);
   #Ablauf: 1. Ueberpruefe ob das Passwort 2mal richtig eingegeben wurde
   #		   2. Ueberpruefe ob der User schon existiert
   #		   3. Wenn alles passt, dann leite die Anfrage weiter und erstelle den User
-  shift; #Muss gemacht werden, weil an der 0. Stelle (db_Login) als Wert steht!!!! FRAGT MICH NICHT WISO!
   my $Vorname = $_[0];
   my $Nachname = $_[1];
   my $Email = $_[2];
@@ -57,9 +57,9 @@ our @EXPORT_OK = qw(login_User regist_User);
   
   if($Passwort1 eq $Passwort2)
   {#Passwort ist identisch
-	  if(! db_access->exist_User($Email) )
+	  if(! db_access::exist_User($Email) )
 		  {#Benutzer gibt es noch nicht, also darf er erstellt werden
-		  	 if( db_access->insert_User($Nachname, $Vorname, $Email, $Passwort1) )
+		  	 if( db_access::insert_User($Nachname, $Vorname, $Email, $Passwort1) )
 		  	 {#Benutzer wurde erfolgreich hinzugefuegt		  	 	
 		  	 	return "Registration_successfull";
 		  	 }
