@@ -162,7 +162,8 @@ our @EXPORT_OK = qw(html_login html_registration html_login_successfull html_reg
 	 						 });
 	 
 	 print $cgi->hidden(-name=>'input_Site',
-	 				   -value=>'Registration_check');
+	 				   -value=>'Registration_check',
+	 				   -override=>'Registration_check');
 	 				   
 	&print_register_textfields("Vorname", "input_Vorname",
 								"Nachname", "input_Nachname",
@@ -251,8 +252,8 @@ our @EXPORT_OK = qw(html_login html_registration html_login_successfull html_reg
  
  sub html_testseite
  {#Uebergabeparameter: Der Text, der als Ueberschrift ausgegeben werden soll
- 	my $cgi = CGI->new();	#Uebernehme das alte CGI-Objekt und arbeite damit!
- 	my $text = $_[0];
+ 	my $cgi = CGI->new();	
+ 	my $text = $_[1];
  	print $cgi->header(-type    =>'text/html',
                    		-expires =>'+1s'
                    		),

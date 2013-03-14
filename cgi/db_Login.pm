@@ -7,9 +7,10 @@
 package db_Login;
 
 use db_access 'valid_Login','insert_User','exist_User';
+use Login 'html_testseite';
 use strict; 
 use Exporter;
-use Digest::SHA qw(sha256);
+use Digest::SHA qw(sha256_hex);
 
 our @ISA = qw(Exporter);
 
@@ -46,18 +47,20 @@ our @EXPORT_OK = qw(login_User regist_User);
   #Ablauf: 1. Ueberpruefe ob das Passwort 2mal richtig eingegeben wurde
   #		   2. Ueberpruefe ob der User schon existiert
   #		   3. Wenn alles passt, dann leite die Anfrage weiter und erstelle den User
+  shift; #Muss gemacht werden, weil an der 0. Stelle (db_Login) als Wert steht!!!! FRAGT MICH NICHT WISO!
   my $Vorname = $_[0];
   my $Nachname = $_[1];
   my $Email = $_[2];
-  my $Passwort1 = $_[3];
-  my $Passwort2 = $_[3];
+  my $Passwort1 = sha256_hex($_[3]);
+  my $Passwort2 = sha256_hex($_[3]);
+
   
   if($Passwort1 eq $Passwort2)
   {#Passwort ist identisch
 	  if(! db_access->exist_User($Email) )
 		  {#Benutzer gibt es noch nicht, also darf er erstellt werden
-		  	 if( db_access->insert_User($Nachname, $Vorname, $Email, sha256_hex($Passwort1)) )
-		  	 {#Benutzer wurde erfolgreich hinzugefuegt
+		  	 if( db_access->insert_User($Nachname, $Vorname, $Email, $Passwort1) )
+		  	 {#Benutzer wurde erfolgreich hinzugefuegt		  	 	
 		  	 	return "Registration_successfull";
 		  	 }
 		  	 else
@@ -67,12 +70,12 @@ our @EXPORT_OK = qw(login_User regist_User);
 		  }
 		  else
 		  {#Benutzer gibt es leider schon
-		  	 return "Registration_user_exist_already";
+		  	 return "Registration_failed";
 		  }
-  }
+ }
   else
   {#Passwort wurde nicht identisch eingegeben
-  	return "Registration_password_not_equal";
+  	return "Registration_failed";
   }
  	
  }

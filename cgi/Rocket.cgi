@@ -18,7 +18,7 @@ my $Parameter;
 my $cgi = new CGI;
 # new session object, will get session ID from the query object
 # will restore any existing session with the session ID in the query object
-my $s = CGI::Session->new($cgi);
+#my $s = CGI::Session->new($cgi);
 
 # print the HTTP header and set the session ID cookie
 #print $s->header();
@@ -29,13 +29,14 @@ given ($cgi->param('input_Site')){
   
   when('Registration_init')	 			 { Login->html_registration(); }
   
-  when('Registration_check')	 	 	{  my $value = &db_Login->regist_User($cgi->param('input_Vorname'),
+  when('Registration_check')	 	 	{  	my $value = db_Login->regist_User($cgi->param('input_Vorname'),
   																			  $cgi->param('input_Nachname'),
   																			  $cgi->param('input_Email'),
   																			  $cgi->param('input_Passwort1'),
   																			  $cgi->param('input_Passwort2') 
   																			  );
   											$cgi->param('input_Site',$value);
+  											#print $page->meta({-http_equiv => 'REFRESH', -content => '0;/cgi-bin/user.cgi'}); 
   										 }
   
   when('Registration_successfull')	 	 { Login->html_testseite("Die Registrierung war erfolgreich!"); }
@@ -63,5 +64,14 @@ given ($cgi->param('input_Site')){
 }
 
 
-#Login->html_registration();
+given ($cgi->param('input_Site')){
+  
+  when('Registration_successfull')	 	 { Login->html_testseite("Die Registrierung war erfolgreich!"); }
+  
+  when('Registration_failed')	 	 	 { Login->html_testseite("Die Registrierung fehlgeschlagen!"); }
+  
+  when('Registration_user_exist_already'){ Login->html_testseite("Die Registrierung fehlgeschlagen! Den Benutzer gibt es bereits!"); }
+  
+  when('Registration_password_not_equal'){ Login->html_testseite("Die Registrierung fehlgeschlagen! Die 2 eingegebenen Passwörter sind nicht identisch!"); }
 
+}
