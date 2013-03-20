@@ -7,7 +7,7 @@ use DBI;
 use Config::Tiny;			#Modul, um DB-Config aus ini-File auszulesen
 use Exporter;
 our @ISA = qw(Exporter);
-our @EXPORT_OK = qw(valid_Login exist_User insert_User get_Hash set_Hash);
+our @EXPORT_OK = qw(valid_Login exist_User insert_User get_Hash set_Hash db_connect db_disconnect);
 
 sub db_connect { 
 	#Läd Zugangsdaten aus der INI-Datei
