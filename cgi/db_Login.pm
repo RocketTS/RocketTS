@@ -29,7 +29,7 @@ our @EXPORT_OK = qw(login_User regist_User);
 
   if( db_access::exist_User($Username) )
   {#Username ist vorhanden, jetzt kann getestet werden ob das Passwort dazupasst
-  	if( db_access::valid_User($Username, $Password_hashed) )
+  	if( db_access::valid_Login($Username, $Password_hashed) )
   	{#Login erfolgreich, Passwort hat gepasst!
   		#Hier wird auf den "internen Bereich" weitergeleitet
   		return "Login_valid";
@@ -52,7 +52,15 @@ our @EXPORT_OK = qw(login_User regist_User);
   my $Nachname = $_[1];
   my $Email = $_[2];
   my $Passwort1 = sha256_hex($_[3]);
-  my $Passwort2 = sha256_hex($_[3]);
+  my $Passwort2 = sha256_hex($_[4]);
+#Pruefe ob alle Felder ausgefuellt wurden
+  
+  if($Vorname == undef && $Nachname == undef && $Email == undef && $Passwort1 == undef && $Passwort2 == undef)
+  {
+  	print $Vorname,$Nachname,$Email,$Passwort1,$Passwort2;
+  	return "Registration_textfields_incomplete";
+  }
+
 
   
   if($Passwort1 eq $Passwort2)
@@ -70,12 +78,12 @@ our @EXPORT_OK = qw(login_User regist_User);
 		  }
 		  else
 		  {#Benutzer gibt es leider schon
-		  	 return "Registration_failed";
+		  	 return "Registration_user_exist_already";
 		  }
- }
+  }
   else
   {#Passwort wurde nicht identisch eingegeben
-  	return "Registration_failed";
+  	return "Registration_password_not_equal";
   }
  	
  }

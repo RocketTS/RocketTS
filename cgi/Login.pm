@@ -19,12 +19,9 @@ our @EXPORT_OK = qw(html_login html_registration html_login_successfull html_reg
  sub html_login
  {
  	my $cgi = CGI->new();
- 	
- 	print $cgi->header(-type    =>'text/html',
-                   		-expires =>'+1s'
-                   		),
-                   			
- 	$cgi->start_html(-title  =>'Ticketsystem Team Rocket! Login',
+ 	my $session = CGI::Session->new($cgi);
+ 	print $session->header();               			
+ 	print $cgi->start_html(-title  =>'Ticketsystem Team Rocket! Login',
  						-author =>'beispiel@example.org',
                        -base   =>'true',
                        -target =>'_blank',
@@ -47,7 +44,7 @@ our @EXPORT_OK = qw(html_login html_registration html_login_successfull html_reg
 	 print $cgi->h2("Login:");
 	 
 	 print $cgi->start_form({-method => "POST",
-	 						-action => "/cgi-bin/rocket/Rocket.cgi",
+	 						-action => "/cgi-bin/rocket/setSession.cgi",
 	 						-target => '_self'
 	 						 });
 	 
@@ -76,7 +73,7 @@ our @EXPORT_OK = qw(html_login html_registration html_login_successfull html_reg
 	 #Nur fuer Testzwecke, Todo: Nachschauen wie man einen einzelnen Button mit einer Funktion belegen kann
 	 
 	 print $cgi->start_form({-method => "POST",
-	 						-action => "/cgi-bin/rocket/Rocket.cgi",
+	 						-action => "/cgi-bin/rocket/setSession.cgi",
 	 						-target => '_self'
 	 						 });
 	 print $cgi->hidden(-name=>'input_Site',
@@ -85,7 +82,7 @@ our @EXPORT_OK = qw(html_login html_registration html_login_successfull html_reg
 	 
 	 print $cgi->end_div();
 
-    $cgi->end_html();
+    print $cgi->end_html();
   	1;
  }
  
@@ -128,11 +125,10 @@ our @EXPORT_OK = qw(html_login html_registration html_login_successfull html_reg
  sub html_registration
  {
  	my $cgi = CGI->new();
- 	print $cgi->header(-type    =>'text/html',
-                   		-expires =>'+1s'
-                   		),
+ 	my $session = CGI::Session->new($cgi);
+ 	print $session->header();
                    			
- 	$cgi->start_html(-title  =>'Ticketsystem Team Rocket! Registration',
+ 	print $cgi->start_html(-title  =>'Ticketsystem Team Rocket! Registration',
  						-author =>'beispiel@example.org',
                        -base   =>'true',
                        -target =>'_blank',
@@ -155,7 +151,7 @@ our @EXPORT_OK = qw(html_login html_registration html_login_successfull html_reg
 	 print $cgi->h2("Registration:");
 	 
 	 print $cgi->start_form({-method => "POST",
-	 						-action => "/cgi-bin/rocket/Rocket.cgi",
+	 						-action => "/cgi-bin/rocket/setSession.cgi",
 	 						-target => '_self'
 	 						 });
 	 
@@ -173,90 +169,20 @@ our @EXPORT_OK = qw(html_login html_registration html_login_successfull html_reg
 	 print $cgi->submit("Registrieren");
 	 print $cgi->end_form();
 	 print $cgi->end_div();
-    $cgi->end_html();
+    print $cgi->end_html();
   	1;
  }
  
  
- sub html_registration_successfull
- {
- 	my $cgi = CGI->new();
- 	print $cgi->header(-type    =>'text/html',
-                   		-expires =>'+1s'
-                   		),
-                   			
- 	$cgi->start_html(-title  =>'Ticketsystem Team Rocket! Registration',
- 						-author =>'beispiel@example.org',
-                       -base   =>'true',
-                       -target =>'_blank',
-                       -meta   =>{'keywords'   =>'TeamOne, Test',
-                                  'description'=>'Loginseite'},
-                       -style  =>{'src'=>'../../css/Login.css'}
-                       );
-
-     #Ausgabe des Headers
-     print $cgi->start_div({-id=>'header'});
-     print $cgi->h1(
-     				$cgi->center("Ticketsystem")
-     				);
-     print $cgi->end_div();
-     
-
-	 #Ausgabe des Bodys
-	 print $cgi->start_div({-id=>'body'});
-	 
-	 print $cgi->h2("Registrierung war erfolgreich!!!:");
-	 
-	 
-	 print $cgi->end_div();
-    $cgi->end_html();
-  	1;	
- }
- 
- sub html_login_successfull
- {
- 	my $cgi = CGI->new();
- 	print $cgi->header(-type    =>'text/html',
-                   		-expires =>'+1s'
-                   		),
-                   			
- 	$cgi->start_html(-title  =>'Ticketsystem Team Rocket! Registration',
- 						-author =>'beispiel@example.org',
-                       -base   =>'true',
-                       -target =>'_blank',
-                       -meta   =>{'keywords'   =>'TeamOne, Test',
-                                  'description'=>'Loginseite'},
-                       -style  =>{'src'=>'../../css/Login.css'}
-                       );
-
-     #Ausgabe des Headers
-     print $cgi->start_div({-id=>'header'});
-     print $cgi->h1(
-     				$cgi->center("Ticketsystem")
-     				);
-     print $cgi->end_div();
-     
-
-	 #Ausgabe des Bodys
-	 print $cgi->start_div({-id=>'body'});
-	 
-	 print $cgi->h2("Login war erfolgreich!!!:");
-	 
-	 
-	 print $cgi->end_div();
-    $cgi->end_html();
-  	1;	
- }
- 
  sub html_testseite
- {#Uebergabeparameter: Der Text, der als Ueberschrift ausgegeben werden soll
- 	my $cgi = CGI->new();	
+ {#Uebergabeparameter: Der Text, der als Ueberschrift ausgegeben werden soll	
  	my $text = $_[0];
- 	print $cgi->header(-type    =>'text/html',
-                   		-expires =>'+1s'
-                   		),
+ 	my $cgi = CGI->new();
+ 	my $session = CGI::Session->new($cgi);
+ 	print $session->header();
+
                    			
- 	$cgi->start_html(-title  =>'Ticketsystem Team Rocket! Registration',
+ 	print $cgi->start_html(-title  =>'Ticketsystem Team Rocket! Registration',
  						-author =>'beispiel@example.org',
                        -base   =>'true',
                        -target =>'_blank',
@@ -264,6 +190,7 @@ our @EXPORT_OK = qw(html_login html_registration html_login_successfull html_reg
                                   'description'=>'Loginseite'},
                        -style  =>{'src'=>'../../css/Login.css'}
                        );
+
 
      #Ausgabe des Headers
      print $cgi->start_div({-id=>'header'});
@@ -280,6 +207,6 @@ our @EXPORT_OK = qw(html_login html_registration html_login_successfull html_reg
 	 
 	 
 	 print $cgi->end_div();
-    $cgi->end_html();
+    print $cgi->end_html();
   	1;	
  }
