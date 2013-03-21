@@ -77,7 +77,7 @@ given ($session->param('input_Site')){
   when('Login_valid')					 { 
   											
   											Login::html_testseite("Login war erfolgreich, trage Session in DB ein");
-  											$session->param('setContent', "content_Start");
+  											$session->param('Group', "User");
   											$session->param('User', $session->param('input_Login') );
   											db_access::set_Hash($session->param('input_Login'),$session->id());	
   											print $cgi->meta({-http_equiv => 'REFRESH', -content => '2; /cgi-bin/rocket/Dummy.cgi'});

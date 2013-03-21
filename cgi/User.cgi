@@ -10,7 +10,7 @@ use CGI::Carp qw(fatalsToBrowser);  	#Zeige die Fehlermeldungen im Browser an
 use Login 'html_testseite'; 
 use db_Login 'login_User', 'regist_User';
 use db_access 'set_Hash', 'get_Hash';
-use setUserContent 'print_Punkt1', 'print_Punkt2', 'print_Punkt3', 'print_Punkt4', 'print_Start'; 
+use setUserContent 'print_createTicket', 'print_Punkt2', 'print_Punkt3', 'print_Punkt4', 'print_Start', 'print_submit_create_Ticket'; 
  
  #----------------------------------------
  #Instanzvariablen
@@ -23,6 +23,7 @@ my $session = CGI::Session->new($cgi);
 my $user = $session->param('User');
 
 $setContent = $cgi->param('setContent');
+my $sessionContent = $session->param('setContent');
 
 
 
@@ -43,12 +44,12 @@ print $cgi->start_html(-title  =>'Ticketsystem Team Rocket! Userbereich',
      print $cgi->start_div({-id=>'user_wrapper'});
      print $cgi->start_div({-id=>'user_header'});
      print $cgi->h1(
-     				$cgi->center("Header! Willkommen $user")
+     				$cgi->center("Header! Willkommen $user, cgicontent: $setContent, Sessioncontent: $sessionContent")
      				);
      print $cgi->end_div({-id=>'user_header'});
 	 print $cgi->start_div({-id=>'user_menu'});
 	
-	 print '<a href="User.cgi?setContent=Punkt1" TARGET="_self">Punkt1</a><br>';
+	 print '<a href="User.cgi?setContent=create_Ticket" TARGET="_self">Neues Ticket</a><br>';
 	 print '<a href="User.cgi?setContent=Punkt2" TARGET="_self">Punkt2</a><br>';
 	 print '<a href="User.cgi?setContent=Punkt3" TARGET="_self">Punkt3</a><br>';
 	 print '<a href="User.cgi?setContent=Punkt4" TARGET="_self">Punkt4</a><br>';
@@ -57,12 +58,14 @@ print $cgi->start_html(-title  =>'Ticketsystem Team Rocket! Userbereich',
      print $cgi->start_div({-id=>'user_content'});
 	 #Hier muss der "richtige" Content ausgewaehlt und angezeigt werden
 	 given ($setContent){
-	 	when( undef )	{setUserContent::print_Start();}
-	 	when('Punkt1')	{setUserContent::print_Punkt1();}
-	 	when('Punkt2')	{setUserContent::print_Punkt2();}
-	 	when('Punkt3')	{setUserContent::print_Punkt3();}
-	 	when('Punkt4')	{setUserContent::print_Punkt4();}	 	
-	 }
+	 	when( undef )				{setUserContent::print_Start();}
+	 	when('create_Ticket')		{setUserContent::print_createTicket();}
+	 	when('Punkt2')				{setUserContent::print_Punkt2();}
+	 	when('Punkt3')				{setUserContent::print_Punkt3();}
+	 	when('Punkt4')				{setUserContent::print_Punkt4();}
+	 	when('submit_create_Ticket'){setUserContent::print_submit_create_Ticket($user,$session->param('input_Betreff'),$session->param('input_Message'),1,1); 
+									}	 	
+						 }
 
      print $cgi->end_div({-id=>'user_content'});
      print $cgi->end_div({-id=>'user_wrapper'});

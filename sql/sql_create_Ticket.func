@@ -1,0 +1,25 @@
+DELIMITER //
+USE rocket;
+DROP PROCEDURE IF EXISTS sql_create_Ticket;
+CREATE PROCEDURE sql_create_Ticket(p_Email varchar(40), p_Betreff varchar(40), p_Message text, p_AID INT, p_PID INT, p_IP varchar(20), p_OS varchar(20))
+BEGIN
+	SELECT sql_exist_User(p_Email) INTO @exist;
+	IF @exist = 1 THEN	
+		SELECT User_ID FROM user WHERE Email=p_Email INTO @uid;
+		SET @timestamp = now();
+		INSERT INTO ticket (Ersteller, Erstelldatum, Betreff, Auswahlkriterien_ID, Prioritaet_ID, IP_Adresse, Betriebssystem) values (@uid, @timestamp, p_Betreff, p_AID, p_PID, p_IP, p_OS);
+		SELECT Name	   FROM user WHERE Email=p_Email INTO @uName;
+		SELECT Vorname FROM user WHERE Email=p_Email INTO @uVorname;
+		SELECT CONCAT (@uName, ' ', @uVorname) INTO @Fullname;
+		SELECT Ticket_ID FROM ticket WHERE Erstelldatum=@timestamp INTO @TicketID;
+		INSERT INTO message (Ersteller, Erstelldatum, Inhalt) values (@Fullname, @timestamp, p_Message);
+		SELECT Message_ID FROM message WHERE Erstelldatum=@timestamp INTO @MessageID;
+		INSERT INTO tm (Ticket_ID, Message_ID) values (@TicketID, @MessageID);
+		SET @ret=1;
+	ELSE
+		SET @ret=0;
+	END IF;
+	
+END
+//
+DELIMITER ;

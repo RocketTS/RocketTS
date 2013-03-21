@@ -18,12 +18,17 @@ my $cgi = new CGI;
 # will restore any existing session with the session ID in the query object  											
 my $session = CGI::Session->new($cgi);
 print $session->header();
-$Parameter = $session->param('setContent');
-if( $Parameter eq "content_Start")
-{
-	print $cgi->meta({-http_equiv => 'REFRESH', -content => '0; /cgi-bin/rocket/User.cgi'});
-}
-else
-{
-	print $cgi->meta({-http_equiv => 'REFRESH', -content => '0; /cgi-bin/rocket/Rocket.cgi'});
-}
+$Parameter = $session->param('Group');
+my $Content = $session->param('setContent');
+print $Parameter;
+
+my $UserURL = '0; /cgi-bin/rocket/User.cgi'."?setContent=".$Content;
+print $UserURL;
+
+given ($Parameter){  
+  when('User')	{ print $cgi->meta({-http_equiv => 'REFRESH', -content => $UserURL});}
+  
+  when('Admin')	{  }
+  default		{ print $cgi->meta({-http_equiv => 'REFRESH', -content => '0; /cgi-bin/rocket/Rocket.cgi'}); }
+					}
+  
