@@ -54,5 +54,5 @@ given ($cgi->param('input_Site')){
   when('Login_valid')					{ $session->param('input_Site',"Login_valid");
   											print $cgi->meta({-http_equiv => 'REFRESH', -content => '0; /cgi-bin/rocket/Dummy.cgi'}); }
   										 
-  default								 { print $cgi->h1("Problem mit der Websitenauswahl") }
+  default								 { print $cgi->h1("Problem mit dem setSession-Modul") }
 }

@@ -7,7 +7,7 @@ use feature qw {switch};
 use strict; 
 use CGI; 
 use CGI::Carp qw(fatalsToBrowser);  	#Zeige die Fehlermeldungen im Browser an
-use Login 'html_login','html_registration','html_login_successfull','html_registration_successfull'; 
+use Login 'html_login','html_registration','html_testseite'; 
 use db_Login 'login_User', 'regist_User';
 use db_access 'set_Hash';
  
@@ -77,7 +77,11 @@ given ($session->param('input_Site')){
   when('Login_valid')					 { 
   											
   											Login::html_testseite("Login war erfolgreich, trage Session in DB ein");
-  											db_access::set_Hash($session->param('input_Login'),$session->id());											
+  											$session->param('setContent', "content_Start");
+  											$session->param('User', $session->param('input_Login') );
+  											db_access::set_Hash($session->param('input_Login'),$session->id());	
+  											print $cgi->meta({-http_equiv => 'REFRESH', -content => '2; /cgi-bin/rocket/Dummy.cgi'});
+  																					
   														
   										  }
  

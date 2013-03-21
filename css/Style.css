@@ -1,0 +1,56 @@
+#login_header
+{
+border: 1px #000000 solid;
+background-image:url(Login_Header.jpg);
+background-color:333333;
+width: 640px;
+height: 200px;
+position: absolute;
+top: 0px;
+left: 50%;
+
+margin-left: -320px;
+}
+
+#login_body
+{
+width: 640px;
+border: 1px #000000 solid;
+background-color:ffffff;
+height: 200px;
+position: absolute;
+top: 200px;
+left: 50%;
+
+margin-left: -320px;
+}
+
+#user_wrapper
+{
+width: 1200px;
+margin: 20px auto;
+border: 1px solid black;
+}
+
+#user_header
+{
+width: 1200px;
+background: #D6B88D;
+margin-bottom: 15px;
+} 
+
+#user_menu
+{
+width: 200px;
+float: left;
+padding: 5px;
+background: #C5D78D;
+} 
+
+#user_content
+{
+width: 970px;
+padding: 5px;
+margin-left: 220px;
+background: #D6D6D6;
+} 
