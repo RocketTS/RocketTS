@@ -119,7 +119,8 @@ sub get_Hash {  #liefert hash
 sub insert_Ticket {
 	#(p_Email varchar(40), p_Betreff varchar(40), p_AID INT, p_PID INT, p_IP varchar(20), p_OS varchar(20))
 	my($Username,$Betreff,$AID,$PID) = @_;
-	my $myIP=get_IP();
+	my $myIP=$ENV{REMOTE_ADDR};	
+	($myIP=get_IP()) if ($myIP eq "::1");
 	my $myOS=$^O;
 	my $db = db_connect();
 	my $sql = "CALL sql_insert_Ticket(\'".$Username."\',\'".$Betreff."\',\'".$AID."\',\'".$PID."\',\'".$myIP."\',\'".$myOS."\');";
