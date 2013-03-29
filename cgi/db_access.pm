@@ -120,13 +120,14 @@ sub insert_Ticket {
 	#(p_Email varchar(40), p_Betreff varchar(40), p_AID INT, p_PID INT, p_IP varchar(20), p_OS varchar(20))
 	my($Username,$Betreff,$AID,$PID) = @_;
 	my $myIP=$ENV{REMOTE_ADDR};	
-	($myIP=get_IP()) if ($myIP eq "::1");
+		($myIP=get_IP()) if ($myIP eq "::1");
 	my $myOS=$^O;
+	
 	my $db = db_connect();
 	my $sql = "CALL sql_insert_Ticket(\'".$Username."\',\'".$Betreff."\',\'".$AID."\',\'".$PID."\',\'".$myIP."\',\'".$myOS."\');";
 	my $command = $db->prepare($sql);
 	$command->execute();
-	$command = $db->prepare("SELECT \@ret;");
+	$command = $db->prepare("SELECT \@ret;"); #Abfrage des boolschen Rückgabewerts
 	$command->execute();
 	my $result = $command->fetchrow_array(); #abrufen des boolschen Wertes der SQL-Abfrage
 	$command->finish();
