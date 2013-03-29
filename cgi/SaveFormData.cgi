@@ -75,6 +75,16 @@ if($cgi->param('input_Password2') ne '')
 	$session->param('RegistrationPassword2',$cgi->param('input_Password2'));
 }
 
+if($cgi->param('input_Betreff') ne '')
+{
+	$session->param('UserMessageTopic',$cgi->param('input_Betreff'));
+}
+
+if($cgi->param('input_Message') ne '')
+{
+	$session->param('UserMessage',$cgi->param('input_Message'));
+}
+
 $session->flush();
 
 #Leite auf Root um

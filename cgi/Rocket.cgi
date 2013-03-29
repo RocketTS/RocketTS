@@ -69,6 +69,6 @@ given ($session->param('ShowPage_Level1'))
 							}
 	
 	when('User')			{#Zum User-Script
-							DebugUtils::html_testseite("User");
+							print $cgi->meta({-http_equiv => 'REFRESH', -content => '0; /cgi-bin/rocket/User.cgi'});
 							}
 }
