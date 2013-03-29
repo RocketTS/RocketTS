@@ -31,10 +31,6 @@ my $cgi = new CGI;
 #User her
 my $session = CGI::Session->new($cgi);
 
-#Setze UserIdent auf den Dummy-Wert "LoginDummy", damit der User die
-#Moeglichkeit hat sich zu registrieren
-$session->param('UserIdent', "LoginDummy");
-$session->flush();
 
 #Ausgabe des Headers
 print $session->header();

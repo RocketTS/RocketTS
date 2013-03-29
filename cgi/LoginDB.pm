@@ -54,10 +54,9 @@ our @EXPORT_OK = qw(login_User regist_User);
   my $Passwort2 = sha256_hex($_[4]);
 #Pruefe ob alle Felder ausgefuellt wurden
   
-  if($Vorname == undef && $Nachname == undef && $Email == undef && $Passwort1 == undef && $Passwort2 == undef)
+  if($Vorname eq '' || $Nachname eq '' || $Email eq '' || $Passwort1 eq '' || $Passwort2 eq '' )
   {
-  	print $Vorname,$Nachname,$Email,$Passwort1,$Passwort2;
-  	return "Registration_textfields_incomplete";
+  	return "Textfields_incomplete";
   }
 
 
@@ -68,21 +67,21 @@ our @EXPORT_OK = qw(login_User regist_User);
 		  {#Benutzer gibt es noch nicht, also darf er erstellt werden
 		  	 if( db_access::insert_User($Nachname, $Vorname, $Email, $Passwort1) )
 		  	 {#Benutzer wurde erfolgreich hinzugefuegt		  	 	
-		  	 	return "Registration_successfull";
+		  	 	return "Valid";
 		  	 }
 		  	 else
 		  	 {#Es trat ein Fehler auf als der Benutzer hinzugefuegt werden sollte
-		  	 	return "Registration_failed";
+		  	 	return "Invalid";
 		  	 }
 		  }
 		  else
 		  {#Benutzer gibt es leider schon
-		  	 return "Registration_user_exist_already";
+		  	 return "User_exists_already";
 		  }
   }
   else
   {#Passwort wurde nicht identisch eingegeben
-  	return "Registration_password_not_equal";
+  	return "Passwords_not_equal";
   }
  	
  }

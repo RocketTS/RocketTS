@@ -58,8 +58,8 @@ sub printIndex
 	&print_register_textfields("Vorname", "input_Vorname",
 								"Nachname", "input_Nachname",
 								"Email", "input_Email",
-								"Passwort", "input_Passwort1",
-								"Passwort wiederholen", "input_Passwort2");
+								"Passwort", "input_Password1",
+								"Passwort wiederholen", "input_Password2");
 	
 	
 	 print $cgi->submit("Registrieren");
@@ -86,7 +86,7 @@ sub print_register_textfields
  		#Zeige auf das zugehoerigen Namen fuers Textfeld
  		$i++;
  		$Value = $_[$i];
- 		if($Value =~"Passwort")
+ 		if($Value =~"Password")
  		{#Unterscheidung zwischen einem Text und Passwortfeld						
 			print $cgi->password_field(-name=>"$Value",
 			 						   -value=>'',

@@ -15,6 +15,7 @@ use CGI;
 use CGI::Carp qw(fatalsToBrowser);
 use DebugUtils 'html_testseite';
 use RegistrationContent 'printIndex';
+use LoginDB 'regist_User';
 
 
 #########################################
@@ -42,15 +43,50 @@ given ($session->param('ShowPage_Level2'))
 							}
 	
 	when('Check')			{#Pruefe ob der neue Benutzer angelegt werden kann
-							DebugUtils::html_testseite("Registrierung wird geprüft");
+							my $Level2 = LoginDB::regist_User($session->param('RegistrationVorname'),
+  															 $session->param('RegistrationNachname'),
+  															 $session->param('RegistrationEmail'),
+  															 $session->param('RegistrationPassword1'),
+  															 $session->param('RegistrationPassword2') 
+  																			  		);
+  							$session->param('ShowPage_Level2', $Level2);
+  							$session->flush();
+							print $cgi->meta({-http_equiv => 'REFRESH', -content => '0; /cgi-bin/rocket/Rocket.cgi'});
 							}
 							
 	when('Valid')			{#Zeige das neuer Benutzer angelegt wurde, loesche die Session und ermoegliche Benutzer sich einzuloggen
+							DebugUtils::html_testseite("Registrierung erfolgreich");
+							$session->clear();
+							$session->flush();
+							print $cgi->meta({-http_equiv => 'REFRESH', -content => '3; /cgi-bin/rocket/Rocket.cgi'});
 							}
 
 	when('Invalid')			{#Zeige das neuer Benutzer NICHT angelegt werden kann, loesche die Session und ermoegliche Benutzer sich neu zu registrieren
+							DebugUtils::html_testseite("Registrierung fehlgeschlagen");
+							$session->clear();
+							$session->flush();
+							print $cgi->meta({-http_equiv => 'REFRESH', -content => '3; /cgi-bin/rocket/Rocket.cgi'});
 							}
 							
-	
+	when('Textfields_incomplete'){#Zeige das neuer Benutzer NICHT angelegt werden kann, loesche die Session und ermoegliche Benutzer sich neu zu registrieren
+							DebugUtils::html_testseite("Textfelder nicht alle ausgefüllt");
+							$session->clear();
+							$session->flush();
+							print $cgi->meta({-http_equiv => 'REFRESH', -content => '3; /cgi-bin/rocket/Rocket.cgi'});
+							}	
+													
+	when('User_exists_already'){#Zeige das neuer Benutzer NICHT angelegt werden kann, loesche die Session und ermoegliche Benutzer sich neu zu registrieren
+							DebugUtils::html_testseite("Den Benutzer gibt es bereits");
+							$session->clear();
+							$session->flush();
+							print $cgi->meta({-http_equiv => 'REFRESH', -content => '3; /cgi-bin/rocket/Rocket.cgi'});
+							}	
+		
+	when('Passwords_not_equal'){#Zeige das neuer Benutzer NICHT angelegt werden kann, loesche die Session und ermoegliche Benutzer sich neu zu registrieren
+							DebugUtils::html_testseite("Passwörter waren nicht identisch!");
+							$session->clear();
+							$session->flush();
+							print $cgi->meta({-http_equiv => 'REFRESH', -content => '3; /cgi-bin/rocket/Rocket.cgi'});
+							}		
 							
 }

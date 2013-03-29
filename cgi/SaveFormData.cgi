@@ -80,6 +80,13 @@ $session->flush();
 #Leite auf Root um
 print $cgi->header();
 print $cgi->h1( 'Daten' );
+
+print $cgi->h1( $session->param('RegistrationVorname'));
+print $cgi->h1( $session->param('RegistrationNachname'));
+print $cgi->h1( $session->param('RegistrationEmail'));
+print $cgi->h1( $session->param('RegistrationPassword1'));
+print $cgi->h1( $session->param('RegistrationPassword2'));
+
 print $cgi->h1( $session->param('ShowPage_Level1'));
 print $cgi->h1( $session->param('ShowPage_Level2'));
 print $cgi->h1( $session->param('ShowPage_Level3'));
