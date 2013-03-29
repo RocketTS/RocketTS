@@ -1,0 +1,17 @@
+DELIMITER //
+DROP PROCEDURE IF EXISTS sql_get_AccessRights;
+CREATE PROCEDURE sql_get_AccessRights(p_Email varchar(40))
+BEGIN
+	SELECT COUNT(*) FROM user WHERE Email = p_Email INTO @user;
+	SELECT COUNT(*) FROM mitarbeiter WHERE Email = p_Email INTO @ma;
+	IF @user = 1 THEN	
+		SET @ret="User";
+	ELSEIF @ma = 1 THEN
+		SET @ret="Mitarbeiter";
+	ELSE
+		SET @ret="None";
+	END IF;
+	
+END
+//
+DELIMITER ;
