@@ -17,7 +17,7 @@ use CGI::Carp qw(fatalsToBrowser);
 use DebugUtils 'html_testseite';
 use LoginContent 'printIndex';
 use LoginDB 'login_User';
-use db_access 'set_Hash';
+use db_access 'set_Hash', 'get_AccessRights';
 
 #########################################
 #Instanzvariablen						#
@@ -63,9 +63,8 @@ given ($session->param('ShowPage_Level2'))
 							if(db_access::set_Hash($session->param('UserIdent'),$session->id()) )
 								{#Session-ID wurde erfolgreich gesetzt
 									DebugUtils::html_testseite("Login war erfolgreich");
-									#Matze muss methode machen die rausfindet welche Rechte der Benutzer hat
-									#Defaultmaessig wird hier das Recht "User" vergeben
-									$session->param('AccessRights', "User");
+									#Hier werden die Rechte von der Datenbank ausgelesen und eingetragen
+									$session->param('AccessRights', db_access::get_AccessRights($session->param('UserIdent')));
 									$session->param('ShowPage_Level1', "User");
 									$session->param('ShowPage_Level2', "");
 									$session->flush();							
