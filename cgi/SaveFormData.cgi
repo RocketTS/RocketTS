@@ -85,6 +85,11 @@ if($cgi->param('input_Message') ne '')
 	$session->param('UserMessage',$cgi->param('input_Message'));
 }
 
+if($cgi->param('input_specificTicket') ne '')
+{
+	$session->param('specificTicket',$cgi->param('input_specificTicket'));
+}
+
 $session->flush();
 
 #Leite auf Root um
@@ -100,5 +105,7 @@ print $cgi->h1( $session->param('RegistrationPassword2'));
 print $cgi->h1( $session->param('ShowPage_Level1'));
 print $cgi->h1( $session->param('ShowPage_Level2'));
 print $cgi->h1( $session->param('ShowPage_Level3'));
+
+print $cgi->h1( $session->param('specificTicket'));
 
 print $cgi->meta({-http_equiv => 'REFRESH', -content => '2; /cgi-bin/rocket/Rocket.cgi'});

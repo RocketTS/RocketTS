@@ -11,7 +11,7 @@ use Config::Tiny;			#Modul, um DB-Config aus ini-File auszulesen
 use getinfo 'get_IP';
 use Exporter;
 our @ISA = qw(Exporter);
-our @EXPORT_OK = qw(valid_Login exist_User insert_User get_Hash del_Hash set_Hash db_connect db_disconnect insert_Ticket create_Ticket get_AccessRights get_Tickets);
+our @EXPORT_OK = qw(valid_Login exist_User insert_User get_Hash del_Hash set_Hash db_connect db_disconnect insert_Ticket create_Ticket get_AccessRights get_Tickets get_Messages_from_Ticket);
 
 sub db_connect { 
 	#Läd Zugangsdaten aus der INI-Datei
@@ -166,10 +166,24 @@ sub get_AccessRights {
 }
 
 sub get_Tickets {#Author: Thomas Dorsch	Date: 30.03.2013
+	#liefert alle Tickets die ein bestimmter User erstellt hat
 	my($Username) = @_;
 	my $db = db_connect();
 	my $sqlcommand = "CALL sql_get_Tickets(\'". $Username. "\');";
 	my $ref_array = $db->selectall_arrayref($sqlcommand);
 	$db = db_disconnect($db);
 	return $ref_array;	
+}
+
+sub get_Messages_from_Ticket {#Author: Thomas Dorsch Date: 01.04.2013
+	#liefert alle Messages die zu einem Ticket gehoeren zurueck
+	my($UserIdent, $TicketID) = @_;
+	
+	#Pruefe zuerst ob der User auf die geforderten Messages vom Ticket zugreifen darf
+	#Kurz: Ist er der Eigentuemer?
+	#MUSS NOCH GEMACHT WERDEN!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	
+	my $db = db_connect();
+	my $sqlcommand = "CALL sql_get_Messages_from_Ticket(\'". $TicketID. "\');";
+	
 }

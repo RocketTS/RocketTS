@@ -15,8 +15,11 @@ use CGI::Carp qw(fatalsToBrowser);
 use Exporter;
 use db_access 'create_Ticket';
 use UserDB 'get_Tickets';
+use HTML::Table;
 
-our @EXPORT_OK = qw(print_createTicket print_Punkt2 print_Punkt3 print_Punkt4 print_Index print_submit_createTicket);
+
+
+our @EXPORT_OK = qw(print_createTicket print_Punkt2 print_Punkt3 print_Punkt4 print_Index print_submit_createTicket print_show_specTicket);
 
 
 
@@ -93,30 +96,35 @@ sub print_createTicket
 	#mit der Session-ID
 	my $cgi = new CGI;
 
+
 	#Stelle das alte zugehoerige Session-Objekt zu dem aktuellen
 	#User her
 	my $session = CGI::Session->new($cgi);
 	
-	#Referenz von dem Array welches die Ticket_IDs und den Betreff beinhält
-	my $ref_Ticketarray;
-	my @Ticketarray;
-	my $Zeile;
-	my @Zeile;
-	my $spalte;
+
+	#Hole die HTML-Tabelle mit den Tickets
+	my $ref_table = UserDB::get_Tickets($session->param('UserIdent'));
+	my $table = $$ref_table;
 	
-	#Hole das Ticketarray
-	$ref_Ticketarray = UserDB::get_Tickets($session->param('UserIdent'));
-	@Ticketarray = @$ref_Ticketarray;
+	print $cgi->h1("Übersicht der erstellten Tickets");
+
 	
-	print $cgi->h1("Hashdaten");
-	#Zeige Debugmaesig mal was an
-#	foreach $Zeile (@Ticketarray) {
-#		foreach $spalte(@Zeile) { print $cgi->h1($spalte) }
-#		print "<br>";
-#	}
-	foreach my $array ( @{$ref_Ticketarray} ) {
-	  print $array->[0], "\t", $array->[1], "<br>";
-	}	
+	print $table->getTable();	
 	
 	
+ }
+ 
+ sub print_show_specTicket
+{#Ein bestimmtes von dem User erstellten Tickets wird Verlaufsmäßig angezeigt
+ 	#Erstelle ein neues CGI-Objekt und hole das vorhandene Cookie
+	#mit der Session-ID
+	my $cgi = new CGI;
+
+
+	#Stelle das alte zugehoerige Session-Objekt zu dem aktuellen
+	#User her
+	my $session = CGI::Session->new($cgi);
+	my $TicketID = $session->param('specificTicket');
+	
+	print $cgi->h1("Das Ticket mit der ID $TicketID wird nachfolgend im \"Verlaufsmodus\" angezeigt!");
  }

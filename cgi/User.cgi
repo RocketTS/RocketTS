@@ -75,7 +75,7 @@ else
 		when( '' )					{UserContent::print_Index();}
 		when('createTicket')		{UserContent::print_createTicket();}
 		when('show_ownTickets')		{UserContent::print_show_ownTickets();}
-		when('Punkt3')				{UserContent::print_Punkt3();}
+		when('show_specTicket')		{UserContent::print_show_specTicket();}
 		when('Punkt4')				{UserContent::print_Punkt4();}
 		when('submit_createTicket')	{UserContent::print_submit_createTicket($session->param('UserIdent'),$session->param('UserMessageTopic'),$session->param('UserMessage'),1,1); }	 	
 	}

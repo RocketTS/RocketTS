@@ -1,0 +1,9 @@
+DELIMITER //
+USE rocket;
+DROP PROCEDURE IF EXISTS sql_get_Messages_from_Ticket;
+CREATE PROCEDURE sql_get_Messages_from_Ticket(p_TicketID INT)
+BEGIN
+	SELECT Message_ID INTO @uid FROM tm WHERE Ticket_ID = p_TicketID;
+END
+//
+DELIMITER ;

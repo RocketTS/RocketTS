@@ -6,7 +6,7 @@ BEGIN
 	SELECT sql_exist_User(p_Email) INTO @exist;
 	IF @exist = 1 THEN	
 		SELECT User_ID FROM user WHERE Email=p_Email INTO @uid;
-		SELECT Ticket_ID, BETREFF FROM ticket WHERE Ersteller=@uid;
+		SELECT Ticket_ID, Erstelldatum, BETREFF FROM ticket WHERE Ersteller=@uid;
 	END IF;	
 END
 //
