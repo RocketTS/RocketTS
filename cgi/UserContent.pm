@@ -127,4 +127,7 @@ sub print_createTicket
 	my $TicketID = $session->param('specificTicket');
 	
 	print $cgi->h1("Das Ticket mit der ID $TicketID wird nachfolgend im \"Verlaufsmodus\" angezeigt!");
+	my $ref_table = UserDB::show_Messages_from_Ticket($TicketID,$session->param('UserIdent'));
+	my $table = $$ref_table;
+	print $table->getTable();	
  }

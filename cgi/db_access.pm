@@ -185,5 +185,8 @@ sub get_Messages_from_Ticket {#Author: Thomas Dorsch Date: 01.04.2013
 	
 	my $db = db_connect();
 	my $sqlcommand = "CALL sql_get_Messages_from_Ticket(\'". $TicketID. "\');";
+	my $ref_array = $db->selectall_arrayref($sqlcommand);
+	$db = db_disconnect($db);
+	return $ref_array;	
 	
 }
