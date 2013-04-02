@@ -11,7 +11,7 @@ use Config::Tiny;			#Modul, um DB-Config aus ini-File auszulesen
 use getinfo 'get_IP';
 use Exporter;
 our @ISA = qw(Exporter);
-our @EXPORT_OK = qw(valid_Login exist_User insert_User get_Hash del_Hash set_Hash db_connect db_disconnect insert_Ticket create_Ticket get_AccessRights get_Tickets get_Messages_from_Ticket);
+our @EXPORT_OK = qw(valid_Login exist_User insert_User get_Hash del_Hash set_Hash db_connect db_disconnect insert_Ticket create_Ticket get_AccessRights get_Tickets get_Messages_from_Ticket get_newTickets);
 
 sub db_connect { 
 	#Läd Zugangsdaten aus der INI-Datei
@@ -119,8 +119,10 @@ sub get_Hash {  #liefert hash
 sub insert_Ticket {
 	#(p_Email varchar(40), p_Betreff varchar(40), p_AID INT, p_PID INT, p_IP varchar(20), p_OS varchar(20))
 	my($Username,$Betreff,$AID,$PID) = @_;
-	my $myIP=$ENV{REMOTE_ADDR};	
-		($myIP=get_IP()) if ($myIP eq "::1");
+	#my $myIP=$ENV{REMOTE_ADDR};	
+	#	($myIP=get_IP()) if ($myIP eq "::1");
+	my $cgi = new CGI;
+	my $myIP=$cgi->remote_host();
 	my $myOS=$^O;
 	
 	my $db = db_connect();
@@ -189,4 +191,14 @@ sub get_Messages_from_Ticket {#Author: Thomas Dorsch Date: 01.04.2013
 	$db = db_disconnect($db);
 	return $ref_array;	
 	
+}
+
+sub get_newTickets {
+	#liefert alle Tickets die ein bestimmter User erstellt hat
+	#my($Username) = @_;
+	my $db = db_connect();
+	my $sqlcommand = "CALL view_newTickets;";
+	my $ref_array = $db->selectall_arrayref($sqlcommand);
+	$db = db_disconnect($db);
+	return $ref_array;	
 }

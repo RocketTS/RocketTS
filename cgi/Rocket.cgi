@@ -71,4 +71,8 @@ given ($session->param('ShowPage_Level1'))
 	when('User')			{#Zum User-Script
 							print $cgi->meta({-http_equiv => 'REFRESH', -content => '0; /cgi-bin/rocket/User.cgi'});
 							}
+	when('Mitarbeiter')		{#Zum Mitarbeiter-Script
+							print $cgi->meta({-http_equiv => 'REFRESH', -content => '0; /cgi-bin/rocket/Mitarbeiter.cgi'});
+							}
+
 }
