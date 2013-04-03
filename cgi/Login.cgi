@@ -64,7 +64,8 @@ given ($session->param('ShowPage_Level2'))
 								{#Session-ID wurde erfolgreich gesetzt
 									DebugUtils::html_testseite("Login war erfolgreich");
 									#Hier werden die Rechte von der Datenbank ausgelesen und eingetragen
-									$session->param('AccessRights', my $AccessRights = db_access::get_AccessRights($session->param('UserIdent')));
+									my $AccessRights = db_access::get_AccessRights($session->param('UserIdent'));
+									$session->param('AccessRights', $AccessRights); 
 									#$session->param('ShowPage_Level1', "User");
 									$session->param('ShowPage_Level1', $AccessRights);	#Matthias
 									$session->param('ShowPage_Level2', "");

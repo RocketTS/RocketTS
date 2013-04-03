@@ -197,7 +197,7 @@ sub get_newTickets {
 	#liefert alle Tickets die ein bestimmter User erstellt hat
 	#my($Username) = @_;
 	my $db = db_connect();
-	my $sqlcommand = "CALL view_newTickets;";
+	my $sqlcommand = "SELECT * from view_newTickets;";
 	my $ref_array = $db->selectall_arrayref($sqlcommand);
 	$db = db_disconnect($db);
 	return $ref_array;	
