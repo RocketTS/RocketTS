@@ -16,10 +16,12 @@ use Exporter;
 use db_access 'create_Ticket';
 use UserDB 'get_Tickets';
 use HTML::Table;
+use feature qw {switch};
 
 
 
-our @EXPORT_OK = qw(print_createTicket print_Punkt2 print_Punkt3 print_Punkt4 print_Index print_submit_createTicket print_show_specTicket);
+our @EXPORT_OK = qw(print_createTicket print_Punkt2 print_Punkt3 print_Punkt4 print_Index print_submit_createTicket print_show_specTicket
+					print_answerTicket);
 
 
 
@@ -90,11 +92,33 @@ sub print_createTicket
  	1;
  }
  
+  sub print_answerTicket
+ {#Subroutine versucht das Ticket in die Datenbank einzutragen
+  	#Erstelle ein neues CGI-Objekt und hole das vorhandene Cookie
+	#mit der Session-ID
+	my $cgi = new CGI;
+ 	my($Username,$TicketID,$Message) = @_;
+ 	my $success = db_access::answer_Ticket($Username,$TicketID,$Message);
+ 	if($success != 0)
+ 	{
+ 		print_User_Testseite("Antwort wurde erfolgreich uebermittelt!");
+ 	}
+ 	else
+ 	{
+ 		print_User_Testseite("Fehler! Antwort konnte nicht uebermittelt werden!");
+ 	}
+ 	#Leite nach 3 Sekunden auf die spezifische Ticketansicht weiter (ueber die Root)
+ 	print $cgi->meta({-http_equiv => 'REFRESH', -content => '3; /cgi-bin/rocket/SaveFormData.cgi?Level2=show_specTicket'});
+
+ }
+ 
  sub print_show_ownTickets
  {#Alle von dem User erstellten Tickets werden anzeigt (Erstmal nur das Ticket ohne nachfolgenden Messages)
+  #Uebergabeparameter 1: Status (Damit ist der Status des Tickets gemeint, bsp Neu, Bearbeitung, Geschlossen, ...
  	#Erstelle ein neues CGI-Objekt und hole das vorhandene Cookie
 	#mit der Session-ID
 	my $cgi = new CGI;
+	my $Status = $_[0];
 
 
 	#Stelle das alte zugehoerige Session-Objekt zu dem aktuellen
@@ -103,31 +127,60 @@ sub print_createTicket
 	
 
 	#Hole die HTML-Tabelle mit den Tickets
-	my $ref_table = UserDB::get_Tickets($session->param('UserIdent'));
+	my $ref_table = UserDB::get_Tickets($session->param('UserIdent'), $Status);
 	my $table = $$ref_table;
 	
-	print $cgi->h1("Übersicht der erstellten Tickets");
+	given ($Status)
+	{
+		when( 'Alle' )			{print $cgi->h1("Übersicht aller erstellten Tickets");}
+		when( 'Neu' )			{print $cgi->h1("Übersicht der unbearbeiteten Tickets");}
+		when( 'Bearbeitung' )	{print $cgi->h1("Übersicht der Tickets in Bearbeitung");}
+		when( 'Geschlossen' )	{print $cgi->h1("Übersicht der geschlossenen Tickets");}
+	}
+	
 
 	
 	print $table->getTable();	
-	
-	
  }
+ 
  
  sub print_show_specTicket
 {#Ein bestimmtes von dem User erstellten Tickets wird Verlaufsmäßig angezeigt
+ #Dabei soll der User eine neue Message anhängen/antworten können
  	#Erstelle ein neues CGI-Objekt und hole das vorhandene Cookie
 	#mit der Session-ID
 	my $cgi = new CGI;
-
 
 	#Stelle das alte zugehoerige Session-Objekt zu dem aktuellen
 	#User her
 	my $session = CGI::Session->new($cgi);
 	my $TicketID = $session->param('specificTicket');
 	
+	
 	print $cgi->h1("Das Ticket mit der ID $TicketID wird nachfolgend im \"Verlaufsmodus\" angezeigt!");
 	my $ref_table = UserDB::show_Messages_from_Ticket($TicketID,$session->param('UserIdent'));
 	my $table = $$ref_table;
 	print $table->getTable();	
+	
+	#Zeige das "Antwortformular"
+	print $cgi->h2("Antwort");
+	 
+	print $cgi->start_form({-method => "POST",
+	 						-action => "/cgi-bin/rocket/SaveFormData.cgi",
+	 						-target => '_self'
+	 						 });
+	 
+ 	print $cgi->hidden(-name=>'Level2',
+	 				   -value=>'submit_answerTicket');
+	 				   
+	 
+	print $cgi->strong("Nachricht\t");	
+	 						
+	print $cgi->textarea(-name=>'input_Message',
+	 						   -value=>'',
+	 						   -cols=>70,
+	 						   -rows=>10);
+	print $cgi->br();
+	print $cgi->submit("Abschicken");
+	print $cgi->end_form();
  }

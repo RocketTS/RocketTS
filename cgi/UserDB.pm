@@ -20,9 +20,10 @@ our @EXPORT_OK = qw(show_Tickets show_Messages_from_Ticket);
 
 sub get_Tickets
 {#1. Uebergabeparameter = UserIdent (Email)
+ #2. Status (z.b. "Neu")
  #Liefert eine HTML-Tabllen-Objekt zurueck
  my $UserIdent = $_[0];
- 
+ my $Status = $_[1];
  my $ref_Ticketarray = db_access::get_Tickets($UserIdent);
  #Hole das Ticketarray
  my @Ticketarray = @$ref_Ticketarray;
@@ -38,15 +39,18 @@ sub get_Tickets
  );
 	
  foreach my $array ( @{$ref_Ticketarray} ) {
-	 #Jetzt wird aus dem Topic ein Link generiert, 
-	 #welcher verwendet wird um den Nachrichtenverlauf anzuzeigen
-	 my $LinkText = $array->[2];
-	 my $TicketID = $array->[0];
+ 	 if( $Status eq 'Alle' || $array->[3] eq $Status)
+ 	 {	#Nur wenn das Ticket offen/bearbeitung/geschlossen ist solls angezeigt werden
+		#Jetzt wird aus dem Topic ein Link generiert, 
+	 	#welcher verwendet wird um den Nachrichtenverlauf anzuzeigen
+	 	my $LinkText = $array->[2];
+	 	my $TicketID = $array->[0];
 	 
-	 my $Link = "<a href=\"/cgi-bin/rocket/SaveFormData.cgi?input_specificTicket=$TicketID&Level2=show_specTicket\">$LinkText</a>";
+	 	my $Link = "<a href=\"/cgi-bin/rocket/SaveFormData.cgi?input_specificTicket=$TicketID&Level2=show_specTicket\">$LinkText</a>";
 	  
-	 #Das Erstelldatum und der veränderte "TopicLink" werden der HTML-Tabelle hinzugefügt
-	 $table->addRow($array->[1], $Link);
+	 	#Das Erstelldatum und der veränderte "TopicLink" werden der HTML-Tabelle hinzugefügt
+	 	$table->addRow($array->[1], $Link);
+ 	 }
  }
 
  $table->addRow('1', '2');

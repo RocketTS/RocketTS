@@ -62,7 +62,16 @@ else
 	print $cgi->start_div({-id=>'user_menu'});
 	
 	print '<a href="SaveformData.cgi?Level2=createTicket" TARGET="_self">Neues Ticket</a><br>';
-	print '<a href="SaveformData.cgi?Level2=show_ownTickets" TARGET="_self">Erstellte Tickets</a><br>';
+	print '<a href="SaveformData.cgi?Level2=show_ownTickets&Level3=all" TARGET="_self">Erstellte Tickets</a><br>';
+	if($session->param('ShowPage_Level2') eq "show_ownTickets")
+	{#Falls die "Eigenen Tickets" angeklickt wurden, zeige die 3 Menueunterpunkte
+	 #1. Offen
+	 #2. In Bearbeitung
+	 #3. Geschlossen
+	 print '<a href="SaveformData.cgi?Level3=show_open" TARGET="_self">  ->Offen</a><br>';
+	 print '<a href="SaveformData.cgi?Level3=show_in_use" TARGET="_self">  ->In Bearbeitung</a><br>';
+	 print '<a href="SaveformData.cgi?Level3=show_closed" TARGET="_self">  ->Geschlossen</a><br>';
+	}
 	print '<a href="SaveformData.cgi?Level2=Punkt3" TARGET="_self">Punkt3</a><br>';
 	print '<a href="SaveformData.cgi?Level2=Punkt4" TARGET="_self">Punkt4</a><br>';
     
@@ -74,10 +83,20 @@ else
 	{
 		when( '' )					{UserContent::print_Index();}
 		when('createTicket')		{UserContent::print_createTicket();}
-		when('show_ownTickets')		{UserContent::print_show_ownTickets();}
+		when('show_ownTickets')		{given ($session->param('ShowPage_Level3'))
+										{
+											when( 'all' )			{UserContent::print_show_ownTickets("Alle");}
+											when( 'show_open' )		{UserContent::print_show_ownTickets("Neu");}
+											when( 'show_in_use' )	{UserContent::print_show_ownTickets("Bearbeitung");}
+											when( 'show_closed' )	{UserContent::print_show_ownTickets("Geschlossen");}
+										}
+									
+									 
+									 }
 		when('show_specTicket')		{UserContent::print_show_specTicket();}
 		when('Punkt4')				{UserContent::print_Punkt4();}
-		when('submit_createTicket')	{UserContent::print_submit_createTicket($session->param('UserIdent'),$session->param('UserMessageTopic'),$session->param('UserMessage'),1,1); }	 	
+		when('submit_createTicket')	{UserContent::print_submit_createTicket($session->param('UserIdent'),$session->param('UserMessageTopic'),$session->param('UserMessage'),1,1); }	 
+		when('submit_answerTicket') {UserContent::print_answerTicket($session->param('UserIdent'),$session->param('specificTicket'),$session->param('UserMessage'));}	
 	}
 
 	     print $cgi->end_div({-id=>'user_content'});

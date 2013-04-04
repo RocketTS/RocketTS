@@ -11,7 +11,7 @@ use Config::Tiny;			#Modul, um DB-Config aus ini-File auszulesen
 use getinfo 'get_IP';
 use Exporter;
 our @ISA = qw(Exporter);
-our @EXPORT_OK = qw(valid_Login exist_User insert_User get_Hash del_Hash set_Hash db_connect db_disconnect insert_Ticket create_Ticket get_AccessRights get_Tickets get_Messages_from_Ticket get_newTickets);
+our @EXPORT_OK = qw(valid_Login exist_User insert_User get_Hash del_Hash set_Hash db_connect db_disconnect insert_Ticket create_Ticket answer_Ticket get_AccessRights get_Tickets get_Messages_from_Ticket get_newTickets);
 
 sub db_connect { 
 	#Läd Zugangsdaten aus der INI-Datei
@@ -144,6 +144,21 @@ sub create_Ticket {
 	my $myOS=$^O;
 	my $db = db_connect();
 	my $sql = "CALL sql_create_Ticket(\'".$Username."\',\'".$Betreff."\',\'".$Message."\',\'".$AID."\',\'".$PID."\',\'".$myIP."\',\'".$myOS."\');";
+	my $command = $db->prepare($sql);
+	$command->execute();
+	$command = $db->prepare("SELECT \@ret;");
+	$command->execute();
+	my $result = $command->fetchrow_array(); #abrufen des boolschen Wertes der SQL-Abfrage
+	$command->finish();
+	$db = db_disconnect($db);
+	return $result;	
+}
+
+sub answer_Ticket {#Author: Thomas Dorsch, Date 03.04.2013
+	#(p_Email varchar(40), p_TicketID INT, p_Message text, p_IP varchar(20), p_OS varchar(20))
+	my($Username,$TicketID,$Message) = @_;
+	my $db = db_connect();
+	my $sql = "CALL sql_answer_Ticket(\'".$Username."\',\'".$TicketID."\',\'".$Message."\');";
 	my $command = $db->prepare($sql);
 	$command->execute();
 	$command = $db->prepare("SELECT \@ret;");
