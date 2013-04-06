@@ -76,11 +76,12 @@ sub show_Messages_from_Ticket{
 	 my $table = HTML::Table->new( 
     	-cols    => 3, 
     	-border  => 0,
-    	-padding => 1,
-    	-width	 => 970,
-    	-align   => 'center',
+    #	-padding => 1,
+   # 	-width	 => 970,
+    	-align   => 'left',
     	-head => ['Erstelldatum', 'Benutzer', 'Nachricht'],
 	 );
+
 	 
 	 foreach my $array ( @{$ref_Messagearray} ) {
 
@@ -94,6 +95,6 @@ sub show_Messages_from_Ticket{
  $table->setColWidth(1, 150);	#Legt die Breite der ersten Spalte fest (100 Pixel)
  $table->setColWidth(2, 200);	#Breite 2. Spalte
  $table->setColWidth(3, 550);	#Breite 3. Spalte
- $table->setAttr('style="table-layout:fixed"'); #Damit wird der ColWidth Vorrang vor der Länge des Inhalts der Zelle gegeben
+
  return \$table;	
 }

@@ -139,8 +139,11 @@ sub print_createTicket
 	}
 	
 
+#	 $table->setAttr('style="table-layout:fixed"'); #Damit wird der ColWidth Vorrang vor der Länge des Inhalts der Zelle gegeben
+ 	 $table->setClass("table_tickets");				#Verwende das Definierte Layout das in der CSS-Datei definiert ist
 	
 	print $table->getTable();	
+	
  }
  
  
@@ -183,4 +186,27 @@ sub print_createTicket
 	print $cgi->br();
 	print $cgi->submit("Abschicken");
 	print $cgi->end_form();
+ }
+ 
+ sub print_show_Einstellungen
+ {
+ 	#Erstelle ein neues CGI-Objekt und hole das vorhandene Cookie
+	#mit der Session-ID
+	my $cgi = new CGI;
+	my $Status = $_[0];
+		
+	#Stelle das alte zugehoerige Session-Objekt zu dem aktuellen
+	#User her
+	my $session = CGI::Session->new($cgi);
+	
+	#Zeige den Menupunkt an, der ausgewaehlt wurde
+	
+		given ($Status)
+	{
+		when( 'Alle' )					{print $cgi->h1("Übersicht der Einstellungen");}
+		when( 'Password' )			{print $cgi->h1("Ändern des Passwortes");}
+		when( 'Email' )				{print $cgi->h1("Ändern der Email-Adresse");}
+		when( 'delete_Account' )	{print $cgi->h1("Account löschen");}
+	}
+	
  }

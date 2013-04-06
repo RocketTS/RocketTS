@@ -61,23 +61,79 @@ else
 	print $cgi->end_div({-id=>'user_header'});
 	print $cgi->start_div({-id=>'user_menu'});
 	
-	print '<a href="SaveformData.cgi?Level2=createTicket" TARGET="_self">Neues Ticket</a><br>';
-	print '<a href="SaveformData.cgi?Level2=show_ownTickets&Level3=all" TARGET="_self">Erstellte Tickets</a><br>';
-	if($session->param('ShowPage_Level2') eq "show_ownTickets")
-	{#Falls die "Eigenen Tickets" angeklickt wurden, zeige die 3 Menueunterpunkte
-	 #1. Offen
-	 #2. In Bearbeitung
-	 #3. Geschlossen
-	 print '<a href="SaveformData.cgi?Level3=show_open" TARGET="_self">  ->Offen</a><br>';
-	 print '<a href="SaveformData.cgi?Level3=show_in_use" TARGET="_self">  ->In Bearbeitung</a><br>';
-	 print '<a href="SaveformData.cgi?Level3=show_closed" TARGET="_self">  ->Geschlossen</a><br>';
-	}
-	print '<a href="SaveformData.cgi?Level2=Punkt3" TARGET="_self">Punkt3</a><br>';
-	print '<a href="SaveformData.cgi?Level2=Punkt4" TARGET="_self">Punkt4</a><br>';
-    
+#	print '<a href="SaveformData.cgi?Level2=createTicket" TARGET="_self">Neues Ticket</a><br>';
+#	print '<a href="SaveformData.cgi?Level2=show_ownTickets&Level3=all" TARGET="_self">Erstellte Tickets</a><br>';
+#	if($session->param('ShowPage_Level2') eq "show_ownTickets")
+#	{#Falls die "Eigenen Tickets" angeklickt wurden, zeige die 3 Menueunterpunkte
+#	 #1. Offen
+#	 #2. In Bearbeitung
+#	 #3. Geschlossen
+#	 print '<a href="SaveformData.cgi?Level3=show_open" TARGET="_self">  ->Offen</a><br>';
+#	 print '<a href="SaveformData.cgi?Level3=show_in_use" TARGET="_self">  ->In Bearbeitung</a><br>';
+#	 print '<a href="SaveformData.cgi?Level3=show_closed" TARGET="_self">  ->Geschlossen</a><br>';
+#	}
+#	print '<a href="SaveformData.cgi?Level2=show_Einstellungen&Level3=all" TARGET="_self">Einstellungen</a><br>';
+#	if($session->param('ShowPage_Level2') eq "show_Einstellungen")
+#	{#Falls die "Einstellungen" angeklickt wurden, zeige die 3 Menueunterpunkte
+#	 #1. Password
+#	 #2. Email
+#	 #3. Account löschen
+#	 print '<a href="SaveformData.cgi?Level3=show_Password" TARGET="_self">  ->Passwort</a><br>';
+#	 print '<a href="SaveformData.cgi?Level3=show_Email" TARGET="_self">  ->Email</a><br>';
+#	 print '<a href="SaveformData.cgi?Level3=show_delete_Account" TARGET="_self">  ->Account löschen</a><br>';
+#	}
+#	print '<a href="SaveformData.cgi?Level1=Logout" TARGET="_self">Logout</a><br>';
+#    
+#	print $cgi->end_div({-id=>'user_menu'});
+
+
+#Hier kommt eine alternative Menüansicht
+
+print '<nav>
+		    <div class="menu-item">
+		      <h4>Tickets</h4>
+		      <ul>
+		      <li><a href="SaveformData.cgi?Level2=createTicket" TARGET="_self">Neues Ticket</a></li>
+		      <li><a href="SaveformData.cgi?Level2=show_ownTickets&Level3=all" TARGET="_self">Erstellte Tickets</a></li>
+		      <li><a href="SaveformData.cgi?Level2=show_ownTickets&Level3=show_open" TARGET="_self">Offene Tickets</a></li>
+		      <li><a href="SaveformData.cgi?Level2=show_ownTickets&Level3=show_in_use" TARGET="_self">In Bearbeitung</a></li>
+		      <li><a href="SaveformData.cgi?Level2=show_ownTickets&Level3=show_closed" TARGET="_self">Geschlossen</a></li>
+		      </ul>
+		    </div>
+		      
+		    <div class="menu-item">
+		      <h4><a href="#">Einstellungen</a></h4>
+		      <ul>
+		        <li><a href="SaveformData.cgi?Level2=show_Einstellungen&Level3=show_Password" TARGET="_self">Passwort</a></li>
+		        <li><a href="SaveformData.cgi?Level2=show_Einstellungen&Level3=show_Email" TARGET="_self">Email</a></li>
+		        <li><a href="SaveformData.cgi?Level2=show_Einstellungen&Level3=show_delete_Account" TARGET="_self">Account löschen</a></li>
+		      </ul>
+		    </div>
+		      
+		    <div class="menu-item">
+		      <h4><a href="#">About</a></h4>
+		      <ul>
+		        <li><a href="#">History</a></li>
+		        <li><a href="#">Meet The Owners</a></li>
+		        <li><a href="#">Awards</a></li>
+		      </ul>
+		    </div>
+		      
+		    <div class="menu-item">
+		      <h4><a href="#">Contact</a></h4>
+		      <ul>
+		        <li><a href="#">Phone</a></li>
+		        <li><a href="#">Email</a></li>
+		        <li><a href="#">Location</a></li>
+		      </ul>
+		    </div>
+		</nav>';
 	print $cgi->end_div({-id=>'user_menu'});
-	print $cgi->start_div({-id=>'user_content'});
+
+
 	#Hier muss der "richtige" Content ausgewaehlt und angezeigt werden (Level2)
+	print $cgi->start_div({-id=>'user_content'});
+
 
 	given ($session->param('ShowPage_Level2'))
 	{
@@ -94,13 +150,22 @@ else
 									 
 									 }
 		when('show_specTicket')		{UserContent::print_show_specTicket();}
-		when('Punkt4')				{UserContent::print_Punkt4();}
+		when('show_Einstellungen')	{given ($session->param('ShowPage_Level3'))
+										{
+											when( 'all' )					{UserContent::print_show_Einstellungen("Alle");}
+											when( 'show_Password' )			{UserContent::print_show_Einstellungen("Password");}
+											when( 'show_Email' )			{UserContent::print_show_Einstellungen("Email");}
+											when( 'show_delete_Account' )	{UserContent::print_show_Einstellungen("delete_Account");}
+										}
+									
+									 
+									 }
 		when('submit_createTicket')	{UserContent::print_submit_createTicket($session->param('UserIdent'),$session->param('UserMessageTopic'),$session->param('UserMessage'),1,1); }	 
 		when('submit_answerTicket') {UserContent::print_answerTicket($session->param('UserIdent'),$session->param('specificTicket'),$session->param('UserMessage'));}	
 	}
-
-	     print $cgi->end_div({-id=>'user_content'});
-	     print $cgi->end_div({-id=>'user_wrapper'});
+	
+	print $cgi->end_div({-id=>'user_content'});
+	print $cgi->end_div({-id=>'user_wrapper'});
      
 	print $cgi->end_html();
 }
