@@ -139,7 +139,7 @@ sub print_createTicket
 	}
 	
 
-#	 $table->setAttr('style="table-layout:fixed"'); #Damit wird der ColWidth Vorrang vor der Länge des Inhalts der Zelle gegeben
+	 $table->setAttr('style="table-layout:fixed"'); #Damit wird der ColWidth Vorrang vor der Länge des Inhalts der Zelle gegeben
  	 $table->setClass("table_tickets");				#Verwende das Definierte Layout das in der CSS-Datei definiert ist
 	
 	print $table->getTable();	
@@ -163,6 +163,10 @@ sub print_createTicket
 	print $cgi->h1("Das Ticket mit der ID $TicketID wird nachfolgend im \"Verlaufsmodus\" angezeigt!");
 	my $ref_table = UserDB::show_Messages_from_Ticket($TicketID,$session->param('UserIdent'));
 	my $table = $$ref_table;
+	
+	$table->setAttr('style="table-layout:fixed"'); #Damit wird der ColWidth Vorrang vor der Länge des Inhalts der Zelle gegeben
+ 	$table->setClass("table_tickets");				#Verwende das Definierte Layout das in der CSS-Datei definiert ist
+	
 	print $table->getTable();	
 	
 	#Zeige das "Antwortformular"
@@ -203,7 +207,7 @@ sub print_createTicket
 	
 		given ($Status)
 	{
-		when( 'Alle' )					{print $cgi->h1("Übersicht der Einstellungen");}
+		when( 'Alle' )				{print $cgi->h1("Übersicht der Einstellungen");}
 		when( 'Password' )			{print $cgi->h1("Ändern des Passwortes");}
 		when( 'Email' )				{print $cgi->h1("Ändern der Email-Adresse");}
 		when( 'delete_Account' )	{print $cgi->h1("Account löschen");}
