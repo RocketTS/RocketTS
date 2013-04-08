@@ -11,7 +11,7 @@ use Config::Tiny;			#Modul, um DB-Config aus ini-File auszulesen
 use getinfo 'get_IP';
 use Exporter;
 our @ISA = qw(Exporter);
-our @EXPORT_OK = qw(valid_Login exist_User insert_User get_Hash del_Hash set_Hash db_connect db_disconnect insert_Ticket create_Ticket answer_Ticket get_AccessRights get_Tickets get_Messages_from_Ticket get_newTickets);
+our @EXPORT_OK = qw(valid_Login exist_User insert_User get_Hash del_Hash set_Hash db_connect db_disconnect insert_Ticket create_Ticket answer_Ticket get_AccessRights get_Tickets get_Messages_from_Ticket get_newTickets get_TicketsbyStatus get_countTicketbyStatus);
 
 sub db_connect { 
 	#Läd Zugangsdaten aus der INI-Datei
@@ -216,4 +216,26 @@ sub get_newTickets {
 	my $ref_array = $db->selectall_arrayref($sqlcommand);
 	$db = db_disconnect($db);
 	return $ref_array;	
+}
+
+sub get_TicketsbyStatus {
+	#Aufruf: get_TicketsbyStatus(EMail,Status);
+	#liefert Tickets zu Usernamen mit gewünschtem Status
+	my($Username,$Status) = @_;
+	my $db = db_connect();
+	my $sqlcommand = "CALL sql_get_TicketsbyStatus(\'". $Username. "\',\'". $Status. "\');";
+	my $ref_array = $db->selectall_arrayref($sqlcommand);
+	$db = db_disconnect($db);
+	return $ref_array;	
+}
+
+sub get_countTicketbyStatus {
+	my($Status) = @_;
+	my $db = db_connect();
+	my $command = $db->prepare("SELECT COUNT(*) FROM ticket WHERE Status=\'". $Status . "\';");
+	$command->execute();	
+	my $result = $command->fetchrow_array();
+	$command->finish();
+	$db = db_disconnect($db);
+	return $result;	
 }

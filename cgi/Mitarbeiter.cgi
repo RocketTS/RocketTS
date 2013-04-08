@@ -61,13 +61,32 @@ else
 	print $cgi->end_div({-id=>'ma_header'});
 	print $cgi->start_div({-id=>'ma_menu'});
 	
-	print '<b>Tickets</b><br>';
-	print '<a href="SaveformData.cgi?Level2=show_newTickets" TARGET="_self">Neue Tickets</a><br>';
-	print '<a href="SaveformData.cgi?Level2=show_inprocessTickets" TARGET="_self">In Bearbeitung</a><br>';
-	print '<a href="SaveformData.cgi?Level2=show_History" TARGET="_self">History</a><br>';
-	print '<a href="SaveformData.cgi?Level2=show_Statistik" TARGET="_self">Statistik</a><br>';
-	print '<br><br><b>Benutzerverwaltung</b><br>';
-	print '<a href="SaveformData.cgi?Level2=show_User" TARGET="_self">Übersicht Benutzer</a><br>';
+#	print '<b>Tickets</b><br>';
+#	print '<a href="SaveformData.cgi?Level2=show_newTickets" TARGET="_self">Neue Tickets</a><br>';
+#	print '<a href="SaveformData.cgi?Level2=show_inprocessTickets" TARGET="_self">In Bearbeitung</a><br>';
+#	print '<a href="SaveformData.cgi?Level2=show_History" TARGET="_self">History</a><br>';
+#	print '<a href="SaveformData.cgi?Level2=show_Statistik" TARGET="_self">Statistik</a><br>';
+#	print '<br><br><b>Benutzerverwaltung</b><br>';
+#	print '<a href="SaveformData.cgi?Level2=show_User" TARGET="_self">Übersicht Benutzer</a><br>';
+	
+	print '<nav>
+		    <div class="menu-item">
+		      <h4>Tickets</h4>
+		      <ul>
+		      <li><a href="SaveformData.cgi?Level2=show_newTickets" TARGET="_self">Neue Tickets</a></li>
+		      <li><a href="SaveformData.cgi?Level2=show_inprocessTickets" TARGET="_self">in Bearbeitung</a></li>
+		      <li><a href="SaveformData.cgi?Level2=show_History" TARGET="_self">History</a></li>
+		      <li><a href="SaveformData.cgi?Level2=show_Statistik" TARGET="_self">Statistik</a></li>
+		      </ul>
+		    </div>
+		      
+		    <div class="menu-item">
+		      <h4><a href="#">Benutzerverwaltung</a></h4>
+		      <ul>
+		        <li><a href="SaveformData.cgi?Level2=show_User" TARGET="_self">Benutzerübersicht</a></li>
+		      </ul>
+		    </div>
+		</nav>';
     
 	print $cgi->end_div({-id=>'ma_menu'});
 	print $cgi->start_div({-id=>'ma_content'});
@@ -81,6 +100,7 @@ else
 		when('show_History')			{MitarbeiterContent::print_show_History();}
 		when('show_Statistik')			{MitarbeiterContent::print_Statistik();}
 		when('show_User')				{MitarbeiterContent::print_show_User();}
+		when('show_specTicket')			{MitarbeiterContent::print_show_specTicket();}
 	#	when('submit_createTicket')		{UserContent::print_submit_createTicket($session->param('UserIdent'),$session->param('UserMessageTopic'),$session->param('UserMessage'),1,1); }	 	
 	}
 
