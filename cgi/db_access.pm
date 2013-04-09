@@ -250,3 +250,17 @@ sub get_MA_Level { #liefert den INT-Wert aus der Spalte Level des entsprechenden
 	$db = db_disconnect($db);
 	return $result;	
 }
+
+sub assume_Ticket {
+	my($Username,$Ticket_ID) = @_;
+	my $db = db_connect();
+	my $sql = "CALL sql_assume_Ticket(\'".$Username."\',\'".$Ticket_ID."\');";
+	my $command = $db->prepare($sql);
+	$command->execute();
+	$command = $db->prepare("SELECT \@ret;");
+	$command->execute();
+	my $result = $command->fetchrow_array(); #abrufen des boolschen Wertes der SQL-Abfrage
+	$command->finish();
+	$db = db_disconnect($db);
+	return $result;	
+}

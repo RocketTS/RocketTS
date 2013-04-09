@@ -39,7 +39,7 @@ sub get_allnewTickets {
  foreach my $array ( @$ref_Ticketarray ) {
 	 #Jetzt wird aus dem Topic ein Link generiert, welcher verwendet wird um den Nachrichtenverlauf anzuzeigen
 	 my($ticket_ID,$Ersteller,$Erstelldatum,$Betreff,$Auswahlkriterien,$Prio,$IP,$OS) = @$array;
-	 my $aktion = "<a href=\"/cgi-bin/rocket/SaveFormData.cgi?input_specificTicket=$ticket_ID&Level2=show_specTicket\">anzeigen</a>";
+	 my $aktion = "<a href=\"/cgi-bin/rocket/SaveFormData.cgi?input_specificTicket=$ticket_ID&Level2=show_specTicket\" target=\"_self\">anzeigen</a>";
 	  
 	 $table->addRow($ticket_ID,$Ersteller,$Erstelldatum,$Betreff,$Auswahlkriterien,$Prio,$IP,$OS,$aktion);
  }
@@ -72,7 +72,7 @@ sub get_allinprocessTickets {
  foreach my $array ( @$ref_Ticketarray ) {
 	 #Jetzt wird aus dem Topic ein Link generiert, welcher verwendet wird um den Nachrichtenverlauf anzuzeigen
 	 my($ticket_ID,$Erstelldatum,$Betreff,$Auswahlkriterien,$Prio,$Status,$Bearbeiter) = @$array;
-	 my $aktion = "<a href=\"/cgi-bin/rocket/SaveFormData.cgi?input_specificTicket=$ticket_ID&Level2=show_specTicket\">anzeigen</a>";
+	 my $aktion = "<a href=\"/cgi-bin/rocket/SaveFormData.cgi?input_specificTicket=$ticket_ID&Level2=show_specTicket\" target=\"_self\">anzeigen</a>";
 	  
 	 $table->addRow($ticket_ID,$Erstelldatum,$Betreff,$Auswahlkriterien,$Prio,$Status,$Bearbeiter,$aktion);
  }
@@ -101,7 +101,7 @@ sub get_allclosedTickets {
  foreach my $array ( @$ref_Ticketarray ) {
 	 #Jetzt wird aus dem Topic ein Link generiert, welcher verwendet wird um den Nachrichtenverlauf anzuzeigen
 	 my($ticket_ID,$Erstelldatum,$Betreff,$Auswahlkriterien,$Prio,$Status,$Bearbeiter) = @$array;
-	 my $aktion = "<a href=\"/cgi-bin/rocket/SaveFormData.cgi?input_specificTicket=$ticket_ID&Level2=show_specTicket\">anzeigen</a>";
+	 my $aktion = "<a href=\"/cgi-bin/rocket/SaveFormData.cgi?input_specificTicket=$ticket_ID&Level2=show_specTicket\" target=\"_self\">anzeigen</a>";
 	  
 	 $table->addRow($ticket_ID,$Erstelldatum,$Betreff,$Auswahlkriterien,$Prio,$Status,$Bearbeiter,$aktion);
  }

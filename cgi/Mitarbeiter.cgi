@@ -81,7 +81,7 @@ else
 		    </div>
 		      
 		    <div class="menu-item">
-		      <h4><a href="#">Benutzerverwaltung</a></h4>
+		      <h4><a href="#">Verwaltung</a></h4>
 		      <ul>
 		        <li><a href="SaveformData.cgi?Level2=show_User" TARGET="_self">Benutzerübersicht</a></li>
 		      </ul>
@@ -101,7 +101,11 @@ else
 		when('show_Statistik')			{MitarbeiterContent::print_Statistik();}
 		when('show_User')				{MitarbeiterContent::print_show_User();}
 		when('show_specTicket')			{MitarbeiterContent::print_show_specTicket();}
+		when('submit_assumeTicket')		{MitarbeiterContent::print_submit_assumeTicket($session->param('UserIdent'),$session->param('specificTicket'));}
+		when('submit_forwardTicket')	{MitarbeiterContent::print_submit_forwardTicket($session->param('UserIdent'),$session->param('specificTicket'));}
+		when('submit_closeTicket')		{MitarbeiterContent::print_submit_closeTicket($session->param('UserIdent'),$session->param('specificTicket'));}
 	#	when('submit_createTicket')		{UserContent::print_submit_createTicket($session->param('UserIdent'),$session->param('UserMessageTopic'),$session->param('UserMessage'),1,1); }	 	
+		when('submit_answerTicket') 	{MitarbeiterContent::print_answerTicket($session->param('UserIdent'),$session->param('specificTicket'),$session->param('UserMessage'));}	
 	}
 
 	     print $cgi->end_div({-id=>'ma_content'});

@@ -17,7 +17,8 @@ use HTML::Table;
 use myGraph 'print_Statistik_TicketStatus';
 
 
-our @EXPORT_OK = qw(print_show_newTickets print_show_inprocessTickets print_show_History print_show_Statistik print_show_User print_show_inprocessTickets print_show_History print_Statistik);
+our @EXPORT_OK = qw(print_show_newTickets print_show_inprocessTickets print_show_History print_show_Statistik print_show_User 
+					print_show_inprocessTickets print_show_History print_Statistik print_answerTicket);
 
 
 
@@ -119,8 +120,41 @@ sub print_Index
 	my $table = $$ref_table;
 	$table->setClass("table_tickets");
 	print $table->getTable();	
+	print $cgi->br;
 	
-	#Zeige das "Antwortformular"
+	#Anzeigen des Übernehmen-Buttons
+	print $cgi->start_form({-method => "POST",
+	 						-action => "/cgi-bin/rocket/SaveFormData.cgi",
+	 						-target => '_self'
+	 						 });
+	print $cgi->hidden(-name=>'Level2',
+	 				   -value=>'submit_assumeTicket'); 				   
+	print $cgi->submit("Übernehmen");
+	print "onclick=\"this.form['sub'].disabled=true";
+	print $cgi->end_form();
+	print "<input type=\"submit\" name=\"test\" value=\"Submit\" disabled>";
+	#Anzeigen des Weiterleiten-Buttons
+	print $cgi->start_form({-method => "POST",
+	 						-action => "/cgi-bin/rocket/SaveFormData.cgi",
+	 						-target => '_self'
+	 						 });
+	print $cgi->hidden(-name=>'Level2',
+	 				   -value=>'submit_forwardTicket');
+	print $cgi->submit("Weiterleiten");
+	print $cgi->end_form();
+	
+	#Anzeigen des Schließen-Buttons
+	print $cgi->start_form({-method => "POST",
+	 						-action => "/cgi-bin/rocket/SaveFormData.cgi",
+	 						-target => '_self'
+	 						 });
+	print $cgi->hidden(-name=>'Level2',
+	 				   -value=>'submit_closeTicket');
+	print $cgi->submit("Schliessen");
+	print $cgi->end_form();
+	
+	
+	#Zeige das "Antwortformular"	
 	print $cgi->h2("Antwort");
 	 
 	print $cgi->start_form({-method => "POST",
@@ -141,6 +175,42 @@ sub print_Index
 	print $cgi->br();
 	print $cgi->submit("Abschicken");
 	print $cgi->end_form();
+ }
+ 
+sub print_answerTicket {  #Subroutine versucht das Ticket in die Datenbank einzutragen
+  	#Erstelle ein neues CGI-Objekt und hole das vorhandene Cookie mit der Session-ID
+	my $cgi = new CGI;
+ 	my($Username,$TicketID,$Message) = @_;
+ 	my $success = db_access::answer_Ticket($Username,$TicketID,$Message);
+ 	if($success != 0)
+ 	{
+ 		print_User_Testseite("Antwort wurde erfolgreich uebermittelt!");
+ 	}
+ 	else
+ 	{
+ 		print_User_Testseite("Fehler! Antwort konnte nicht uebermittelt werden!");
+ 	}
+ 	#Leite nach 3 Sekunden auf die spezifische Ticketansicht weiter (ueber die Root)
+ 	print $cgi->meta({-http_equiv => 'REFRESH', -content => '3; /cgi-bin/rocket/SaveFormData.cgi?Level2=show_specTicket'});
+
+ } 
+ 
+ sub print_submit_assumeTicket {  #Mitarbeiter übernimmt angegebenes Ticket
+	my $cgi = new CGI;
+ 	my($Username,$Ticket_ID) = @_;
+ 	my $success1 = db_access::assume_Ticket($Username,$Ticket_ID);
+ 	my $success2 = db_access::answer_Ticket($Username,$Ticket_ID,"Ticket wurde zur Bearbeitung übernommen!");
+ 	if($success1 != 0 && $success2 != 0)
+ 	{
+ 		print_User_Testseite("Ticket wurde erfolgreich uebernommen!");
+ 	}
+ 	else
+ 	{
+ 		print_User_Testseite("Fehler! Ticket konnte nicht uebernommen werden!");
+ 	}
+ 	#Leite nach 3 Sekunden auf die spezifische Ticketansicht weiter (ueber die Root)
+ 	print $cgi->meta({-http_equiv => 'REFRESH', -content => '3; /cgi-bin/rocket/SaveFormData.cgi?Level2=show_specTicket'});
+
  }
  
 sub print_Statistik{
