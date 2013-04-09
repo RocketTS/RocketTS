@@ -151,6 +151,6 @@ sub print_Statistik{
  	#print myGraph::print_Statistik_TicketStatus();
  	
  	my $mygraph = myGraph::print_Statistik_TicketStatus();
- 	print qq!<img src="http://localhost/rocket/$mygraph" alt="Statistik_TicketStatus"></img>!;
+ 	print qq!<img src="/rocket/$mygraph" alt="Statistik_TicketStatus"></img>!;
  	
  }

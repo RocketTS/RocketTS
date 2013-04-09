@@ -11,7 +11,7 @@ use Config::Tiny;			#Modul, um DB-Config aus ini-File auszulesen
 use getinfo 'get_IP';
 use Exporter;
 our @ISA = qw(Exporter);
-our @EXPORT_OK = qw(valid_Login exist_User insert_User get_Hash del_Hash set_Hash db_connect db_disconnect insert_Ticket create_Ticket answer_Ticket get_AccessRights get_Tickets get_Messages_from_Ticket get_newTickets get_TicketsbyStatus get_countTicketbyStatus);
+our @EXPORT_OK = qw(valid_Login exist_User insert_User get_Hash del_Hash set_Hash db_connect db_disconnect insert_Ticket create_Ticket answer_Ticket get_AccessRights get_Tickets get_Messages_from_Ticket get_newTickets get_TicketsbyStatus get_countTicketbyStatus get_MA_Level);
 
 sub db_connect { 
 	#Läd Zugangsdaten aus der INI-Datei
@@ -123,7 +123,7 @@ sub insert_Ticket {
 	#	($myIP=get_IP()) if ($myIP eq "::1");
 	my $cgi = new CGI;
 	my $myIP=$cgi->remote_host();
-	my $myOS=$^O;
+	my $myOS = $^O;
 	
 	my $db = db_connect();
 	my $sql = "CALL sql_insert_Ticket(\'".$Username."\',\'".$Betreff."\',\'".$AID."\',\'".$PID."\',\'".$myIP."\',\'".$myOS."\');";
@@ -233,6 +233,17 @@ sub get_countTicketbyStatus {
 	my($Status) = @_;
 	my $db = db_connect();
 	my $command = $db->prepare("SELECT COUNT(*) FROM ticket WHERE Status=\'". $Status . "\';");
+	$command->execute();	
+	my $result = $command->fetchrow_array();
+	$command->finish();
+	$db = db_disconnect($db);
+	return $result;	
+}
+
+sub get_MA_Level { #liefert den INT-Wert aus der Spalte Level des entsprechenden Mitarbeiters zurück
+	my($Username) = @_;
+	my $db = db_connect();
+	my $command = $db->prepare("SELECT Level FROM mitarbeiter M, user U WHERE M.User_ID=U.User_ID AND U.Email =\'". $Username . "\';");
 	$command->execute();	
 	my $result = $command->fetchrow_array();
 	$command->finish();

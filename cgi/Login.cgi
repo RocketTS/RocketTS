@@ -17,7 +17,7 @@ use CGI::Carp qw(fatalsToBrowser);
 use DebugUtils 'html_testseite';
 use LoginContent 'printIndex';
 use LoginDB 'login_User';
-use db_access 'set_Hash', 'get_AccessRights';
+use db_access 'set_Hash', 'get_AccessRights','get_MA_Level';
 
 #########################################
 #Instanzvariablen						#
@@ -66,8 +66,12 @@ given ($session->param('ShowPage_Level2'))
 									#Hier werden die Rechte von der Datenbank ausgelesen und eingetragen
 									my $AccessRights = db_access::get_AccessRights($session->param('UserIdent'));
 									$session->param('AccessRights', $AccessRights); 
-									#$session->param('ShowPage_Level1', "User");
-									$session->param('ShowPage_Level1', $AccessRights);	#Matthias
+									#Mitarbeiter-Level wird in Session gespeichert
+									if($AccessRights ne "User") {
+										my $qualification = db_access::get_MA_Level($session->param('UserIdent'));
+										$session->param('Qualification', $qualification);
+									}
+									$session->param('ShowPage_Level1', $AccessRights);	#Entscheidungsbaum wird anhand der Zugriffsrechte aufgerufen
 									$session->param('ShowPage_Level2', "");
 									$session->flush();							
 								}
