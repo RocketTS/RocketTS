@@ -264,3 +264,36 @@ sub assume_Ticket {
 	$db = db_disconnect($db);
 	return $result;	
 }
+
+sub get_DropDownValues { #AUTHOR Thomas Dorsch DATE 09.04.13
+	#Modul liefert eine gehashte Liste mit DropDown-Values zurück welche dann von einem anderen
+	#Modul genutzt werden kann um diese auf der Website auszugeben
+	#Übergabeparameter: Tabellenname, in dem sich die Werte befinden
+	#Tabelle muss folgenderweise aufgebaut sein damit es funktioniert
+	#TABLE_INDEX VALUE
+	my $tablename = $_[0];
+	
+	my $db = db_connect();
+	my $sqlcommand = "SELECT * FROM $tablename;";
+	my $ref_array = $db->selectall_arrayref($sqlcommand);
+	$db = db_disconnect($db);
+	return $ref_array;
+}
+
+sub change_Password { #AUTHOR Thomas Dorsch DATE 09.04.13
+	#Modul ändert das den Hash des Passwortes zu dem mitglieferten UserIdent
+	#Es gibt nen boolschen Rückgabewert, ob das Ganze erfolgreich war
+	#Übergabeparameter: 1. UserIdent
+	#					2. gehashte Passwort
+	my ($UserIdent,$hashed_Password) = @_;
+	my $db = db_connect();
+	my $sql = "CALL sql_change_Password(\'".$UserIdent."\',\'".$hashed_Password."\');";
+	my $command = $db->prepare($sql);
+	$command->execute();
+	$command = $db->prepare("SELECT \@ret;");
+	$command->execute();	
+	my $result = $command->fetchrow_array(); #abrufen des boolschen Wertes der SQL-Abfrage
+	$command->finish();
+	$db = db_disconnect($db);
+	return $result;	
+}

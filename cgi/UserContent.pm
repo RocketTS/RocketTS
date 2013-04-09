@@ -45,16 +45,26 @@ sub print_Index
 
 sub print_createTicket
 {
+	#Jetzt werden die Values für das Dropdown-Menü aus der Datenbank geholt
+	my $ref_DropDown = db_access::get_DropDownValues("auswahlkriterien");
+	
  	my $cgi = CGI->new();
 		
 	print $cgi->start_html();
 	print $cgi->h2("Neues Ticket erstellen");
 	 
+ 
+	 
+	 
 	print $cgi->start_form({-method => "POST",
 	 						-action => "/cgi-bin/rocket/SaveFormData.cgi",
 	 						-target => '_self'
 	 						 });
-	 
+	
+	#Gebe das DropDown-Menü aus
+	UserContent::print_dropDown("input_Categorie",$ref_DropDown);
+	print $cgi->br();
+ 	
  	print $cgi->hidden(-name=>'Level2',
 	 				   -value=>'submit_createTicket');
 	 				   
@@ -207,10 +217,56 @@ sub print_createTicket
 	
 		given ($Status)
 	{
-		when( 'Alle' )				{print $cgi->h1("Übersicht der Einstellungen");}
-		when( 'Password' )			{print $cgi->h1("Ändern des Passwortes");}
+		when( 'Password' )			{print $cgi->h1("Ändern des Passwortes");
+									 print $cgi->start_form({-method => "POST",
+	 								 -action => "/cgi-bin/rocket/SaveFormData.cgi",
+	 								 -target => '_self'
+	 						 								});	 
+	 								 print $cgi->hidden(-name=>'Level2',
+	 				  									-value=>'changePassword'); 				   
+	 
+									 print $cgi->strong("Altes Passwort\t");		 						
+	 								 print $cgi->password_field(-name=>'input_Password',
+	 														    -value=>'',
+	 						 								    -size=>25,
+	 						 								    -maxlength=>50);
+									 print $cgi->br();									 
+									 print $cgi->strong("Neues Passwort\t");									 
+									 print $cgi->password_field(-name=>'input_Password_new1',
+	 														    -value=>'',
+	 						 								    -size=>25,
+	 						 								    -maxlength=>50);
+									 print $cgi->br();									 
+									 print $cgi->strong("Neues Passwort wiederholen\t");									 
+									 print $cgi->password_field(-name=>'input_Password_new2',
+	 														    -value=>'',
+	 						 								    -size=>25,
+	 						 								    -maxlength=>50);
+									 print $cgi->br();									 
+	 								 print $cgi->submit("Übernehmen");
+									 print $cgi->end_form();
+									}
 		when( 'Email' )				{print $cgi->h1("Ändern der Email-Adresse");}
 		when( 'delete_Account' )	{print $cgi->h1("Account löschen");}
 	}
 	
+ }
+ 
+ sub print_dropDown
+ {	#Dieses Modul soll einfach ein DropDown ausgeben
+  	#Uebergabeparameter: 1. Der Variablenname mit dem spaeter die Value identifizierbar ist
+  	#					 2. gehashtes Array
+  	#Beispiel 1 => Hans
+  	#		  2 => Karl
+  	#		  3 => Kunz
+  	my $name = $_[0];
+  	my $ref_Array = $_[1];
+  	
+  	#Hier wird jetzt der HTML-Code ausgegeben
+  	print "<select name=\"$name\">";
+  	foreach my $eintrag ( @{$ref_Array} ) 
+  	{
+  		print "<option value=\"$eintrag->[0]\">$eintrag->[1]";	
+ 	}
+ 	print "</select> ";
  }

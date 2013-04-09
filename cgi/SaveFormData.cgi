@@ -90,6 +90,22 @@ if($cgi->param('input_specificTicket') ne '')
 	$session->param('specificTicket',$cgi->param('input_specificTicket'));
 }
 
+if($cgi->param('input_Categorie') ne '')
+{
+	$session->param('TicketCategorie',$cgi->param('input_Categorie'));
+}
+
+if($cgi->param('input_Password_new1') ne '')
+{
+	$session->param('newPassword1',$cgi->param('input_Password_new1'));
+}
+
+if($cgi->param('input_Password_new2') ne '')
+{
+	$session->param('newPassword2',$cgi->param('input_Password_new2'));
+}
+
+
 $session->flush();
 
 #Leite auf Root um

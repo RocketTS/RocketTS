@@ -15,6 +15,7 @@ use feature qw {switch};
 use strict;
 use Exporter;
 use HTML::Table;
+use Digest::SHA qw(sha256_hex);
 
 our @EXPORT_OK = qw(show_Tickets show_Messages_from_Ticket);
 
@@ -46,7 +47,7 @@ sub get_Tickets
 	 	my $LinkText = $array->[2];
 	 	my $TicketID = $array->[0];
 	 
-	 	my $Link = "<a href=\"/cgi-bin/rocket/SaveFormData.cgi?input_specificTicket=$TicketID&Level2=show_specTicket\">$LinkText</a>";
+	 	my $Link = "<a href=\"/cgi-bin/rocket/SaveFormData.cgi?input_specificTicket=$TicketID&Level2=show_specTicket\" target=\"_self\">$LinkText</a>";
 	  
 	 	#Das Erstelldatum und der veränderte "TopicLink" werden der HTML-Tabelle hinzugefügt
 	 	$table->addRow($array->[1], $Link);
@@ -97,4 +98,43 @@ sub show_Messages_from_Ticket{
  $table->setColWidth(3, 550);	#Breite 3. Spalte
 
  return \$table;	
+}
+
+sub changePassword{
+	#1. Uebergabeparameter = UserIdent
+	#2. Uebergabeparamteer = Altes Passwort
+	#3. Uebergabeparamter  = Neues Passwort 1
+	#4. Uebergabeparameter = Neues Passwort 2
+	#Rückgabe = Statusmeldungen (Fehlerstatus, oder alles ok)
+	#Zuerst wird ueberprueft ob alles eingegeben wurde, und ob Passwort 1 gleich dem Passwort 2 ist
+	my($UserIdent,$oldPassword,$newPassword1,$newPassword2) = @_;
+	my $oldPassword_hashed = sha256_hex($oldPassword);
+	my $newPassword1_hashed = sha256_hex($newPassword1);
+	my $newPassword2_hashed = sha256_hex($newPassword2);
+	
+	if($oldPassword eq "" || $newPassword1 eq "" || $newPassword2 eq "")
+	{
+		return "changePassword_missing";
+	}
+	
+	if($newPassword1 ne $newPassword2)
+	{
+		return "changePassword_not_equal";
+	}
+	
+	#Jetzt wird ueberprueft ob das alte eingegebenen Passwort zu dem UserIdent passt, dessen Passwort geändert werden soll
+	if(! db_access::valid_Login($UserIdent, $oldPassword_hashed))
+	{#Gibt true zurueck falls das Passwort passt, wird negiert
+		return "changePassword_incorrect";
+	}
+	
+	#Jetzt darf das alte Passwort ueberschrieben werden
+	if( db_access::change_Password($UserIdent, $newPassword1_hashed))
+	{#Falls das setzten des neues Passwortes erfolgreich war
+		return "changePassword_success";
+	}
+	else
+	{#ansonsten
+		return "changePassword_failed";
+	}
 }
