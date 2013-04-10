@@ -103,6 +103,7 @@ else
 		when('show_specTicket')			{MitarbeiterContent::print_show_specTicket();}
 		when('submit_assumeTicket')		{MitarbeiterContent::print_submit_assumeTicket($session->param('UserIdent'),$session->param('specificTicket'));}
 		when('submit_forwardTicket')	{MitarbeiterContent::print_submit_forwardTicket($session->param('UserIdent'),$session->param('specificTicket'));}
+		when('submit_releaseTicket')	{MitarbeiterContent::print_submit_releaseTicket($session->param('UserIdent'),$session->param('specificTicket'));}	
 		when('submit_closeTicket')		{MitarbeiterContent::print_submit_closeTicket($session->param('UserIdent'),$session->param('specificTicket'));}
 	#	when('submit_createTicket')		{UserContent::print_submit_createTicket($session->param('UserIdent'),$session->param('UserMessageTopic'),$session->param('UserMessage'),1,1); }	 	
 		when('submit_answerTicket') 	{MitarbeiterContent::print_answerTicket($session->param('UserIdent'),$session->param('specificTicket'),$session->param('UserMessage'));}	

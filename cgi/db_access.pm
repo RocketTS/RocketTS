@@ -11,7 +11,7 @@ use Config::Tiny;			#Modul, um DB-Config aus ini-File auszulesen
 use getinfo 'get_IP';
 use Exporter;
 our @ISA = qw(Exporter);
-our @EXPORT_OK = qw(valid_Login exist_User insert_User get_Hash del_Hash set_Hash db_connect db_disconnect insert_Ticket create_Ticket answer_Ticket get_AccessRights get_Tickets get_Messages_from_Ticket get_newTickets get_TicketsbyStatus get_countTicketbyStatus get_MA_Level);
+our @EXPORT_OK = qw(valid_Login exist_User insert_User get_Hash del_Hash set_Hash db_connect db_disconnect insert_Ticket create_Ticket answer_Ticket get_AccessRights get_Tickets get_Messages_from_Ticket get_newTickets get_TicketsbyStatus get_countTicketbyStatus get_MA_Level get_TicketStatus get_TicketPrioritaet);
 
 sub db_connect { 
 	#Läd Zugangsdaten aus der INI-Datei
@@ -249,6 +249,28 @@ sub get_MA_Level { #liefert den INT-Wert aus der Spalte Level des entsprechenden
 	$command->finish();
 	$db = db_disconnect($db);
 	return $result;	
+}
+
+sub get_TicketStatus {
+	my($Ticket_ID) = @_;
+	my $db = db_connect();
+	my $command = $db->prepare("SELECT Status FROM ticket WHERE Ticket_ID =\'". $Ticket_ID . "\';");
+	$command->execute();	
+	my $result = $command->fetchrow_array();
+	$command->finish();
+	$db = db_disconnect($db);
+	return $result;
+}
+
+sub get_TicketPrioritaet {
+	my($Ticket_ID) = @_;
+	my $db = db_connect();
+	my $command = $db->prepare("SELECT Prioritaet_ID FROM ticket WHERE Ticket_ID =\'". $Ticket_ID . "\';");
+	$command->execute();	
+	my $result = $command->fetchrow_array();
+	$command->finish();
+	$db = db_disconnect($db);
+	return $result;
 }
 
 sub assume_Ticket {

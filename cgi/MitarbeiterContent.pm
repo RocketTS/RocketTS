@@ -11,7 +11,7 @@ use strict;
 use CGI;
 use CGI::Carp qw(fatalsToBrowser);
 use Exporter;
-use db_access 'create_Ticket';
+use db_access 'create_Ticket','get_TicketStatus','get_TicketPrioritaet';
 use MitarbeiterDB 'get_allnewTickets','get_allinprocessTickets','get_allclosedTickets';
 use HTML::Table;
 use myGraph 'print_Statistik_TicketStatus';
@@ -114,46 +114,75 @@ sub print_Index
 	my $session = CGI::Session->new($cgi);
 	my $TicketID = $session->param('specificTicket');
 	
-	
 	print $cgi->h1("Das Ticket mit der ID $TicketID wird nachfolgend im \"Verlaufsmodus\" angezeigt!");
 	my $ref_table = MitarbeiterDB::show_Messages_from_Ticket($TicketID,$session->param('UserIdent'));
 	my $table = $$ref_table;
 	$table->setClass("table_tickets");
 	print $table->getTable();	
 	print $cgi->br;
+	#Ausgeben der Bottons nebeneinander
+	print $cgi->table(
+		$cgi->Tr());
+	
+			
 	
 	#Anzeigen des Übernehmen-Buttons
-	print $cgi->start_form({-method => "POST",
-	 						-action => "/cgi-bin/rocket/SaveFormData.cgi",
-	 						-target => '_self'
-	 						 });
-	print $cgi->hidden(-name=>'Level2',
-	 				   -value=>'submit_assumeTicket'); 				   
-	print $cgi->submit("Übernehmen");
-	print "onclick=\"this.form['sub'].disabled=true";
-	print $cgi->end_form();
-	print "<input type=\"submit\" name=\"test\" value=\"Submit\" disabled>";
+	if(db_access::get_TicketStatus($TicketID) eq "in Bearbeitung") {
+		print "<input type=\"submit\" name=\"in Bearbeitung\" value=\"in Bearbeitung\" disabled>";
+	}
+	else {
+		print $cgi->start_form({-method => "POST",
+	 							-action => "/cgi-bin/rocket/SaveFormData.cgi",
+	 							-target => '_self'
+	 						   });
+		print $cgi->hidden(-name=>'Level2',
+	 				       -value=>'submit_assumeTicket'); 				   
+		print $cgi->submit("Übernehmen");
+	
+		print $cgi->end_form();
+	}
+	
+	
 	#Anzeigen des Weiterleiten-Buttons
-	print $cgi->start_form({-method => "POST",
-	 						-action => "/cgi-bin/rocket/SaveFormData.cgi",
-	 						-target => '_self'
-	 						 });
-	print $cgi->hidden(-name=>'Level2',
-	 				   -value=>'submit_forwardTicket');
-	print $cgi->submit("Weiterleiten");
-	print $cgi->end_form();
+	if(db_access::get_TicketPrioritaet($TicketID) == 1) {
+		print "<input type=\"submit\" name=\"Weiterleiten\" value=\"Weiterleiten\" disabled>";
+	}
+	else {
+		print $cgi->start_form({-method => "POST",
+		 						-action => "/cgi-bin/rocket/SaveFormData.cgi",
+		 						-target => '_self'
+		 						 });
+		print $cgi->hidden(-name=>'Level2',
+		 				   -value=>'submit_forwardTicket');
+		print $cgi->submit("Weiterleiten");
+		print $cgi->end_form();
+	}
+	
+	#Anzeigen des Freigeben-Buttons
+		print $cgi->start_form({-method => "POST",
+		 						-action => "/cgi-bin/rocket/SaveFormData.cgi",
+		 						-target => '_self'
+		 						 });
+		print $cgi->hidden(-name=>'Level2',
+		 				   -value=>'submit_releaseTicket');
+		print $cgi->submit("Freigeben");
+		print $cgi->end_form();
+	
 	
 	#Anzeigen des Schließen-Buttons
-	print $cgi->start_form({-method => "POST",
-	 						-action => "/cgi-bin/rocket/SaveFormData.cgi",
-	 						-target => '_self'
-	 						 });
-	print $cgi->hidden(-name=>'Level2',
-	 				   -value=>'submit_closeTicket');
-	print $cgi->submit("Schliessen");
-	print $cgi->end_form();
-	
-	
+	if(db_access::get_TicketStatus($TicketID) eq "Geschlossen") {
+		print "<input type=\"submit\" name=\"Geschlossen\" value=\"Geschlossen\" disabled>";
+	}
+	else {
+		print $cgi->start_form({-method => "POST",
+		 						-action => "/cgi-bin/rocket/SaveFormData.cgi",
+		 						-target => '_self'
+		 						 });
+		print $cgi->hidden(-name=>'Level2',
+		 				   -value=>'submit_closeTicket');
+		print $cgi->submit("Schliessen");
+		print $cgi->end_form();
+	}
 	#Zeige das "Antwortformular"	
 	print $cgi->h2("Antwort");
 	 
