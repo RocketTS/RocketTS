@@ -121,8 +121,9 @@ sub print_Index
 	print $table->getTable();	
 	print $cgi->br;
 	#Ausgeben der Bottons nebeneinander
-	print $cgi->table(
-		$cgi->Tr());
+	print '<table>
+	<tr>
+	<td>';
 	
 			
 	
@@ -142,6 +143,8 @@ sub print_Index
 		print $cgi->end_form();
 	}
 	
+	print '</td>
+	<td>';
 	
 	#Anzeigen des Weiterleiten-Buttons
 	if(db_access::get_TicketPrioritaet($TicketID) == 1) {
@@ -157,7 +160,8 @@ sub print_Index
 		print $cgi->submit("Weiterleiten");
 		print $cgi->end_form();
 	}
-	
+		print '</td>
+	<td>';
 	#Anzeigen des Freigeben-Buttons
 		print $cgi->start_form({-method => "POST",
 		 						-action => "/cgi-bin/rocket/SaveFormData.cgi",
@@ -168,7 +172,8 @@ sub print_Index
 		print $cgi->submit("Freigeben");
 		print $cgi->end_form();
 	
-	
+		print '</td>
+	<td>';
 	#Anzeigen des Schlieﬂen-Buttons
 	if(db_access::get_TicketStatus($TicketID) eq "Geschlossen") {
 		print "<input type=\"submit\" name=\"Geschlossen\" value=\"Geschlossen\" disabled>";
@@ -183,6 +188,9 @@ sub print_Index
 		print $cgi->submit("Schliessen");
 		print $cgi->end_form();
 	}
+		print '</td>
+	</tr>
+	</table>';
 	#Zeige das "Antwortformular"	
 	print $cgi->h2("Antwort");
 	 
