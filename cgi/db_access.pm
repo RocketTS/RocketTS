@@ -12,7 +12,10 @@ use getinfo 'get_IP';
 use Exporter;
 use feature qw {switch};
 our @ISA = qw(Exporter);
-our @EXPORT_OK = qw(valid_Login exist_User insert_User get_Hash del_Hash set_Hash db_connect db_disconnect insert_Ticket create_Ticket answer_Ticket get_AccessRights get_Tickets get_Messages_from_Ticket get_newTickets get_TicketsbyStatus get_countTicketbyStatus get_MA_Level get_TicketStatus get_TicketPrioritaet);
+our @EXPORT_OK = qw(valid_Login exist_User insert_User get_Hash del_Hash set_Hash db_connect db_disconnect insert_Ticket create_Ticket 
+					answer_Ticket get_AccessRights get_Tickets get_Messages_from_Ticket get_newTickets get_TicketsbyStatus 
+					get_countTicketbyStatus get_MA_Level get_TicketStatus get_TicketPrioritaet is_Authorized assume_Ticket forward_Ticket
+					release_Ticket close_Ticket);
 
 sub db_connect { 
 	#Läd Zugangsdaten aus der INI-Datei
@@ -274,10 +277,65 @@ sub get_TicketPrioritaet {
 	return $result;
 }
 
-sub assume_Ticket {
+sub assume_Ticket { #liefert 1 bei TRUE, 0 bei FALSE
 	my($Username,$Ticket_ID) = @_;
 	my $db = db_connect();
 	my $sql = "CALL sql_assume_Ticket(\'".$Username."\',\'".$Ticket_ID."\');";
+	my $command = $db->prepare($sql);
+	$command->execute();
+	$command = $db->prepare("SELECT \@ret;");
+	$command->execute();
+	my $result = $command->fetchrow_array(); #abrufen des boolschen Wertes der SQL-Abfrage
+	$command->finish();
+	$db = db_disconnect($db);
+	return $result;	
+}
+
+sub forward_Ticket { #liefert 1 bei TRUE, 0 bei FALSE
+	my($Username,$Ticket_ID) = @_;
+	my $db = db_connect();
+	my $sql = "CALL sql_forward_Ticket(\'".$Username."\',\'".$Ticket_ID."\');";
+	my $command = $db->prepare($sql);
+	$command->execute();
+	$command = $db->prepare("SELECT \@ret;");
+	$command->execute();
+	my $result = $command->fetchrow_array(); #abrufen des boolschen Wertes der SQL-Abfrage
+	$command->finish();
+	$db = db_disconnect($db);
+	return $result;	
+}
+
+sub release_Ticket { #liefert 1 bei TRUE, 0 bei FALSE
+	my($Username,$Ticket_ID) = @_;
+	my $db = db_connect();
+	my $sql = "CALL sql_release_Ticket(\'".$Username."\',\'".$Ticket_ID."\');";
+	my $command = $db->prepare($sql);
+	$command->execute();
+	$command = $db->prepare("SELECT \@ret;");
+	$command->execute();
+	my $result = $command->fetchrow_array(); #abrufen des boolschen Wertes der SQL-Abfrage
+	$command->finish();
+	$db = db_disconnect($db);
+	return $result;	
+}
+
+sub close_Ticket { #liefert 1 bei TRUE, 0 bei FALSE
+	my($Username,$Ticket_ID) = @_;
+	my $db = db_connect();
+	my $sql = "CALL sql_close_Ticket(\'".$Username."\',\'".$Ticket_ID."\');";
+	my $command = $db->prepare($sql);
+	$command->execute();
+	$command = $db->prepare("SELECT \@ret;");
+	$command->execute();
+	my $result = $command->fetchrow_array(); #abrufen des boolschen Wertes der SQL-Abfrage
+	$command->finish();
+	$db = db_disconnect($db);
+	return $result;	
+}
+sub is_Authorized { #liefert 1 bei TRUE, 0 bei FALSE
+	my($Username,$Ticket_ID) = @_;
+	my $db = db_connect();
+	my $sql = "CALL sql_is_Authorized(\'".$Username."\',\'".$Ticket_ID."\');";
 	my $command = $db->prepare($sql);
 	$command->execute();
 	$command = $db->prepare("SELECT \@ret;");

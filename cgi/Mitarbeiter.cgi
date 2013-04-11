@@ -70,7 +70,7 @@ else
 #	print '<a href="SaveformData.cgi?Level2=show_User" TARGET="_self">Übersicht Benutzer</a><br>';
 	
 	print '<nav>
-		    <div class="menu-item">
+		    <div class="menu-item-static">
 		      <h4>Tickets</h4>
 		      <ul>
 		      <li><a href="SaveformData.cgi?Level2=show_newTickets" TARGET="_self">Neue Tickets</a></li>
