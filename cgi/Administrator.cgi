@@ -1,11 +1,11 @@
 #!perl -w
 ########################################
 #Author: Matthias Nagel                #
-#Date: 	 02.04.2013                    #
+#Date: 	 11.04.2013                    #
 ########################################
-#Description: Level1: Mitarbeiter
+#Description: Level1: Administrator
 #Dieses Script wird nur von Root (Rocket.cgi) aufgerufen
-#Es verwaltet die Ansicht des Mitarbeiter-Bereiches
+#Es verwaltet die Ansicht des Mitarbeiter- und des Administrator-Bereiches (da jeder Admin ja auch ein Mitarbeiter ist)
 
 use CGI::Session;
 use feature qw {switch};
@@ -25,18 +25,17 @@ use LoginDB 'regist_User';
 #mit der Session-ID
 my $cgi = new CGI;
 
-#Stelle das alte zugehoerige Session-Objekt zu dem aktuellen
-#Mitarbeiter her
+#Stelle das alte zugehoerige Session-Objekt zu dem aktuellen Mitarbeiter her
 my $session = CGI::Session->new($cgi);
 
 #Ueberpruefe ob die Rechte des Clienten passen, falls nicht log
 #den Clienten aus und leite zur Root weiter
-if($session->param('AccessRights') ne "Mitarbeiter")
+if($session->param('AccessRights') ne "Administrator")
 {	#Rechte passen nicht, loesche Session (ausloggen)
 	$session->clear();
 	$session->flush();
 	print $cgi->header();
-	DebugUtils::html_testseite("Unauthorisierter Zugriff auf Mitarbeiterbereich!! Du wirst ausgeloggt!");
+	DebugUtils::html_testseite("Unauthorisierter Zugriff auf Administratorbereich!! Du wirst ausgeloggt!");
 	print $cgi->meta({-http_equiv => 'REFRESH', -content => '5; /cgi-bin/rocket/Rocket.cgi'});
 }
 else
@@ -44,12 +43,12 @@ else
 	#Ausgabe des Headers
 	print $session->header();
 
-	print $cgi->start_html(-title  =>'Ticketsystem Team Rocket! Mitarbeiterbereich',
+	print $cgi->start_html(-title  =>'Ticketsystem Team Rocket! Administrationsbereich',
 	 						-author =>'beispiel@example.org',
 	                       -base   =>'true',
 	                       -target =>'_blank',
 	                       -meta   =>{'keywords'   =>'TeamOne, Test',
-	                                  'description'=>'Mitarbeiterbereich'},
+	                                  'description'=>'Administrationsbereich'},
 	                       -style  =>{'src'=>'../../css/Style.css'}
 	                       );
                        
@@ -57,18 +56,10 @@ else
 
 	print $cgi->start_div({-id=>'ma_wrapper'});
 	print $cgi->start_div({-id=>'ma_header'});
-	print $cgi->h1($cgi->center("Header! Willkommen Mitarbeiter"));
+	print $cgi->h1($cgi->center("Header! Willkommen " .$session->param('UserIdent')));
 	print $cgi->end_div({-id=>'ma_header'});
 	print $cgi->start_div({-id=>'ma_menu'});
-	
-#	print '<b>Tickets</b><br>';
-#	print '<a href="SaveformData.cgi?Level2=show_newTickets" TARGET="_self">Neue Tickets</a><br>';
-#	print '<a href="SaveformData.cgi?Level2=show_inprocessTickets" TARGET="_self">In Bearbeitung</a><br>';
-#	print '<a href="SaveformData.cgi?Level2=show_History" TARGET="_self">History</a><br>';
-#	print '<a href="SaveformData.cgi?Level2=show_Statistik" TARGET="_self">Statistik</a><br>';
-#	print '<br><br><b>Benutzerverwaltung</b><br>';
-#	print '<a href="SaveformData.cgi?Level2=show_User" TARGET="_self">Übersicht Benutzer</a><br>';
-	
+		
 	print '<nav>
 		    <div class="menu-item-static">
 		      <h4>Tickets</h4>
@@ -84,6 +75,13 @@ else
 		      <h4><a href="#">Verwaltung</a></h4>
 		      <ul>
 		        <li><a href="SaveformData.cgi?Level2=show_User" TARGET="_self">Benutzerübersicht</a></li>
+		      </ul>
+		    </div>
+		    
+		    <div class="menu-item">
+		      <h4><a href="#">Administration</a></h4>
+		      <ul>
+		        <li><a href="SaveformData.cgi?Level2=show_Mitarbeiter" TARGET="_self">Mitarbeiterverwaltung</a></li>
 		      </ul>
 		    </div>
 		    
@@ -112,8 +110,9 @@ else
 		when('submit_forwardTicket')	{MitarbeiterContent::print_submit_forwardTicket($session->param('UserIdent'),$session->param('specificTicket'));}
 		when('submit_releaseTicket')	{MitarbeiterContent::print_submit_releaseTicket($session->param('UserIdent'),$session->param('specificTicket'));}	
 		when('submit_closeTicket')		{MitarbeiterContent::print_submit_closeTicket($session->param('UserIdent'),$session->param('specificTicket'));}
-	#	when('submit_createTicket')		{UserContent::print_submit_createTicket($session->param('UserIdent'),$session->param('UserMessageTopic'),$session->param('UserMessage'),1,1); }	 	
 		when('submit_answerTicket') 	{MitarbeiterContent::print_answerTicket($session->param('UserIdent'),$session->param('specificTicket'),$session->param('UserMessage'));}	
+		#Zusatz zu Mitarbeitern für Administatoren
+		when('show_Mitarbeiter')		{AdministratorContent::print_show_Mitarbeiter();}
 	}
 
 	     print $cgi->end_div({-id=>'ma_content'});
