@@ -13,7 +13,7 @@ use strict;
 use CGI;
 use CGI::Carp qw(fatalsToBrowser);
 use DebugUtils 'html_testseite';
-use UserContent 'printIndex';
+use UserContent;
 use LoginDB 'regist_User';
 
 
@@ -160,6 +160,38 @@ else
 										$session->flush();
 										print $cgi->meta({-http_equiv => 'REFRESH', -content => '3; /cgi-bin/rocket/Rocket.cgi'});
 									 }
+									 
+		when('deleteAccount')		{
+										given ($session->param('ShowPage_Level3'))
+										{
+											when( 'checkPassword' )	{my $status = UserDB::deleteAccount($session->param('UserIdent'),$session->param('UserPassword'));
+																	 $session->param('ShowPage_Level3',$status);
+																	 $session->flush();
+																	 print $cgi->meta({-http_equiv => 'REFRESH', -content => '0; /cgi-bin/rocket/Rocket.cgi'});
+																	}
+											when( 'missing' )		{print $cgi->h1("Fehler: Passwort wurde nicht eingegeben!");	
+																	 $session->param('ShowPage_Level2',"deleteAccount");
+																	 $session->flush();
+																	 print $cgi->meta({-http_equiv => 'REFRESH', -content => '3; /cgi-bin/rocket/Rocket.cgi'});
+																	}
+											when( 'incorrect' )		{print $cgi->h1("Fehler: Passwort war nicht korrekt!");	
+																	 $session->param('ShowPage_Level2',"deleteAccount");
+																	 $session->flush();
+																	 print $cgi->meta({-http_equiv => 'REFRESH', -content => '3; /cgi-bin/rocket/Rocket.cgi'});
+																	}
+											when( 'success' )		{print $cgi->h1("Der Account wurde erfolgreich gelöscht. Sie werden nun ausgeloggt!");	
+																	 $session->param('ShowPage_Level1',"Logout");
+																	 $session->flush();
+																	 print $cgi->meta({-http_equiv => 'REFRESH', -content => '3; /cgi-bin/rocket/Rocket.cgi'});
+																	}
+											when( 'failed' )		{print $cgi->h1("Fehler: Es trat ein Datenbankfehler beim Löschen auf!");	
+																	 $session->param('ShowPage_Level2',"deleteAccount");
+																	 $session->flush();
+																	 print $cgi->meta({-http_equiv => 'REFRESH', -content => '3; /cgi-bin/rocket/Rocket.cgi'});
+																	}
+										}
+									}
+										
 	}
 	
 	print $cgi->end_div({-id=>'user_content'});

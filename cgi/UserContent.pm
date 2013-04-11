@@ -13,7 +13,7 @@ use strict;
 use CGI;
 use CGI::Carp qw(fatalsToBrowser);
 use Exporter;
-use db_access 'create_Ticket';
+use db_access;
 use UserDB 'get_Tickets';
 use HTML::Table;
 use feature qw {switch};
@@ -247,7 +247,28 @@ sub print_createTicket
 									 print $cgi->end_form();
 									}
 		when( 'Email' )				{print $cgi->h1("Ändern der Email-Adresse");}
-		when( 'delete_Account' )	{print $cgi->h1("Account löschen");}
+		when( 'delete_Account' )	{print $cgi->h1("Löschen des eigenen Accounts");
+									 print $cgi->h1("Zur Bestätigung bitte das Passwort angeben");
+									 print $cgi->start_form({-method => "POST",
+	 								 -action => "/cgi-bin/rocket/SaveFormData.cgi",
+	 								 -target => '_self'
+	 						 								});	 
+	 								 print $cgi->hidden(-name=>'Level2',
+	 				  									-value=>'deleteAccount'); 		
+	 								
+	 								 print $cgi->hidden(-name=>'Level3',
+	 				  									-value=>'checkPassword');		   
+	 
+									 print $cgi->strong("Passwort\t");		 						
+	 								 print $cgi->password_field(-name=>'input_Password',
+	 														    -value=>'',
+	 						 								    -size=>25,
+	 						 								    -maxlength=>50);
+									 print $cgi->br();									 
+									 	 
+	 								 print $cgi->submit("Account löschen!");
+									 print $cgi->end_form();
+									}
 	}
 	
  }

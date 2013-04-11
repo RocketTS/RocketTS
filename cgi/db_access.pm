@@ -10,6 +10,7 @@ use DBI;
 use Config::Tiny;			#Modul, um DB-Config aus ini-File auszulesen
 use getinfo 'get_IP';
 use Exporter;
+use feature qw {switch};
 our @ISA = qw(Exporter);
 our @EXPORT_OK = qw(valid_Login exist_User insert_User get_Hash del_Hash set_Hash db_connect db_disconnect insert_Ticket create_Ticket answer_Ticket get_AccessRights get_Tickets get_Messages_from_Ticket get_newTickets get_TicketsbyStatus get_countTicketbyStatus get_MA_Level get_TicketStatus get_TicketPrioritaet);
 
@@ -319,3 +320,45 @@ sub change_Password { #AUTHOR Thomas Dorsch DATE 09.04.13
 	$db = db_disconnect($db);
 	return $result;	
 }
+
+sub deleteAccount { #AUTHOR Thomas Dorsch 10.04.13
+	#Subroutine löscht den mitgelieferten Account aus der Datenbank
+	#Übergabeparameter: 1: UserIdent
+	my $User = $_[0];
+	#Zuerst wird nachgeschaut ob es sich um einen Admin/Mitarbeiter/User handelt
+	#Je nachdem was vorliegt muss die Löschung anders abgehandelt werden
+	my $typ = db_access::get_AccessRights($User);
+	my $db = db_connect();
+	my $result;
+	my $command;
+	my $sql;
+	given ($typ)
+		{
+			when( 'Administrator' )	{$sql = "CALL sql_del_Administrator(\'".$User."\');";
+									 $command = $db->prepare($sql);
+								  	 $command->execute();
+									 $command = $db->prepare("SELECT \@ret;");
+									 $command->execute();	
+									 $result = $command->fetchrow_array(); #abrufen des boolschen Wertes der SQL-Abfrage
+									 }
+									 
+			when( 'Mitarbeiter' )	{$sql = "CALL sql_del_Mitarbeiter(\'".$User."\');";
+									 $command = $db->prepare($sql);
+								  	 $command->execute();
+									 $command = $db->prepare("SELECT \@ret;");
+									 $command->execute();	
+									 $result = $command->fetchrow_array(); #abrufen des boolschen Wertes der SQL-Abfrage
+									 }
+									 
+			when( 'User' )			{$sql = "CALL sql_del_User(\'".$User."\');";
+									 $command = $db->prepare($sql);
+								  	 $command->execute();
+									 $command = $db->prepare("SELECT \@ret;");
+									 $command->execute();	
+									 $result = $command->fetchrow_array(); #abrufen des boolschen Wertes der SQL-Abfrage
+									 }
+		}
+	return $result;
+}
+		
+	

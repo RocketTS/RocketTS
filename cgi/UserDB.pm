@@ -138,3 +138,32 @@ sub changePassword{
 		return "changePassword_failed";
 	}
 }
+
+sub deleteAccount{
+	#1. Uebergabeparameter = UserIdent
+	#2. Uebergabeparameter = Passwort
+	#Rückgabe = Statusmeldungen (Fehlerstatus oder alles ok)
+	#Zuerst wird überprüft ob das Passwort eingegeben wurde
+	my $UserIdent = $_[0];
+	my $Password_hash = sha256_hex($_[1]);
+	if($_[1] eq "")
+	{
+		return "missing";
+	}
+		
+	#Jetztwird überprüft ob das Passwort zum User passt, um dessen Identität zu bestätigen
+	if(! db_access::valid_Login($UserIdent, $Password_hash))
+	{#Gibt true zurueck falls das Passwort passt, wird negiert
+		return "incorrect";
+	}
+	
+	#Jetzt kann das User-Löschen-Procedure gestartet werden
+	if(db_access::deleteAccount($UserIdent))
+	{#War die Löschung erfolgreich
+		return "success";	
+	}
+	else
+	{
+		return "failed";
+	}
+}
