@@ -212,7 +212,7 @@ sub get_Messages_from_Ticket {#Author: Thomas Dorsch Date: 01.04.2013
 	
 }
 
-sub get_newTickets {
+sub get_newTickets { #müll?
 	#liefert alle Tickets die ein bestimmter User erstellt hat
 	#my($Username) = @_;
 	my $db = db_connect();

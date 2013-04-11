@@ -134,8 +134,8 @@ sub print_Index
 	my $is_Authorized = db_access::is_Authorized($session->param('UserIdent'),$session->param('specificTicket'));
 	
 	#Anzeigen des ‹bernehmen-Buttons
-	if($TicketStatus eq "in Bearbeitung") {
-		print "<input type=\"submit\" name=\"in Bearbeitung\" value=\"in Bearbeitung\" disabled>";
+	if(($TicketStatus eq "in Bearbeitung") || ($TicketStatus eq "Geschlossen")) {
+		print "<input type=\"submit\" name=\"‹bernehmen\" value=\"‹bernehmen\" disabled>";
 	}
 	else {
 		print $cgi->start_form({-method => "POST",
@@ -153,7 +153,7 @@ sub print_Index
 	<td>';
 	
 	#Anzeigen des Weiterleiten-Buttons, wenn Prio >1 und der Bearbeitende User angemeldet ist
-	if(($TicketPrioritaet == 1) && $is_Authorized == 0 && ($TicketStatus eq "Geschlossen")) {
+	if(($TicketPrioritaet == 1) || $is_Authorized == 0 || ($TicketStatus eq "Geschlossen")) {
 		print "<input type=\"submit\" name=\"Weiterleiten\" value=\"Weiterleiten\" disabled>";
 	}
 	else {
@@ -170,7 +170,7 @@ sub print_Index
 	<td>';
 	
 	#Anzeigen des Freigeben-Buttons, wenn der aktuelle MA auch der Bearbeiter ist
-	if($is_Authorized == 0) {
+	if($TicketStatus eq "Geschlossen" || $is_Authorized == 0) {
 		print "<input type=\"submit\" name=\"Freigeben\" value=\"Freigeben\" disabled>";
 	}
 	else {
@@ -187,7 +187,7 @@ sub print_Index
 	<td>';
 	#Anzeigen des Schlieﬂen-Buttons
 	if($TicketStatus ne "in Bearbeitung" || $is_Authorized == 0) {
-		print "<input type=\"submit\" name=\"Geschlossen\" value=\"Geschlossen\" disabled>";
+		print "<input type=\"submit\" name=\"Schliessen\" value=\"Schliessen\" disabled>";
 	}
 	else {
 		print $cgi->start_form({-method => "POST",
@@ -203,7 +203,7 @@ sub print_Index
 	</tr>
 	</table>';
 	#Zeige das "Antwortformular", wenn Ticket in Bearbeitung + MA = Bearbeiter	
-	if($TicketStatus ne "in Bearbeitung" && $is_Authorized == 1) {
+	if($TicketStatus eq "in Bearbeitung" && $is_Authorized == 1) {
 		print $cgi->h2("Antwort");
 		 
 		print $cgi->start_form({-method => "POST",

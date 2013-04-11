@@ -23,6 +23,8 @@ sub get_allnewTickets {
  my $UserIdent = $_[0];
  
  my $ref_Ticketarray = db_access::get_newTickets();
+ #my $ref_Ticketarray = db_access::get_TicketsbyStatus($UserIdent,"Neu"); #NEU + RICHTIGE ABFRAGE !!!
+ 
  #Hole das Ticketarray
  my @Ticketarray = @$ref_Ticketarray; #überflüssig?
  #print $ref_Ticketarray;
