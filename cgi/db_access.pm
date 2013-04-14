@@ -8,7 +8,6 @@ use CGI::Carp qw(warningsToBrowser fatalsToBrowser);
 package db_access;
 use DBI;
 use Config::Tiny;			#Modul, um DB-Config aus ini-File auszulesen
-use getinfo 'get_IP';
 use Exporter;
 use feature qw {switch};
 our @ISA = qw(Exporter);

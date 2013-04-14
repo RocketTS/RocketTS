@@ -20,8 +20,7 @@ use feature qw {switch};
 
 
 
-our @EXPORT_OK = qw(print_createTicket print_Punkt2 print_Punkt3 print_Punkt4 print_Index print_submit_createTicket print_show_specTicket
-					print_answerTicket);
+our @EXPORT_OK = qw(print_createTicket print_Index print_submit_createTicket print_show_specTicket print_answerTicket);
 
 
 
@@ -39,7 +38,9 @@ sub print_Index
 {
 	my $cgi = CGI->new();
 	my $session = CGI::Session->new($cgi);
-    print $cgi->h1( $cgi->center("Startseite von User Rechte: ".$session->param('AccessRights')));
+    #print $cgi->h1( $cgi->center("Startseite von User Rechte: ".$session->param('AccessRights')));
+    print $cgi->h1( $cgi->center("Startseite von " .$session->param('UserIdent') . " Rechte: ".$session->param('AccessRights')));
+    
 	1;  
 }
 
