@@ -88,6 +88,15 @@ else
 		    </div>
 		    
 		    <div class="menu-item">
+		      <h4>Einstellungen</h4>
+		      <ul>
+		        <li><a href="SaveformData.cgi?Level2=show_Einstellungen&Level3=show_Password" TARGET="_self">Passwort</a></li>
+		        <li><a href="SaveformData.cgi?Level2=show_Einstellungen&Level3=show_Email" TARGET="_self">Email</a></li>
+		        <li><a href="SaveformData.cgi?Level2=show_Einstellungen&Level3=show_delete_Account" TARGET="_self">Account löschen</a></li>
+		      </ul>
+		    </div>
+		    
+		    <div class="menu-item">
 		      <h4>Logout</h4>
 		      <ul>
 		        <li><a href="SaveformData.cgi?Level1=Logout" TARGET="_self">Abmelden</a></li>
@@ -113,6 +122,83 @@ else
 		when('submit_releaseTicket')	{MitarbeiterContent::print_submit_releaseTicket($session->param('UserIdent'),$session->param('specificTicket'));}	
 		when('submit_closeTicket')		{MitarbeiterContent::print_submit_closeTicket($session->param('UserIdent'),$session->param('specificTicket'));}
 		when('submit_answerTicket') 	{MitarbeiterContent::print_answerTicket($session->param('UserIdent'),$session->param('specificTicket'),$session->param('UserMessage'));}	
+		
+		#Von User.cgi übernommen
+		when('show_Einstellungen')	{
+			given ($session->param('ShowPage_Level3'))
+										{
+											when( 'show_Password' )			{UserContent::print_show_Einstellungen("Password");}
+											when( 'show_Email' )			{UserContent::print_show_Einstellungen("Email");}
+											when( 'show_delete_Account' )	{UserContent::print_show_Einstellungen("delete_Account");}
+										}
+		}
+		when('changePassword')		{#Das Modul changePassword überprüft nun ob die Änderung eingetragen werden kann, und gibt eine Statusmeldung zurück mit der weitergearbeitet wird
+									 my $status = UserDB::changePassword($session->param('UserIdent'),$session->param('UserPassword'),$session->param('newPassword1'),$session->param('newPassword2'));
+									 $session->param('ShowPage_Level2',$status);
+									 $session->flush();
+									 print $cgi->meta({-http_equiv => 'REFRESH', -content => '0; /cgi-bin/rocket/Rocket.cgi'});
+									}
+		when('changePassword_missing'){
+										print $cgi->h1("Fehler: Nicht alle geforderten Passwörter eingegeben!");	
+										$session->param('ShowPage_Level2',"show_Einstellungen");
+										$session->flush();
+										print $cgi->meta({-http_equiv => 'REFRESH', -content => '3; /cgi-bin/rocket/Rocket.cgi'});
+									 }
+		when('changePassword_not_equal'){
+										print $cgi->h1("Fehler: Die neuen Passwörter waren nicht identisch!");	
+										$session->param('ShowPage_Level2',"show_Einstellungen");
+										$session->flush();
+										print $cgi->meta({-http_equiv => 'REFRESH', -content => '3; /cgi-bin/rocket/Rocket.cgi'});
+									 }
+		when('changePassword_incorrect'){
+										print $cgi->h1("Fehler: Vorhandenen Passwörter stimmen nicht überein!");	
+										$session->param('ShowPage_Level2',"show_Einstellungen");
+										$session->flush();
+										print $cgi->meta({-http_equiv => 'REFRESH', -content => '3; /cgi-bin/rocket/Rocket.cgi'});
+									 }
+		when('changePassword_success'){
+										print $cgi->h1("Password wurde erfolgreich geändert!");	
+										$session->param('ShowPage_Level2',"");
+										$session->flush();
+										print $cgi->meta({-http_equiv => 'REFRESH', -content => '3; /cgi-bin/rocket/Rocket.cgi'});
+									 }
+		when('changePassword_failed'){
+										print $cgi->h1("Es trat ein Fehler beim Speichern des neues Passwortes auf!");	
+										$session->param('ShowPage_Level2',"show_Einstellungen");
+										$session->flush();
+										print $cgi->meta({-http_equiv => 'REFRESH', -content => '3; /cgi-bin/rocket/Rocket.cgi'});
+									 }
+									 
+		when('deleteAccount')		{
+										given ($session->param('ShowPage_Level3'))
+										{
+											when( 'checkPassword' )	{my $status = UserDB::deleteAccount($session->param('UserIdent'),$session->param('UserPassword'));
+																	 $session->param('ShowPage_Level3',$status);
+																	 $session->flush();
+																	 print $cgi->meta({-http_equiv => 'REFRESH', -content => '0; /cgi-bin/rocket/Rocket.cgi'});
+																	}
+											when( 'missing' )		{print $cgi->h1("Fehler: Passwort wurde nicht eingegeben!");	
+																	 $session->param('ShowPage_Level2',"deleteAccount");
+																	 $session->flush();
+																	 print $cgi->meta({-http_equiv => 'REFRESH', -content => '3; /cgi-bin/rocket/Rocket.cgi'});
+																	}
+											when( 'incorrect' )		{print $cgi->h1("Fehler: Passwort war nicht korrekt!");	
+																	 $session->param('ShowPage_Level2',"deleteAccount");
+																	 $session->flush();
+																	 print $cgi->meta({-http_equiv => 'REFRESH', -content => '3; /cgi-bin/rocket/Rocket.cgi'});
+																	}
+											when( 'success' )		{print $cgi->h1("Der Account wurde erfolgreich gelöscht. Sie werden nun ausgeloggt!");	
+																	 $session->param('ShowPage_Level1',"Logout");
+																	 $session->flush();
+																	 print $cgi->meta({-http_equiv => 'REFRESH', -content => '3; /cgi-bin/rocket/Rocket.cgi'});
+																	}
+											when( 'failed' )		{print $cgi->h1("Fehler: Es trat ein Datenbankfehler beim Löschen auf!");	
+																	 $session->param('ShowPage_Level2',"deleteAccount");
+																	 $session->flush();
+																	 print $cgi->meta({-http_equiv => 'REFRESH', -content => '3; /cgi-bin/rocket/Rocket.cgi'});
+																	}
+										}
+		}
 	}
 
 	     print $cgi->end_div({-id=>'user_content'});
