@@ -79,6 +79,15 @@ else
 		    </div>
 		    
 		    <div class="menu-item">
+		      <h4>Einstellungen</h4>
+		      <ul>
+		        <li><a href="SaveformData.cgi?Level2=show_Einstellungen&Level3=show_Password" TARGET="_self">Passwort</a></li>
+		        <li><a href="SaveformData.cgi?Level2=show_Einstellungen&Level3=show_Email" TARGET="_self">Email</a></li>
+		        <li><a href="SaveformData.cgi?Level2=show_Einstellungen&Level3=show_delete_Account" TARGET="_self">Account löschen</a></li>
+		      </ul>
+		    </div>
+		    
+		    <div class="menu-item">
 		      <h4><a href="#">Administration</a></h4>
 		      <ul>
 		        <li><a href="SaveformData.cgi?Level2=show_Mitarbeiter" TARGET="_self">Mitarbeiterverwaltung</a></li>

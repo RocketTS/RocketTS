@@ -16,7 +16,7 @@ use strict;
 use Exporter;
 use HTML::Table;
 
-our @EXPORT_OK = qw(show_Tickets show_Messages_from_Ticket get_allnewTickets get_allinprocessTickets get_allclosedTickets);
+our @EXPORT_OK = qw(show_Tickets get_allnewTickets get_allinprocessTickets get_allclosedTickets);
 
 sub get_allnewTickets {
  #Liefert eine HTML-Tabllen-Objekt zurueck
@@ -109,44 +109,4 @@ sub get_allclosedTickets {
  }
 
  return \$table;
-}
-
-
-sub show_Messages_from_Ticket{
-	#1. Uebergabeparameter = TicketID
-	#2. Uebergabeparameter = UserIdent
-	#Zur Sicherheit wird zuerst geprueft ob der User sein eignes Ticket anschauen moechte
-	#Danach werden alle Messages geholt diese in eine HTML-Tabelle verpackt und eine 
-	#Referenz auf diese zurueckgegeben
-	my $TicketID = $_[0];
-	my $UserIdent = $_[1];
-	
-	my $ref_Messagearray = db_access::get_Messages_from_Ticket($UserIdent, $TicketID);
-	my @Messagearray = @$ref_Messagearray;
-	
-	 #Erstelle das TableObjekt
-	 my $table = HTML::Table->new( 
-    	-cols    => 3, 
-    	-border  => 0,
-    #	-padding => 1,
-   # 	-width	 => 970,
-    	-align   => 'left',
-    	-head => ['Erstelldatum', 'Benutzer', 'Nachricht'],
-	 );
-
-	 
-	 foreach my $array ( @{$ref_Messagearray} ) {
-
-	 my $Erstelldatum = $array->[1];
-	 my $Author = $array->[0];
-	 my $Message = $array->[2];
-	 	  
-	 #Das Erstelldatum und der veränderte "TopicLink" werden der HTML-Tabelle hinzugefügt
-	 $table->addRow($Erstelldatum, $Author, $Message);
- 	 }
- $table->setColWidth(1, 150);	#Legt die Breite der ersten Spalte fest (100 Pixel)
- $table->setColWidth(2, 200);	#Breite 2. Spalte
- $table->setColWidth(3, 550);	#Breite 3. Spalte
-
- return \$table;	
 }

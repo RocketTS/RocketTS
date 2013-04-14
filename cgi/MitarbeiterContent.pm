@@ -13,13 +13,13 @@ use CGI::Carp qw(fatalsToBrowser);
 use Exporter;
 use db_access 'create_Ticket','get_TicketStatus','get_TicketPrioritaet','is_Authorized';
 use MitarbeiterDB 'get_allnewTickets','get_allinprocessTickets','get_allclosedTickets';
-use UserContent 'print_Index', 'print_User_Testseite';
+use UserContent 'print_Index', 'print_User_Testseite', 'show_Messages_from_Ticket';
 use HTML::Table;
 use myGraph 'print_Statistik_TicketStatus';
 
 
 our @EXPORT_OK = qw(print_show_newTickets print_show_inprocessTickets print_show_History print_show_Statistik print_show_User 
-					print_show_inprocessTickets print_show_History print_Statistik print_answerTicket print_submit_assumeTicket 
+					print_show_inprocessTickets print_show_History print_Statistik print_submit_assumeTicket 
 					print_submit_forwardTicket print_submit_releaseTicket print_submit_closeTicket);
 
 
@@ -99,7 +99,7 @@ our @EXPORT_OK = qw(print_show_newTickets print_show_inprocessTickets print_show
 	my $TicketID = $session->param('specificTicket');
 	
 	print $cgi->h1("Das Ticket mit der ID $TicketID wird nachfolgend im \"Verlaufsmodus\" angezeigt!");
-	my $ref_table = MitarbeiterDB::show_Messages_from_Ticket($TicketID,$session->param('UserIdent'));
+	my $ref_table = show_Messages_from_Ticket($TicketID,$session->param('UserIdent'));
 	my $table = $$ref_table;
 	$table->setAttr('style="table-layout:fixed"'); #Damit wird der ColWidth Vorrang vor der Länge des Inhalts der Zelle gegeben
 	$table->setClass("table_tickets");
@@ -210,23 +210,6 @@ our @EXPORT_OK = qw(print_show_newTickets print_show_inprocessTickets print_show
 	}
  }
  
-sub print_answerTicket {  #Subroutine versucht das Ticket in die Datenbank einzutragen
-  	#Erstelle ein neues CGI-Objekt und hole das vorhandene Cookie mit der Session-ID
-	my $cgi = new CGI;
- 	my($Username,$TicketID,$Message) = @_;
- 	my $success = db_access::answer_Ticket($Username,$TicketID,$Message);
- 	if($success != 0)
- 	{
- 		print_User_Testseite("Antwort wurde erfolgreich uebermittelt!");
- 	}
- 	else
- 	{
- 		print_User_Testseite("Fehler! Antwort konnte nicht uebermittelt werden!");
- 	}
- 	#Leite nach 3 Sekunden auf die spezifische Ticketansicht weiter (ueber die Root)
- 	print $cgi->meta({-http_equiv => 'REFRESH', -content => '3; /cgi-bin/rocket/SaveFormData.cgi?Level2=show_specTicket'});
-
- } 
  
  sub print_submit_assumeTicket {  #Mitarbeiter übernimmt angegebenes Ticket
 	my $cgi = new CGI;
