@@ -55,32 +55,6 @@ padding: 5px;
 margin-left: 220px;
 background: #D6D6D6;
 } 
-#ma_wrapper{
-width: 1200px;
-margin: 20px auto;
-border: 1px solid black;
-}
-
-#ma_header{
-width: 1200px;
-background: #D6B88D;
-margin-bottom: 15px;
-} 
-
-#ma_menu{
-font-family: arial; 
-width: 200px;
-float: left;
-padding: 5px;
-background: #C5D78D;
-} 
-
-#ma_content{
-width: 970px;
-padding: 5px;
-margin-left: 220px;
-background: #D6D6D6;
-} 
 
 
 a:link { text-decoration:none; }

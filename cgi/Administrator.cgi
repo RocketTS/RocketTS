@@ -54,11 +54,11 @@ else
                        
 	#Ausgabe des Wrappers, damit wird das Grundgeruest der Seite ausgegeben
 
-	print $cgi->start_div({-id=>'ma_wrapper'});
-	print $cgi->start_div({-id=>'ma_header'});
+	print $cgi->start_div({-id=>'user_wrapper'});
+	print $cgi->start_div({-id=>'user_header'});
 	print $cgi->h1($cgi->center("Header! Willkommen " .$session->param('UserIdent')));
-	print $cgi->end_div({-id=>'ma_header'});
-	print $cgi->start_div({-id=>'ma_menu'});
+	print $cgi->end_div({-id=>'user_header'});
+	print $cgi->start_div({-id=>'user_menu'});
 		
 	print '<nav>
 		    <div class="menu-item-static">
@@ -93,8 +93,8 @@ else
 		    </div>
 		</nav>';
     
-	print $cgi->end_div({-id=>'ma_menu'});
-	print $cgi->start_div({-id=>'ma_content'});
+	print $cgi->end_div({-id=>'user_menu'});
+	print $cgi->start_div({-id=>'user_content'});
 	#Hier muss der "richtige" Content ausgewaehlt und angezeigt werden (Level2)
 
 	given ($session->param('ShowPage_Level2'))
@@ -115,8 +115,8 @@ else
 		when('show_Mitarbeiter')		{AdministratorContent::print_show_Mitarbeiter();}
 	}
 
-	     print $cgi->end_div({-id=>'ma_content'});
-	     print $cgi->end_div({-id=>'ma_wrapper'});
+	     print $cgi->end_div({-id=>'user_content'});
+	     print $cgi->end_div({-id=>'user_wrapper'});
      
 	print $cgi->end_html();
 }

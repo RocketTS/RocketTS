@@ -13,6 +13,7 @@ use CGI::Carp qw(fatalsToBrowser);
 use Exporter;
 use db_access 'create_Ticket','get_TicketStatus','get_TicketPrioritaet','is_Authorized';
 use MitarbeiterDB 'get_allnewTickets','get_allinprocessTickets','get_allclosedTickets';
+use UserContent 'print_Index', 'print_User_Testseite';
 use HTML::Table;
 use myGraph 'print_Statistik_TicketStatus';
 
@@ -22,24 +23,6 @@ our @EXPORT_OK = qw(print_show_newTickets print_show_inprocessTickets print_show
 					print_submit_forwardTicket print_submit_releaseTicket print_submit_closeTicket);
 
 
-
-
-sub print_User_Testseite
-{#Uebergabeparameter: String der ausgegeben werden soll
- #Diese Subroutine ist für den Content-Bereich der Useransicht angepasst
-	my $text = $_[0];
-	my $cgi = CGI->new();
-	print $cgi->h1($text);
-  	1;		
- }
-
-sub print_Index
-{
-	my $cgi = CGI->new();
-	my $session = CGI::Session->new($cgi);
-    print $cgi->h1( $cgi->center("Startseite von Mitarbeiter Rechte: ".$session->param('AccessRights')));
-	1;  
-}
  
  sub print_show_newTickets
  {#Alle von neu erstellten Tickets werden anzeigt
