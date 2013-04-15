@@ -108,7 +108,7 @@ else
 
 	given ($session->param('ShowPage_Level2'))
 	{
-		when( '' )						{MitarbeiterContent::print_Index();}
+		when( '' )						{UserContent::print_Index();}
 		when('show_newTickets')			{MitarbeiterContent::print_show_newTickets();}
 		when('show_inprocessTickets')	{MitarbeiterContent::print_show_inprocessTickets();}
 		when('show_History')			{MitarbeiterContent::print_show_History();}
@@ -119,7 +119,7 @@ else
 		when('submit_forwardTicket')	{MitarbeiterContent::print_submit_forwardTicket($session->param('UserIdent'),$session->param('specificTicket'));}
 		when('submit_releaseTicket')	{MitarbeiterContent::print_submit_releaseTicket($session->param('UserIdent'),$session->param('specificTicket'));}	
 		when('submit_closeTicket')		{MitarbeiterContent::print_submit_closeTicket($session->param('UserIdent'),$session->param('specificTicket'));}
-		when('submit_answerTicket') 	{MitarbeiterContent::print_answerTicket($session->param('UserIdent'),$session->param('specificTicket'),$session->param('UserMessage'));}	
+		when('submit_answerTicket') 	{UsererContent::print_answerTicket($session->param('UserIdent'),$session->param('specificTicket'),$session->param('UserMessage'));}	
 		#Zusatz zu Mitarbeitern für Administatoren
 		when('show_Mitarbeiter')		{AdministratorContent::print_show_Mitarbeiter();}
 		

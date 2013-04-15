@@ -211,16 +211,6 @@ sub get_Messages_from_Ticket {#Author: Thomas Dorsch Date: 01.04.2013
 	
 }
 
-sub get_newTickets { #müll?
-	#liefert alle Tickets die ein bestimmter User erstellt hat
-	#my($Username) = @_;
-	my $db = db_connect();
-	my $sqlcommand = "SELECT * from view_newTickets;";
-	my $ref_array = $db->selectall_arrayref($sqlcommand);
-	$db = db_disconnect($db);
-	return $ref_array;	
-}
-
 sub get_TicketsbyStatus {
 	#Aufruf: get_TicketsbyStatus(EMail,Status);
 	#liefert Tickets zu Usernamen mit gewünschtem Status
@@ -343,6 +333,17 @@ sub is_Authorized { #liefert 1 bei TRUE, 0 bei FALSE
 	$command->finish();
 	$db = db_disconnect($db);
 	return $result;	
+}
+
+sub get_Auswahlkriterien {
+	my($Username) = @_;
+	my $db = db_connect();
+	my $command = $db->prepare("SELECT Prioritaet_ID FROM ticket WHERE Ticket_ID =\'". $Username . "\';");
+	$command->execute();	
+	my $result = $command->fetchrow_array();
+	$command->finish();
+	$db = db_disconnect($db);
+	return $result;
 }
 
 sub get_DropDownValues { #AUTHOR Thomas Dorsch DATE 09.04.13
