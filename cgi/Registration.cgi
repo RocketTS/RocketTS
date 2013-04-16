@@ -16,6 +16,7 @@ use CGI::Carp qw(fatalsToBrowser);
 use DebugUtils 'html_testseite';
 use RegistrationContent 'printIndex';
 use LoginDB 'regist_User';
+use RegistrationDB;
 
 
 #########################################
@@ -43,7 +44,7 @@ given ($session->param('ShowPage_Level2'))
 							}
 	
 	when('Check')			{#Pruefe ob der neue Benutzer angelegt werden kann
-							my $Level2 = LoginDB::regist_User($session->param('RegistrationVorname'),
+							my $Level2 = RegistrationDB::regist_User($session->param('RegistrationVorname'),
   															 $session->param('RegistrationNachname'),
   															 $session->param('RegistrationEmail'),
   															 $session->param('RegistrationPassword1'),

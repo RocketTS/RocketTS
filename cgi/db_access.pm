@@ -418,5 +418,22 @@ sub deleteAccount { #AUTHOR Thomas Dorsch 10.04.13
 		}
 	return $result;
 }
+
+sub changeMail { #AUTHOR Thomas Dorsch 16.04.13
+	#Subroutine ändert die Email-Adresse des Benutzers
+	#Übergabeparameter: 1: UserIdent
+	#					2: neue Email-Adresse
+	my $User = $_[0];
+	my $newEmail = $_[1];		
+	my $db = db_connect();
+	
+	$sql = "CALL sql_change_Email(\'".$User."\',\'".$newEmail."\');";
+	$command = $db->prepare($sql);
+	$command->execute();
+	$command = $db->prepare("SELECT \@ret;");
+	$command->execute();	
+	$result = $command->fetchrow_array();
+	return $result;
+}
 		
 	

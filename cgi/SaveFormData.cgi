@@ -105,23 +105,31 @@ if($cgi->param('input_Password_new2') ne '')
 	$session->param('newPassword2',$cgi->param('input_Password_new2'));
 }
 
+if($cgi->param('input_Email_new') ne '')
+{
+	$session->param('newEmail',$cgi->param('input_Email_new'));
+}
+
 
 $session->flush();
 
 #Leite auf Root um
 print $cgi->header();
+
+#Folgende Ausgaben waren für das debuggen hilfreich und sind in der Endfassung auskommentiert
 print $cgi->h1( 'Daten' );
-
-print $cgi->h1( $session->param('RegistrationVorname'));
-print $cgi->h1( $session->param('RegistrationNachname'));
-print $cgi->h1( $session->param('RegistrationEmail'));
-print $cgi->h1( $session->param('RegistrationPassword1'));
-print $cgi->h1( $session->param('RegistrationPassword2'));
-
+#
+#print $cgi->h1( $session->param('RegistrationVorname'));
+#print $cgi->h1( $session->param('RegistrationNachname'));
+#print $cgi->h1( $session->param('RegistrationEmail'));
+#print $cgi->h1( $session->param('RegistrationPassword1'));
+#print $cgi->h1( $session->param('RegistrationPassword2'));
+#
 print $cgi->h1( $session->param('ShowPage_Level1'));
 print $cgi->h1( $session->param('ShowPage_Level2'));
 print $cgi->h1( $session->param('ShowPage_Level3'));
+#
+#print $cgi->h1( $session->param('specificTicket'));
+#
 
-print $cgi->h1( $session->param('specificTicket'));
-
-print $cgi->meta({-http_equiv => 'REFRESH', -content => '2; /cgi-bin/rocket/Rocket.cgi'});
+print $cgi->meta({-http_equiv => 'REFRESH', -content => '3; /cgi-bin/rocket/Rocket.cgi'});

@@ -257,7 +257,31 @@ sub print_createTicket
 	 								 print $cgi->submit("Übernehmen");
 									 print $cgi->end_form();
 									}
-		when( 'Email' )				{print $cgi->h1("Ändern der Email-Adresse");}
+		when( 'Email' )				{print $cgi->h1("Ändern der Email-Adresse");
+									 print $cgi->start_form({-method => "POST",
+	 								 -action => "/cgi-bin/rocket/SaveFormData.cgi",
+	 								 -target => '_self'
+	 						 								});	 
+	 								 print $cgi->hidden(-name=>'Level2',
+	 				  									-value=>'changeEmail'); 
+	 				  				 print $cgi->hidden(-name=>'Level3',
+	 				  									-value=>'checkPassword');				   
+	 
+									 print $cgi->strong("Neues Email-Adresse\t");		 						
+	 								 print $cgi->textfield(-name=>'input_Email_new',
+	 														    -value=>'',
+	 						 								    -size=>25,
+	 						 								    -maxlength=>50);
+									 print $cgi->br();									 
+									 print $cgi->strong("Passwort bestätigen\t");									 
+									 print $cgi->password_field(-name=>'input_Password_new1',
+	 														    -value=>'',
+	 						 								    -size=>25,
+	 						 								    -maxlength=>50);
+									 print $cgi->br();									 									 
+	 								 print $cgi->submit("Übernehmen");
+									 print $cgi->end_form();
+									}
 		when( 'delete_Account' )	{print $cgi->h1("Löschen des eigenen Accounts");
 									 print $cgi->h1("Zur Bestätigung bitte das Passwort angeben");
 									 print $cgi->start_form({-method => "POST",

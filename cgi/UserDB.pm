@@ -166,3 +166,39 @@ sub deleteAccount{
 		return "failed";
 	}
 }
+
+sub changeEmail{
+	#1. Uebergabeparameter = UserIdent
+	#2. Uebergabeparameter = Passwort
+	#3. Uebergabeparameter = neue Email-Adresse
+	#Rückgabe = Statusmeldungen (Fehlerstatus oder alles ok)
+	#Zuerst wird überprüft ob das Passwort eingegeben wurde
+	my $UserIdent = $_[0];
+	my $Password_hash = sha256_hex($_[1]);
+	my $newEmail = $_[2];
+	if($_[1] eq "")
+	{
+		return "missing_password";
+	}
+	
+	if($_[2] eq "")
+	{
+		return "missing_email";
+	}
+		
+	#Jetztwird überprüft ob das Passwort zum User passt, um dessen Identität zu bestätigen
+	if(! db_access::valid_Login($UserIdent, $Password_hash))
+	{#Gibt true zurueck falls das Passwort passt, wird negiert
+		return "incorrect";
+	}
+	
+	#Jetzt kann die Email ändern Procedure gestartet werden
+	if(db_access::changeEmail($UserIdent, $newEmail))
+	{#War die Löschung erfolgreich
+		return "success";	
+	}
+	else
+	{
+		return "failed";
+	}
+}
