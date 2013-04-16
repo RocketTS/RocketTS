@@ -57,7 +57,7 @@ else
 
 	print $cgi->start_div({-id=>'user_wrapper'});
 	print $cgi->start_div({-id=>'user_header'});
-	print $cgi->h1($cgi->center("Header! Willkommen"));
+	print $cgi->h1($cgi->center("Ticketsystem Rocket"));
 	print $cgi->end_div({-id=>'user_header'});
 	print $cgi->start_div({-id=>'user_menu'});
 	

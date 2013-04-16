@@ -54,7 +54,6 @@ sub get_Tickets
  	 }
  }
 
- $table->addRow('1', '2');
  $table->setColWidth(1, 200);		#Legt die Breite der ersten Spalte fest (100 Pixel)
  $table->setColAlign(1, 'left');	#Erste Spalte wird zentriert dargestellt
  $table->setColAlign(2, 'left');	#zweite Spalte wird zentriert dargestellt

@@ -164,11 +164,13 @@ sub print_createTicket
  	#Erstelle ein neues CGI-Objekt und hole das vorhandene Cookie
 	#mit der Session-ID
 	my $cgi = new CGI;
+	
 
 	#Stelle das alte zugehoerige Session-Objekt zu dem aktuellen
 	#User her
 	my $session = CGI::Session->new($cgi);
 	my $TicketID = $session->param('specificTicket');
+	my $TicketStatus = db_access::get_TicketStatus($TicketID);
 	
 	
 	print $cgi->h1("Das Ticket mit der ID $TicketID wird nachfolgend im \"Verlaufsmodus\" angezeigt!");
@@ -180,6 +182,8 @@ sub print_createTicket
 	
 	print $table->getTable();	
 	
+	if($TicketStatus ne "Geschlossen")
+	{ 	
 	#Zeige das "Antwortformular"
 	print $cgi->h2("Antwort");
 	 
@@ -191,7 +195,7 @@ sub print_createTicket
  	print $cgi->hidden(-name=>'Level2',
 	 				   -value=>'submit_answerTicket');
 	 				   
-	 
+
 	print $cgi->strong("Nachricht\t");	
 	 						
 	print $cgi->textarea(-name=>'input_Message',
@@ -199,7 +203,13 @@ sub print_createTicket
 	 						   -cols=>70,
 	 						   -rows=>10);
 	print $cgi->br();
+
 	print $cgi->submit("Abschicken");
+	}
+	else
+	{
+	print $cgi->h1("Ticket geschlossen!");
+	}
 	print $cgi->end_form();
  }
  
