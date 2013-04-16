@@ -1,0 +1,9 @@
+DELIMITER //
+DROP PROCEDURE IF EXISTS sql_del_Message;
+CREATE PROCEDURE sql_del_Message(p_MessageID INT)
+BEGIN	
+	DELETE FROM tm WHERE Message_ID = p_MessageID;
+	DELETE FROM message WHERE Message_ID = p_MessageID;
+END
+//
+DELIMITER ;
