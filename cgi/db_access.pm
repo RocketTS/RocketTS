@@ -419,7 +419,7 @@ sub deleteAccount { #AUTHOR Thomas Dorsch 10.04.13
 	return $result;
 }
 
-sub changeMail { #AUTHOR Thomas Dorsch 16.04.13
+sub changeEmail { #AUTHOR Thomas Dorsch 16.04.13
 	#Subroutine ändert die Email-Adresse des Benutzers
 	#Übergabeparameter: 1: UserIdent
 	#					2: neue Email-Adresse

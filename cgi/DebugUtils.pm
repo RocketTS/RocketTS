@@ -35,7 +35,7 @@ sub html_testseite
      #Ausgabe des Headers
      print $cgi->start_div({-id=>'login_header'});
      print $cgi->h1(
-     				$cgi->center("Ticketsystem".$session->id())
+     				$cgi->center("Ticketsystem")
      				);
      print $cgi->end_div();
      

@@ -190,48 +190,52 @@ else
 																	 print $cgi->meta({-http_equiv => 'REFRESH', -content => '3; /cgi-bin/rocket/Rocket.cgi'});
 																	}
 										}
+									 }
 										
 		when('changeEmail')			{
 										given ($session->param('ShowPage_Level3'))
 										{
-											when ('')				{print $cgi->h1("fuck you");}
-											when( 'checkPassword' )	{print $cgi->h1("Debugcheck!!");
-																	my $status = UserDB::changeEmail($session->param('UserIdent'),$session->param('newPassword1'),$session->param('newEmail'));
+											when( 'checkPassword' )	{my $status = UserDB::changeEmail($session->param('UserIdent'),$session->param('newPassword1'),$session->param('newEmail'));
 																	 $session->param('ShowPage_Level3',$status);
 																	 $session->flush();
 																	 print $cgi->meta({-http_equiv => 'REFRESH', -content => '3; /cgi-bin/rocket/Rocket.cgi'});
 																	}
 											when( 'missing_password' ){print $cgi->h1("Fehler: Passwort wurde nicht eingegeben!");	
-																	 $session->param('ShowPage_Level2',"changeEmail");
+																	 $session->param('ShowPage_Level2',"show_Einstellungen");
+																	 $session->param('ShowPage_Level3',"show_Email");
 																	 $session->flush();
 																	 print $cgi->meta({-http_equiv => 'REFRESH', -content => '3; /cgi-bin/rocket/Rocket.cgi'});
 																	}
 											when( 'missing_email' )	{print $cgi->h1("Fehler: Neue Email-Adresse wurde nicht eingegeben!");	
-																	 $session->param('ShowPage_Level2',"changeEmail");
+																	 $session->param('ShowPage_Level2',"show_Einstellungen");
+																	 $session->param('ShowPage_Level3',"show_Email");
 																	 $session->flush();
 																	 print $cgi->meta({-http_equiv => 'REFRESH', -content => '3; /cgi-bin/rocket/Rocket.cgi'});
 																	}
 											when( 'incorrect' )		{print $cgi->h1("Fehler: Passwort war nicht korrekt!");	
-																	 $session->param('ShowPage_Level2',"changeEmail");
+																	 $session->param('ShowPage_Level2',"show_Einstellungen");
+																	 $session->param('ShowPage_Level3',"show_Email");
 																	 $session->flush();
 																	 print $cgi->meta({-http_equiv => 'REFRESH', -content => '3; /cgi-bin/rocket/Rocket.cgi'});
 																	}
 											when( 'success' )		{print $cgi->h1("Die Email-Adresse wurde erfolgreich geändert!");	
-																	 $session->param('ShowPage_Level2',"changeEmail");
+																	 $session->param('ShowPage_Level2',"show_Einstellungen");
+																	 $session->param('ShowPage_Level3',"show_Email");
 																	 #Da die Email-Adresse als UserIdent gehandhabt wird, muss diese natürlich auch in der bestehenden Session upgedated werden
 																	 $session->param('UserIdent', $session->param('newEmail'));
 																	 $session->flush();
 																	 print $cgi->meta({-http_equiv => 'REFRESH', -content => '3; /cgi-bin/rocket/Rocket.cgi'});
 																	}
 											when( 'failed' )		{print $cgi->h1("Fehler: Es trat ein Datenbankfehler beim Ändern der Email-Adresse auf!");	
-																	 $session->param('ShowPage_Level2',"changeEmail");
+																	 $session->param('ShowPage_Level2',"show_Einstellungen");
+																	 $session->param('ShowPage_Level3',"show_Email");
 																	 $session->flush();
 																	 print $cgi->meta({-http_equiv => 'REFRESH', -content => '3; /cgi-bin/rocket/Rocket.cgi'});
 																	}
 										}
 			
 									}
-									}
+									
 										
 	}
 	
