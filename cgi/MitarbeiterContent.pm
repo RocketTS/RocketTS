@@ -99,7 +99,7 @@ our @EXPORT_OK = qw(print_show_newTickets print_show_inprocessTickets print_show
 	my $TicketID = $session->param('specificTicket');
 	
 	print $cgi->h1("Das Ticket mit der ID $TicketID wird nachfolgend im \"Verlaufsmodus\" angezeigt!");
-	my $ref_table = show_Messages_from_Ticket($TicketID,$session->param('UserIdent'));
+	my $ref_table = UserDB::show_Messages_from_Ticket($TicketID,$session->param('UserIdent'));
 	my $table = $$ref_table;
 	$table->setAttr('style="table-layout:fixed"'); #Damit wird der ColWidth Vorrang vor der Länge des Inhalts der Zelle gegeben
 	$table->setClass("table_tickets");
@@ -219,11 +219,11 @@ our @EXPORT_OK = qw(print_show_newTickets print_show_inprocessTickets print_show
  	#if($success1 != 0 && $success2 != 0)
  	if($success1 != 0)
  	{
- 		print_User_Testseite("Ticket wurde erfolgreich uebernommen!");
+ 		UserContent::print_User_Testseite("Ticket wurde erfolgreich uebernommen!");
  	}
  	else
  	{
- 		print_User_Testseite("Fehler! Ticket konnte nicht uebernommen werden!");
+ 		UserContent::print_User_Testseite("Fehler! Ticket konnte nicht uebernommen werden!");
  	}
  	#Leite nach 3 Sekunden auf die spezifische Ticketansicht weiter (ueber die Root)
  	print $cgi->meta({-http_equiv => 'REFRESH', -content => '3; /cgi-bin/rocket/SaveFormData.cgi?Level2=show_specTicket'});
@@ -238,11 +238,11 @@ our @EXPORT_OK = qw(print_show_newTickets print_show_inprocessTickets print_show
  	#if($success1 != 0 && $success2 != 0)
  	if($success1 != 0)
  	{
- 		print_User_Testseite("Ticket wurde erfolgreich weitergeleitet!");
+ 		UserContent::print_User_Testseite("Ticket wurde erfolgreich weitergeleitet!");
  	}
  	else
  	{
- 		print_User_Testseite("Fehler! Ticket konnte nicht weitergeleitet werden!");
+ 		UserContent::print_User_Testseite("Fehler! Ticket konnte nicht weitergeleitet werden!");
  	}
  	#Leite nach 3 Sekunden auf die spezifische Ticketansicht weiter (ueber die Root)
  	print $cgi->meta({-http_equiv => 'REFRESH', -content => '3; /cgi-bin/rocket/SaveFormData.cgi?Level2=show_specTicket'});
@@ -257,11 +257,11 @@ our @EXPORT_OK = qw(print_show_newTickets print_show_inprocessTickets print_show
  	#if($success1 != 0 && $success2 != 0)
  	if($success1 != 0)
  	{
- 		print_User_Testseite("Ticket wurde erfolgreich freigegeben!");
+ 		UserContent::print_User_Testseite("Ticket wurde erfolgreich freigegeben!");
  	}
  	else
  	{
- 		print_User_Testseite("Fehler! Ticket konnte nicht freigegeben werden!");
+ 		UserContent::print_User_Testseite("Fehler! Ticket konnte nicht freigegeben werden!");
  	}
  	#Leite nach 3 Sekunden auf die spezifische Ticketansicht weiter (ueber die Root)
  	print $cgi->meta({-http_equiv => 'REFRESH', -content => '3; /cgi-bin/rocket/SaveFormData.cgi?Level2=show_specTicket'});
@@ -276,11 +276,11 @@ our @EXPORT_OK = qw(print_show_newTickets print_show_inprocessTickets print_show
  	#if($success1 != 0 && $success2 != 0)
  	if($success1 != 0)
  	{
- 		print_User_Testseite("Ticket wurde erfolgreich geschlossen!");
+ 		UserContent::print_User_Testseite("Ticket wurde erfolgreich geschlossen!");
  	}
  	else
  	{
- 		print_User_Testseite("Fehler! Ticket konnte nicht geschlossen werden!");
+ 		UserContent::print_User_Testseite("Fehler! Ticket konnte nicht geschlossen werden!");
  	}
  	#Leite nach 3 Sekunden auf die spezifische Ticketansicht weiter (ueber die Root)
  	print $cgi->meta({-http_equiv => 'REFRESH', -content => '3; /cgi-bin/rocket/SaveFormData.cgi?Level2=show_specTicket'});
