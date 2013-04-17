@@ -50,11 +50,21 @@ sub print_createTicket
 	my $ref_DropDown = db_access::get_DropDownValues("auswahlkriterien");
 	
  	my $cgi = CGI->new();
-		
 	print $cgi->start_html();
 	print $cgi->h2("Neues Ticket erstellen");
-	 
- 
+	
+	print "<table>";
+	print "<tr>";
+	print "<td>";	
+	
+
+	
+	print "</td></tr>";
+	print "<tr>";
+	print "<td>";
+ 	print $cgi->strong("Betreff\t");
+ 	print "</td>";
+ 	print "<td>";
 	 
 	 
 	print $cgi->start_form({-method => "POST",
@@ -62,29 +72,39 @@ sub print_createTicket
 	 						-target => '_self'
 	 						 });
 	
-	#Gebe das DropDown-Menü aus
-	UserContent::print_dropDown("input_Categorie",$ref_DropDown);
-	print $cgi->br();
+
+	#print $cgi->br();
  	
  	print $cgi->hidden(-name=>'Level2',
 	 				   -value=>'submit_createTicket');
 	 				   
-	print $cgi->strong("Betreff\t");
+	
 	 
 	print $cgi->textfield(-name=>'input_Betreff',
 	 					  -value=>'',
 	 					  -size=>50,
 	 					  -maxlength=>50);
-	print $cgi->br();
-	 
+	#print "</td><td>";
+	#print $cgi->br();
+	#Gebe das DropDown-Menü aus
+	UserContent::print_dropDown("input_Categorie",$ref_DropDown); 
+	print "</td></tr>";
+	print "<tr><td>";
 	print $cgi->strong("Nachricht\t");	
+	
+	print "</td><td>";
 	 						
 	print $cgi->textarea(-name=>'input_Message',
 	 						   -value=>'',
 	 						   -cols=>70,
 	 						   -rows=>10);
-	print $cgi->br();
+	#print $cgi->br();
+	print "</td></tr>";
+	print "<tr><td></td><td>";
+	
 	print $cgi->submit("Erstellen");
+	print "</td></tr>";
+	print "</table>";
 	print $cgi->end_form();
 }
 
@@ -185,7 +205,10 @@ sub print_createTicket
 	if($TicketStatus ne "Geschlossen")
 	{ 	
 	#Zeige das "Antwortformular"
+	print "<table><tr><td>";
 	print $cgi->h2("Antwort");
+	print "<table></td></tr><tr><td>";
+	
 	 
 	print $cgi->start_form({-method => "POST",
 	 						-action => "/cgi-bin/rocket/SaveFormData.cgi",
@@ -196,15 +219,17 @@ sub print_createTicket
 	 				   -value=>'submit_answerTicket');
 	 				   
 
-	print $cgi->strong("Nachricht\t");	
+		
 	 						
 	print $cgi->textarea(-name=>'input_Message',
 	 						   -value=>'',
 	 						   -cols=>70,
 	 						   -rows=>10);
-	print $cgi->br();
+	#print $cgi->br();
+	print "</td></tr><tr><td>";
 
 	print $cgi->submit("Abschicken");
+	print "</td></tr></table>";
 	}
 	else
 	{
@@ -235,29 +260,37 @@ sub print_createTicket
 	 						 								});	 
 	 								 print $cgi->hidden(-name=>'Level2',
 	 				  									-value=>'changePassword'); 				   
-	 
-									 print $cgi->strong("Altes Passwort\t");		 						
+	 								 print "<table><tr><td>";
+									 print $cgi->strong("Altes Passwort\t");
+									 print "</td><td>";			 						
 	 								 print $cgi->password_field(-name=>'input_Password',
 	 														    -value=>'',
 	 						 								    -size=>25,
 	 						 								    -maxlength=>50);
-									 print $cgi->br();									 
-									 print $cgi->strong("Neues Passwort\t");									 
+									 #print $cgi->br();									 
+									 print "</td></tr><tr><td>";
+									 print $cgi->strong("Neues Passwort\t");
+									 print "</td><td>";									 
 									 print $cgi->password_field(-name=>'input_Password_new1',
 	 														    -value=>'',
 	 						 								    -size=>25,
 	 						 								    -maxlength=>50);
-									 print $cgi->br();									 
-									 print $cgi->strong("Neues Passwort wiederholen\t");									 
+									 #print $cgi->br();									 
+									 print "</td></tr><tr><td>";
+									 print $cgi->strong("Neues Passwort wiederholen\t");
+									 print "</td><td>";									 
 									 print $cgi->password_field(-name=>'input_Password_new2',
 	 														    -value=>'',
 	 						 								    -size=>25,
 	 						 								    -maxlength=>50);
-									 print $cgi->br();									 
+									 print "</td></tr><tr><td></td><td>";
+									 #print $cgi->br();									 
 	 								 print $cgi->submit("Übernehmen");
 									 print $cgi->end_form();
+									 print "</td></tr></table>";
 									}
 		when( 'Email' )				{print $cgi->h1("Ändern der Email-Adresse");
+									 print "<table><tr><td>";
 									 print $cgi->start_form({-method => "POST",
 	 								 -action => "/cgi-bin/rocket/SaveFormData.cgi",
 	 								 -target => '_self'
@@ -267,20 +300,25 @@ sub print_createTicket
 	 				  				 print $cgi->hidden(-name=>'Level3',
 	 				  									-value=>'checkPassword');				   
 	 
-									 print $cgi->strong("Neues Email-Adresse\t");		 						
+									 print $cgi->strong("Neues Email-Adresse\t");
+									 print "</td><td>";		 						
 	 								 print $cgi->textfield(-name=>'input_Email_new',
 	 														    -value=>'',
 	 						 								    -size=>25,
 	 						 								    -maxlength=>50);
-									 print $cgi->br();									 
-									 print $cgi->strong("Passwort bestätigen\t");									 
+									 #print $cgi->br();	
+									 print "</td></tr><tr><td>";								 
+									 print $cgi->strong("Passwort bestätigen\t");
+									 print "</td><td>";										 
 									 print $cgi->password_field(-name=>'input_Password_new1',
 	 														    -value=>'',
 	 						 								    -size=>25,
 	 						 								    -maxlength=>50);
-									 print $cgi->br();									 									 
+									 #print $cgi->br();	
+									 print "</td></tr><tr><td></td><td>";							 									 
 	 								 print $cgi->submit("Übernehmen");
 									 print $cgi->end_form();
+									 print "</td></tr></table>";
 									}
 		when( 'delete_Account' )	{print $cgi->h1("Löschen des eigenen Accounts");
 									 print $cgi->h1("Zur Bestätigung bitte das Passwort angeben");
