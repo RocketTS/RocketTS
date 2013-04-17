@@ -321,7 +321,7 @@ sub print_createTicket
 									 print "</td></tr></table>";
 									}
 		when( 'delete_Account' )	{print $cgi->h1("Löschen des eigenen Accounts");
-									 print $cgi->h1("Zur Bestätigung bitte das Passwort angeben");
+									 print "<p>Zur Bestätigung bitte das Passwort eingeben</p>";
 									 print $cgi->start_form({-method => "POST",
 	 								 -action => "/cgi-bin/rocket/SaveFormData.cgi",
 	 								 -target => '_self'
