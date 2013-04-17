@@ -298,3 +298,27 @@ sub print_Statistik{
  	print qq!<img src="/rocket/$mygraph" alt="Statistik_TicketStatus"></img>!;
  	
  }
+ 
+sub print_UserList {#Alle Benutzer werden anzeigt
+ 
+ 	#Erstelle ein neues CGI-Objekt und hole das vorhandene Cookie mit der Session-ID
+	my $cgi = new CGI;
+
+	#Stelle das alte zugehoerige Session-Objekt zu dem aktuellen Mitarbeiter her
+	#my $session = CGI::Session->new($cgi);
+	
+	#Hole die HTML-Tabelle mit den Tickets
+	my $ref_table = MitarbeiterDB::get_UserList();
+	my $table = $$ref_table;
+	
+	print $cgi->h1("Übersicht der Benutzer");
+	$table->setAttr('style="table-layout:fixed"'); #Damit wird der ColWidth Vorrang vor der Länge des Inhalts der Zelle gegeben
+	$table->setClass("table_tickets");
+	print $table->getTable();	
+	
+	
+ }
+ 
+ sub print_show_specUser {
+	UserContent::print_User_Testseite("User bearbeiten ... "); 	
+ }

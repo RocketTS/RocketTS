@@ -435,5 +435,15 @@ sub changeEmail { #AUTHOR Thomas Dorsch 16.04.13
 	$result = $command->fetchrow_array();
 	return $result;
 }
+
+sub get_User {
+	#Aufruf: get_User();
+	#liefert alle Benutzer zurück
+	my($Username,$Status) = @_;
+	my $db = db_connect();
+	my $sqlcommand = "SELECT * FROM user";
+	my $ref_array = $db->selectall_arrayref($sqlcommand);
+	$db = db_disconnect($db);
+	return $ref_array;	
+}
 		
-	

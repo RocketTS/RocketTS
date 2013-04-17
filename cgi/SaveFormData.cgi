@@ -110,6 +110,11 @@ if($cgi->param('input_Email_new') ne '')
 	$session->param('newEmail',$cgi->param('input_Email_new'));
 }
 
+if($cgi->param('input_specificUser') ne '')
+{
+	$session->param('specificUser',$cgi->param('input_specificUser'));
+}
+
 
 $session->flush();
 

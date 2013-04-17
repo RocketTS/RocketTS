@@ -107,3 +107,33 @@ sub get_allclosedTickets {
 
  return \$table;
 }
+
+sub get_UserList {
+ #Liefert eine HTML-Tabllen-Objekt zurueck
+ my $UserIdent = $_[0];
+ 
+ my $ref_Ticketarray = db_access::get_User();
+ #Hole das Ticketarray
+ my @Ticketarray = @$ref_Ticketarray; #überflüssig?
+ #print $ref_Ticketarray;
+ #Erstelle das TableObjekt
+ my $table = HTML::Table->new( 
+    	-cols    => 6, 
+    	-border  => 0,
+    	-padding => 1,
+    	-width	 => '100%',
+    	-align   => 'center',
+    	-head => ['User_ID','Name','Vorname','Email','Rechte','Aktionen'],
+ );
+	
+ foreach my $array ( @$ref_Ticketarray ) {
+	 #Jetzt wird aus dem Topic ein Link generiert, welcher verwendet wird um den Nachrichtenverlauf anzuzeigen
+	 my($User_ID,$Name,$Vorname, $Email) = @$array;
+	 my $Rechte = db_access::get_AccessRights($Email); #Überarbeiten da zu viele DB-Abfragen
+	 my $Aktion = "<a href=\"/cgi-bin/rocket/SaveFormData.cgi?input_specificUser=$User_ID&Level2=show_specUser\" target=\"_self\">bearbeiten</a>";
+	  
+	 $table->addRow($User_ID,$Name,$Vorname, $Email, $Rechte, $Aktion);
+ }
+
+ return \$table;
+}
