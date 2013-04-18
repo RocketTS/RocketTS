@@ -167,9 +167,8 @@ sub change_User {
 		$return = db_access::update_User($User_ID,$Name_Neu,$Vorname_Neu, $Email_Neu);
 	}
 	else {
-		if($AccessRights_Alt eq "User"){
-			
-		}
+		db_access::update_User($User_ID,$Name_Neu,$Vorname_Neu, $Email_Neu);
+		$return = db_access::update_AccessRights($User_ID,$AccessRights_Alt,$Rechte[$AccessRights_Neu]);
 	}
 	return $return;
 }
