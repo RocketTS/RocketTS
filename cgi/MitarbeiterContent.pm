@@ -305,7 +305,7 @@ sub print_UserList {#Alle Benutzer werden anzeigt
 	my $cgi = new CGI;
 
 	#Stelle das alte zugehoerige Session-Objekt zu dem aktuellen Mitarbeiter her
-	#my $session = CGI::Session->new($cgi);
+	my $session = CGI::Session->new($cgi);
 	
 	#Hole die HTML-Tabelle mit den Tickets
 	my $ref_table = MitarbeiterDB::get_UserList();
@@ -320,5 +320,93 @@ sub print_UserList {#Alle Benutzer werden anzeigt
  }
  
  sub print_show_specUser {
-	UserContent::print_User_Testseite("User bearbeiten ... "); 	
+ 	my $cgi = new CGI;
+ 	my $session = CGI::Session->new($cgi);
+ 	
+ 	
+ 	my ($User_ID,$Name,$Vorname,$Email) = MitarbeiterDB::get_UserDatabyID($session->param('specificUser'));
+ 	my $AccessRights = db_access::get_AccessRights($Email);
+ 	
+ 
+	my %Rechte = ('0'=>'User', '1'=>'Mitarbeiter', '2'=>'Administrator'); #Kommentar
+	my $ref_Rechte = \%Rechte;
+
+
+	print $cgi->h1("Ändern der Benutzerdaten");
+	print $cgi->start_form({-method => "POST",
+	 						-action => "/cgi-bin/rocket/SaveFormData.cgi",
+	 						-target => '_self'
+	 					   });	 
+	print $cgi->hidden(-name=>'Level2',-value=>'submit_changeUser'); 
+				   
+	print $cgi->strong("Name:\t");		 						
+	print $cgi->textfield(-name=>'input_Name_new',
+						  -value=>$Name,
+	 					  -size=>25,
+	 					  -maxlength=>50);
+	print $cgi->br();			
+	 
+	print $cgi->strong("Vorname:\t");		 						
+	print $cgi->textfield(-name=>'input_Vorname_new',
+						  -value=>$Vorname,
+	 					  -size=>25,
+	 					  -maxlength=>50);
+	print $cgi->br();	
+	print $cgi->strong("Email:\t");		 						
+	print $cgi->textfield(-name=>'input_Email_new',
+						  -value=>$Email,
+	 					  -size=>25,
+	 					  -maxlength=>50);
+	print $cgi->br();		
+	print $cgi->strong("Rechte:\t");	
+	if($AccessRights ne 'User'){
+		delete $Rechte{'0'};
+	}
+		MitarbeiterContent::print_dropDown("input_AccessRights_new",$ref_Rechte,$AccessRights);
+		 						
+
+	print $cgi->br();										 
+	print $cgi->br();									 									 
+	print $cgi->submit("Übernehmen");
+	print $cgi->end_form();	
+ }
+ 
+ sub print_dropDown
+ {	#Dieses Modul soll einfach ein DropDown ausgeben
+  	#
+  	#Auswahl  0 => User
+  	#		  1 => Mitarbeiter
+  	#		  2 => Administrator
+  	my ($name,$ref_Array,$AccessRights) = @_;
+  	my %deref_Array = %$ref_Array;
+  	
+  	#Hier wird jetzt der HTML-Code ausgegeben
+  	print "<select name=\"$name\">";
+  	foreach my $key ( keys %deref_Array ) 
+  	{
+  		if($AccessRights eq $deref_Array{$key}){
+  			print "<option selected='selected' value=\"$key\">$deref_Array{$key}";	
+  		}
+  		else {
+  			print "<option value=\"$key\">$deref_Array{$key}";	
+  		}
+ 	}
+ 	print "</select> ";
+ }
+ 
+ sub print_submit_changeUser {  #Mitarbeiter schließt angegebenes Ticket
+	my $cgi = new CGI;
+ 	my($User_ID) = @_;
+ 	my $success = MitarbeiterDB::change_User($User_ID);
+ 	if($success != 0)
+ 	{
+ 		UserContent::print_User_Testseite("Benutzer wurde erfolgreich geändert!");
+ 	}
+ 	else
+ 	{
+ 		UserContent::print_User_Testseite("Fehler! Benutzer konnte nicht geändert werden!");
+ 	}
+ 	#Leite nach 3 Sekunden auf die spezifische Ticketansicht weiter (ueber die Root)
+ 	print $cgi->meta({-http_equiv => 'REFRESH', -content => '3; /cgi-bin/rocket/SaveFormData.cgi?Level2=show_User'});
+
  }

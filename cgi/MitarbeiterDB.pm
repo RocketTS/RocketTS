@@ -137,3 +137,39 @@ sub get_UserList {
 
  return \$table;
 }
+
+sub get_UserDatabyID {
+	#Aufruf: get_UserData($User_ID);
+	#liefert Benutzerdaten zu der übergebenen User_ID
+	my($User_ID) = @_;
+	my @array = db_access::get_UserData($User_ID);
+	return @array;
+}
+
+sub change_User {
+	#Auswahl  0 => User
+  	#		  1 => Mitarbeiter
+  	#		  2 => Administrator
+	my $cgi = new CGI;
+ 	my $session = CGI::Session->new($cgi);
+	my($User_ID) = @_;
+	my @Rechte = ('User','Mitarbeiter','Administrator');
+	
+	my $AccessRights_Alt = db_access::get_AccessRights(db_access::get_Email($User_ID));
+	my $AccessRights_Neu = $session->param('AccessRights_new');
+	my $Name_Neu = $session->param('Name_new');
+	my $Vorname_Neu = $session->param('Vorname_new');
+	my $Email_Neu = $session->param('Email_new');
+	my $Email = db_access::get_Email();
+	my $return = 0;
+
+	if($AccessRights_Alt eq $Rechte[$AccessRights_Neu]) { #Wenn keine Änderung der Rechte erfolgt ist
+		$return = db_access::update_User($User_ID,$Name_Neu,$Vorname_Neu, $Email_Neu);
+	}
+	else {
+		if($AccessRights_Alt eq "User"){
+			
+		}
+	}
+	return $return;
+}

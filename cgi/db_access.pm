@@ -446,4 +446,39 @@ sub get_User {
 	$db = db_disconnect($db);
 	return $ref_array;	
 }
+
+sub get_UserData {
+	#Aufruf: get_UserData($User_ID);
+	#liefert Benutzerdaten zu der übergebenen User_ID
+	my($User_ID) = @_;
+	my $db = db_connect();
+	my $sqlcommand = "SELECT User_ID,Name,Vorname,Email FROM user WHERE User_ID=\'".$User_ID."\'";
+	my @array = $db->selectrow_array($sqlcommand);
+	$db = db_disconnect($db);
+	return @array;	
+}
+
+sub get_Email {
+	my $User = $_[0];
 		
+	my $db = db_connect();
+	$command = $db->prepare("SELECT Email FROM user WHERE User_ID=\'". $User ."\'");
+	$command->execute();	
+	$result = $command->fetchrow_array();
+	$db = db_disconnect($db);
+	return $result;
+}		
+
+sub update_User {
+	my ($User_ID,$Name_Neu,$Vorname_Neu, $Email_Neu) = @_;
+		
+	my $db = db_connect();
+	my $sql = "CALL sql_update_User(\'". $User_ID ."\',\'". $Name_Neu ."\',\'". $Vorname_Neu ."\',\'". $Email_Neu ."\');";
+	my $command = $db->prepare($sql);
+	$command->execute();	
+	$command = $db->prepare("SELECT \@ret;");
+	$command->execute();	
+	my $result = $command->fetchrow_array();
+	$db = db_disconnect($db);
+	return $result;
+}

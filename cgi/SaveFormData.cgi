@@ -115,6 +115,23 @@ if($cgi->param('input_specificUser') ne '')
 	$session->param('specificUser',$cgi->param('input_specificUser'));
 }
 
+if($cgi->param('input_Name_new') ne '')
+{
+	$session->param('Name_new',$cgi->param('input_Name_new'));
+}
+if($cgi->param('input_Vorname_new') ne '')
+{
+	$session->param('Vorname_new',$cgi->param('input_Vorname_new'));
+}
+if($cgi->param('input_Email_new') ne '')
+{
+	$session->param('Email_new',$cgi->param('input_Email_new'));
+}
+if($cgi->param('input_AccessRights_new') ne '')
+{
+	$session->param('AccessRights_new',$cgi->param('input_AccessRights_new'));
+}
+
 
 $session->flush();
 

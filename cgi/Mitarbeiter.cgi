@@ -118,6 +118,7 @@ else
 		when('show_User')				{MitarbeiterContent::print_UserList();}
 		when('show_specUser')			{MitarbeiterContent::print_show_specUser();}
 		when('show_specTicket')			{MitarbeiterContent::print_show_specTicket();}
+		when('submit_changeUser')		{MitarbeiterContent::print_submit_changeUser($session->param('specificUser'));}
 		when('submit_assumeTicket')		{MitarbeiterContent::print_submit_assumeTicket($session->param('UserIdent'),$session->param('specificTicket'));}
 		when('submit_forwardTicket')	{MitarbeiterContent::print_submit_forwardTicket($session->param('UserIdent'),$session->param('specificTicket'));}
 		when('submit_releaseTicket')	{MitarbeiterContent::print_submit_releaseTicket($session->param('UserIdent'),$session->param('specificTicket'));}	
