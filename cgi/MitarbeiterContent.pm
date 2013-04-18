@@ -330,6 +330,8 @@ sub print_UserList {#Alle Benutzer werden anzeigt
  
 	my %Rechte = ('0'=>'User', '1'=>'Mitarbeiter', '2'=>'Administrator'); #Kommentar
 	my $ref_Rechte = \%Rechte;
+	my %Level = ('1'=>'Level 1', '2'=>'Level 2', '3'=>'Level 3'); #Kommentar
+	my $ref_Level = \%Level;
 
 
 	print $cgi->h1("Ändern der Benutzerdaten");
@@ -338,43 +340,74 @@ sub print_UserList {#Alle Benutzer werden anzeigt
 	 						-target => '_self'
 	 					   });	 
 	print $cgi->hidden(-name=>'Level2',-value=>'submit_changeUser'); 
-				   
-	print $cgi->strong("Name:\t");		 						
+	
+	print "<table>";
+	print "<tr>";
+	print "<td>";				   
+	print $cgi->strong("Name:\t");
+	print "</td><td>";		 						
 	print $cgi->textfield(-name=>'input_Name_new',
 						  -value=>$Name,
 	 					  -size=>25,
 	 					  -maxlength=>50);
-	print $cgi->br();			
+	print "</td></tr>";
+	print "<tr>";
+	print "<td>";
+	#print $cgi->br();			
 	 
-	print $cgi->strong("Vorname:\t");		 						
+	print $cgi->strong("Vorname:\t");	
+	print "</td><td>";	 						
 	print $cgi->textfield(-name=>'input_Vorname_new',
 						  -value=>$Vorname,
 	 					  -size=>25,
 	 					  -maxlength=>50);
-	print $cgi->br();	
-	print $cgi->strong("Email:\t");		 						
+	print "</td></tr>";
+	print "<tr>";
+	print "<td>";	
+	print $cgi->strong("Email:\t");	
+	print "</td><td>";
+	 						
 	print $cgi->textfield(-name=>'input_Email_new',
 						  -value=>$Email,
 	 					  -size=>25,
 	 					  -maxlength=>50);
-	print $cgi->br();		
+	print "</td></tr>";
+	print "<tr>";
+	print "<td>";		
 	print $cgi->strong("Rechte:\t");	
+	print "</td><td>";
 	if($AccessRights ne 'User'){
 		delete $Rechte{'0'};
 	}
-		MitarbeiterContent::print_dropDown("input_AccessRights_new",$ref_Rechte,$AccessRights);
-		 						
-
-	print $cgi->br();										 
-	print $cgi->br();									 									 
+		MitarbeiterContent::print_dropDown("input_AccessRights_new",$ref_Rechte,'Level 3');
+	print "</td></tr>";
+	if($AccessRights){
+		my $ref_Abteilung = UserDB::get_DropDownValues("abteilung");
+		print "<tr><td>";
+		print $cgi->strong("Level:\t");
+		print "</td><td>";
+		MitarbeiterContent::print_dropDown("input_Level_new",$ref_Level,$AccessRights);
+		print "</td></tr>";
+		print "<tr><td>";
+		print $cgi->strong("Abteilung:\t");
+		print "</td><td>";
+		UserContent::print_dropDown("input_Abteilung_new",$ref_Abteilung);
+		print "</td></tr>";
+	}
+	print "<tr>";
+	print "<td></td><td>"; 						
+								 									 
 	print $cgi->submit("Übernehmen");
+	print "</td></tr>";
+	print "</table>";
+
 	print $cgi->end_form();	
  }
  
  sub print_dropDown
  {	#Dieses Modul soll einfach ein DropDown ausgeben
   	#
-  	#Auswahl  0 => User
+  	#Beispiel 0 => User
   	#		  1 => Mitarbeiter
   	#		  2 => Administrator
   	my ($name,$ref_Array,$AccessRights) = @_;

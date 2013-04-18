@@ -131,6 +131,14 @@ if($cgi->param('input_AccessRights_new') ne '')
 {
 	$session->param('AccessRights_new',$cgi->param('input_AccessRights_new'));
 }
+if($cgi->param('input_Level_new') ne '')
+{
+	$session->param('Level_new',$cgi->param('input_Level_new'));
+}
+if($cgi->param('input_Abteilung_new') ne '')
+{
+	$session->param('Abteilung_new',$cgi->param('input_Abteilung_new'));
+}
 
 
 $session->flush();

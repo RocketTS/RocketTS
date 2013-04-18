@@ -483,3 +483,16 @@ sub update_User {
 	$db = db_disconnect($db);
 	return $result;
 }
+sub update_AccessRights {
+	my ($User_ID,$alt,$neu, $Email_Neu,$Abteilung,$Level) = @_;
+		
+	my $db = db_connect();
+	my $sql = "CALL sql_update_AccessRights(\'". $User_ID ."\',\'". $alt ."\',\'". $neu ."\',\'". $Abteilung ."\',\'". $Level ."\');";
+	my $command = $db->prepare($sql);
+	$command->execute();	
+	$command = $db->prepare("SELECT \@ret;");
+	$command->execute();	
+	my $result = $command->fetchrow_array();
+	$db = db_disconnect($db);
+	return $result;
+}

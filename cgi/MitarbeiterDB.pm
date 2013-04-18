@@ -160,6 +160,8 @@ sub change_User {
 	my $Name_Neu = $session->param('Name_new');
 	my $Vorname_Neu = $session->param('Vorname_new');
 	my $Email_Neu = $session->param('Email_new');
+	my $Level_Neu = $session->param('Level_new');
+	my $Abteilung_Neu = $session->param('Abteilung_new');
 	my $Email = db_access::get_Email();
 	my $return = 0;
 
@@ -167,9 +169,8 @@ sub change_User {
 		$return = db_access::update_User($User_ID,$Name_Neu,$Vorname_Neu, $Email_Neu);
 	}
 	else {
-		if($AccessRights_Alt eq "User"){
-			
-		}
+		db_access::update_User($User_ID,$Name_Neu,$Vorname_Neu, $Email_Neu);
+		$return = db_access::update_AccessRights($User_ID,$AccessRights_Alt,$Rechte[$AccessRights_Neu],$Abteilung_Neu,$Level_Neu);
 	}
 	return $return;
 }
