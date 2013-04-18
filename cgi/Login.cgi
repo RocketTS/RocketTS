@@ -17,7 +17,6 @@ use CGI::Carp qw(fatalsToBrowser);
 use DebugUtils 'html_testseite';
 use LoginContent 'printIndex';
 use LoginDB 'login_User';
-use db_access 'set_Hash', 'get_AccessRights','get_MA_Level';
 
 #########################################
 #Instanzvariablen						#
