@@ -330,8 +330,8 @@ sub print_UserList {#Alle Benutzer werden anzeigt
  
 	my %Rechte = ('0'=>'User', '1'=>'Mitarbeiter', '2'=>'Administrator'); #Kommentar
 	my $ref_Rechte = \%Rechte;
-	my %Level = ('1'=>'Level 1', '3'=>'Level 2', '3'=>'Level 3'); #Kommentar
-	my $ref_Level = \%Rechte;
+	my %Level = ('1'=>'Level 1', '2'=>'Level 2', '3'=>'Level 3'); #Kommentar
+	my $ref_Level = \%Level;
 
 
 	print $cgi->h1("Ändern der Benutzerdaten");
@@ -379,18 +379,18 @@ sub print_UserList {#Alle Benutzer werden anzeigt
 	if($AccessRights ne 'User'){
 		delete $Rechte{'0'};
 	}
-		MitarbeiterContent::print_dropDown("input_AccessRights_new",$ref_Rechte,$AccessRights);
+		MitarbeiterContent::print_dropDown("input_AccessRights_new",$ref_Rechte,'Level 3');
 	print "</td></tr>";
 	if($AccessRights){
 		my $ref_Abteilung = UserDB::get_DropDownValues("abteilung");
 		print "<tr><td>";
 		print $cgi->strong("Level:\t");
-		print "</td><td";
+		print "</td><td>";
 		MitarbeiterContent::print_dropDown("input_Level_new",$ref_Level,$AccessRights);
 		print "</td></tr>";
 		print "<tr><td>";
 		print $cgi->strong("Abteilung:\t");
-		print "</td><td";
+		print "</td><td>";
 		UserContent::print_dropDown("input_Abteilung_new",$ref_Abteilung);
 		print "</td></tr>";
 	}
@@ -407,7 +407,7 @@ sub print_UserList {#Alle Benutzer werden anzeigt
  sub print_dropDown
  {	#Dieses Modul soll einfach ein DropDown ausgeben
   	#
-  	#Auswahl  0 => User
+  	#Beispiel 0 => User
   	#		  1 => Mitarbeiter
   	#		  2 => Administrator
   	my ($name,$ref_Array,$AccessRights) = @_;
