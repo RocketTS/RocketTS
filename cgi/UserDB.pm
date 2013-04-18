@@ -202,3 +202,43 @@ sub changeEmail{
 		return "failed";
 	}
 }
+
+sub get_DropDownValues{
+	#Die Subroutine holt eine Array in dem die DropDown-Values befinden, und im UserContent.pm ausgegeben werden
+	#1. Uebergabeparameter = Tabellenname, in dem sich die DropDown-Values befinden
+	#Rückgabe = Referenz auf die Hash-Array, welche die Werte beinhaltet
+	my $tabellenname = $_[0];
+	my $referenz = db_access::get_DropDownValues($tabellenname);
+	return $referenz;
+}
+
+sub create_Ticket{
+	#Übergabeparameter: 1. Userident
+	#					2. Betreff
+	#					3. Message
+	#					4. Auswahl_ID
+	#					5. Prioritaet_ID
+	#Rückgabe: Status, ob das Ticket Erstellen funktioniert hat
+	
+	my($Userident, $Betreff, $Message, $Auswahl_ID, $Prioritaet_ID) = @_;
+	my $Status = db_access::create_Ticket($Userident,$Betreff,$Message,$Auswahl_ID,$Prioritaet_ID);
+	return $Status;
+}
+
+sub answer_Ticket{
+	#Übergabeparameter: 1. Userident
+	#					2. TicketID
+	#					3. Message
+	#Rückgabe: Boolschen Wert ob der Eintrag in die Datenbank gelückt ist (0 = fehler)
+	my($Userident, $TicketID, $Message) = @_;
+	my $Success = db_access::answer_Ticket($Userident,$TicketID,$Message);
+	return $Success;
+}
+
+sub get_TicketStatus{
+	#Übergabeparameter 1. TicketID
+	#Rückgabewert: Ticketstatus (Mögliche Werte: ("Neu", "Geschlossen", "In Bearbeitung"));
+	my $TicketID = $_[0];
+	my $Status = db_access::get_TicketStatus($TicketID);
+	return $Status;
+}

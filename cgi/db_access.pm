@@ -245,6 +245,7 @@ sub get_MA_Level { #liefert den INT-Wert aus der Spalte Level des entsprechenden
 }
 
 sub get_TicketStatus {
+	#liefert den Ticketstatus zurück. Mögliche Werte: ("Neu", "Geschlossen", "In Bearbeitung");
 	my($Ticket_ID) = @_;
 	my $db = db_connect();
 	my $command = $db->prepare("SELECT Status FROM ticket WHERE Ticket_ID =\'". $Ticket_ID . "\';");

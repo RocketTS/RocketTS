@@ -47,7 +47,8 @@ sub print_Index
 sub print_createTicket
 {
 	#Jetzt werden die Values für das Dropdown-Menü aus der Datenbank geholt
-	my $ref_DropDown = db_access::get_DropDownValues("auswahlkriterien");
+	#Übergabeparameter: Tabellenname, in dem sich die Werte befinden (auswahlkriterien)
+	my $ref_DropDown = UserDB::get_DropDownValues("auswahlkriterien");
 	
  	my $cgi = CGI->new();
 	print $cgi->start_html();
@@ -111,7 +112,7 @@ sub print_createTicket
  sub print_submit_createTicket
  {#Subroutine versucht das Ticket in die Datenbank einzutragen
  	my($Username,$Betreff,$Message,$Auswahl_ID,$Prioritaet_ID) = @_;
- 	my $success = db_access::create_Ticket($Username,$Betreff,$Message,$Auswahl_ID,$Prioritaet_ID);
+ 	my $success = UserDB::create_Ticket($Username,$Betreff,$Message,$Auswahl_ID,$Prioritaet_ID);
  	if($success != 0)
  	{
  		print_User_Testseite("Ticket wurde erfolgreich uebermittelt!");
@@ -129,7 +130,7 @@ sub print_createTicket
 	#mit der Session-ID
 	my $cgi = new CGI;
  	my($Username,$TicketID,$Message) = @_;
- 	my $success = db_access::answer_Ticket($Username,$TicketID,$Message);
+ 	my $success = UserDB::answer_Ticket($Username,$TicketID,$Message);
  	if($success != 0)
  	{
  		print_User_Testseite("Antwort wurde erfolgreich uebermittelt!");
@@ -190,7 +191,7 @@ sub print_createTicket
 	#User her
 	my $session = CGI::Session->new($cgi);
 	my $TicketID = $session->param('specificTicket');
-	my $TicketStatus = db_access::get_TicketStatus($TicketID);
+	my $TicketStatus = UserDB::get_TicketStatus($TicketID);
 	
 	
 	print $cgi->h1("Das Ticket mit der ID $TicketID wird nachfolgend im \"Verlaufsmodus\" angezeigt!");
