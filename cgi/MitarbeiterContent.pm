@@ -11,7 +11,6 @@ use strict;
 use CGI;
 use CGI::Carp qw(fatalsToBrowser);
 use Exporter;
-use db_access 'create_Ticket','get_TicketStatus','get_TicketPrioritaet','is_Authorized';
 use MitarbeiterDB 'get_allnewTickets','get_allinprocessTickets','get_allclosedTickets';
 use UserContent 'print_Index', 'print_User_Testseite', 'show_Messages_from_Ticket';
 use HTML::Table;
@@ -24,8 +23,9 @@ our @EXPORT_OK = qw(print_show_newTickets print_show_inprocessTickets print_show
 
 
  
- sub print_show_newTickets
- {#Alle von neu erstellten Tickets werden anzeigt
+ sub print_show_newTickets {
+ 	#gibt die neuen Tickets des Mitarbeiters aus
+ 	
  
  	#Erstelle ein neues CGI-Objekt und hole das vorhandene Cookie mit der Session-ID
 	my $cgi = new CGI;
@@ -33,7 +33,7 @@ our @EXPORT_OK = qw(print_show_newTickets print_show_inprocessTickets print_show
 	#Stelle das alte zugehoerige Session-Objekt zu dem aktuellen Mitarbeiter her
 	my $session = CGI::Session->new($cgi);
 	
-	#Hole die HTML-Tabelle mit den Tickets
+	#Hole die HTML-Tabelle mit den Tickets und dereferenziert
 	my $ref_table = MitarbeiterDB::get_allnewTickets($session->param('UserIdent'));
 	my $table = $$ref_table;
 	
@@ -44,8 +44,8 @@ our @EXPORT_OK = qw(print_show_newTickets print_show_inprocessTickets print_show
 	
 	
  }
-  sub print_show_inprocessTickets
- {#Alle von neu erstellten Tickets werden anzeigt
+  sub print_show_inprocessTickets {
+  	#gibt die Tickets aus, die vom jeweiligen Mitarbeiter momentan bearbeitet werden
  
  	#Erstelle ein neues CGI-Objekt und hole das vorhandene Cookie mit der Session-ID
 	my $cgi = new CGI;
@@ -65,8 +65,8 @@ our @EXPORT_OK = qw(print_show_newTickets print_show_inprocessTickets print_show
 	
  }
  
-   sub print_show_History
- {#Alle von neu erstellten Tickets werden anzeigt
+   sub print_show_History {
+   	#gibt die Tickets aus, die vom Mitarbeiter bearbeitet wurden 
  
  	#Erstelle ein neues CGI-Objekt und hole das vorhandene Cookie mit der Session-ID
 	my $cgi = new CGI;
@@ -86,19 +86,19 @@ our @EXPORT_OK = qw(print_show_newTickets print_show_inprocessTickets print_show
 	
  }
  
- sub print_show_specTicket
-{#Ein bestimmtes von dem User erstellten Tickets wird Verlaufsmäßig angezeigt
- #Dabei soll der User eine neue Message anhängen/antworten können
- 	#Erstelle ein neues CGI-Objekt und hole das vorhandene Cookie
-	#mit der Session-ID
+ sub print_show_specTicket {
+ 	#gibt die Informationen des ausgewählten Tickets aus, sowie Bearbeitungsoptionen und der Antwortmöglichkeit für den Mitarbeiter
+ 	
+ 	#Erstelle ein neues CGI-Objekt und hole das vorhandene Cookie mit der Session-ID
 	my $cgi = new CGI;
 
-	#Stelle das alte zugehoerige Session-Objekt zu dem aktuellen
-	#User her
+	#Stelle das alte zugehoerige Session-Objekt zu dem aktuellen User her
 	my $session = CGI::Session->new($cgi);
 	my $TicketID = $session->param('specificTicket');
 	
 	print $cgi->h1("Das Ticket mit der ID $TicketID wird nachfolgend im \"Verlaufsmodus\" angezeigt!");
+	
+	#Abrufen aller Nachrichten zum ausgewählten Ticket und Ausgabe in Tabelle
 	my $ref_table = UserDB::show_Messages_from_Ticket($TicketID,$session->param('UserIdent'));
 	my $table = $$ref_table;
 	$table->setAttr('style="table-layout:fixed"'); #Damit wird der ColWidth Vorrang vor der Länge des Inhalts der Zelle gegeben
@@ -111,12 +111,10 @@ our @EXPORT_OK = qw(print_show_newTickets print_show_inprocessTickets print_show
 	<tr>
 	<td>';
 	
-	#Abfragen für die Aktions-Buttons, um DB-Abfragen zu reduzieren
-	my $TicketStatus = db_access::get_TicketStatus($TicketID);	
-	my $TicketPrioritaet = db_access::get_TicketPrioritaet($TicketID);
-	my $is_Authorized = db_access::is_Authorized($session->param('UserIdent'),$session->param('specificTicket'));
+	#DB-Abfragen für die Aktions-Buttons, um DB-Abfragen zu reduzieren
+	my ($TicketStatus,$TicketPrioritaet,$is_Authorized) = MitarbeiterDB::show_specTicketData($TicketID,$session->param('UserIdent'));
 	
-	#Anzeigen des Übernehmen-Buttons
+	#Anzeigen des Übernehmen-Buttons, wenn Ticket nicht in Bearbeitung oder nicht geschlossen ist
 	if(($TicketStatus eq "in Bearbeitung") || ($TicketStatus eq "Geschlossen")) {
 		print "<input type=\"submit\" name=\"Übernehmen\" value=\"Übernehmen\" disabled>";
 	}
@@ -185,6 +183,7 @@ our @EXPORT_OK = qw(print_show_newTickets print_show_inprocessTickets print_show
 		print '</td>
 	</tr>
 	</table>';
+	
 	#Zeige das "Antwortformular", wenn Ticket in Bearbeitung + MA = Bearbeiter	
 	if($TicketStatus eq "in Bearbeitung" && $is_Authorized == 1) {
 		print $cgi->h2("Antwort");
@@ -211,13 +210,13 @@ our @EXPORT_OK = qw(print_show_newTickets print_show_inprocessTickets print_show
  }
  
  
- sub print_submit_assumeTicket {  #Mitarbeiter übernimmt angegebenes Ticket
+ sub print_submit_assumeTicket {  
+ 	#wird ausgeführt, wenn Mitarbeiter das angegebenes Ticket übernimmt
+ 	#Übergabewerte (Email, TicketID)
 	my $cgi = new CGI;
  	my($Username,$Ticket_ID) = @_;
- 	my $success1 = db_access::assume_Ticket($Username,$Ticket_ID);
- 	#my $success2 = db_access::answer_Ticket($Username,$Ticket_ID,"Ticket wurde zur Bearbeitung übernommen!");
- 	#if($success1 != 0 && $success2 != 0)
- 	if($success1 != 0)
+ 	my $success = MitarbeiterDB::assume_Ticket($Username,$Ticket_ID);
+ 	if($success != 0)
  	{
  		UserContent::print_User_Testseite("Ticket wurde erfolgreich uebernommen!");
  	}
@@ -230,13 +229,14 @@ our @EXPORT_OK = qw(print_show_newTickets print_show_inprocessTickets print_show
 
  }
  
-  sub print_submit_forwardTicket {  #Mitarbeiter leitet angegebenes Ticket weiter
+  sub print_submit_forwardTicket {  
+  	#wird ausgeführt, wenn Mitarbeiter das angegebenes Ticket weiterleitet
+ 	#Übergabewerte (Email, TicketID)
 	my $cgi = new CGI;
  	my($Username,$Ticket_ID) = @_;
- 	my $success1 = db_access::forward_Ticket($Username,$Ticket_ID);
- 	#my $success2 = db_access::answer_Ticket($Username,$Ticket_ID,"Ticket wurde zur nächsten Instanz weitergeleitet!");
- 	#if($success1 != 0 && $success2 != 0)
- 	if($success1 != 0)
+ 	my $success = MitarbeiterDB::forward_Ticket($Username,$Ticket_ID);
+
+ 	if($success != 0)
  	{
  		UserContent::print_User_Testseite("Ticket wurde erfolgreich weitergeleitet!");
  	}
@@ -249,13 +249,14 @@ our @EXPORT_OK = qw(print_show_newTickets print_show_inprocessTickets print_show
 
  }
  
-  sub print_submit_releaseTicket {  #Mitarbeiter gibt angegebenes Ticket frei
+  sub print_submit_releaseTicket { 
+  	#wird ausgeführt, wenn Mitarbeiter das angegebenes Ticket wieder freigibt
+ 	#Übergabewerte (Email, TicketID)
 	my $cgi = new CGI;
  	my($Username,$Ticket_ID) = @_;
- 	my $success1 = db_access::release_Ticket($Username,$Ticket_ID);
- 	#my $success2 = db_access::answer_Ticket($Username,$Ticket_ID,"Ticket wurde wieder freigegeben!");
- 	#if($success1 != 0 && $success2 != 0)
- 	if($success1 != 0)
+ 	my $success = MitarbeiterDB::release_Ticket($Username,$Ticket_ID);
+ 	
+ 	if($success != 0)
  	{
  		UserContent::print_User_Testseite("Ticket wurde erfolgreich freigegeben!");
  	}
@@ -268,13 +269,14 @@ our @EXPORT_OK = qw(print_show_newTickets print_show_inprocessTickets print_show
 
  }
   
-  sub print_submit_closeTicket {  #Mitarbeiter schließt angegebenes Ticket
+  sub print_submit_closeTicket { 
+  	#wird ausgeführt, wenn Mitarbeiter das angegebenes Ticket schließt
+ 	#Übergabewerte (Email, TicketID)
 	my $cgi = new CGI;
  	my($Username,$Ticket_ID) = @_;
- 	my $success1 = db_access::close_Ticket($Username,$Ticket_ID);
- 	#my $success2 = db_access::answer_Ticket($Username,$Ticket_ID,"Ticket wurde geschlossen!");
- 	#if($success1 != 0 && $success2 != 0)
- 	if($success1 != 0)
+ 	my $success = MitarbeiterDB::close_Ticket($Username,$Ticket_ID);
+
+ 	if($success != 0)
  	{
  		UserContent::print_User_Testseite("Ticket wurde erfolgreich geschlossen!");
  	}
@@ -288,158 +290,14 @@ our @EXPORT_OK = qw(print_show_newTickets print_show_inprocessTickets print_show
  }
  
 sub print_Statistik{
+	#gibt die Graphen der Statistik aus
  	my $cgi = new CGI;
 	my $session = CGI::Session->new($cgi);
-	print $cgi->h1("Statistik");
-	#print "Content-type: image/png\n\n";
- 	#print myGraph::print_Statistik_TicketStatus();
- 	
+	
+	#lässt Graphen erstellen, abspeichern und gibt diesen aus
  	my $mygraph = myGraph::print_Statistik_TicketStatus();
+ 	
+ 	print $cgi->h1("Statistik");
  	print qq!<img src="/rocket/$mygraph" alt="Statistik_TicketStatus"></img>!;
- 	
  }
  
-sub print_UserList {#Alle Benutzer werden anzeigt
- 
- 	#Erstelle ein neues CGI-Objekt und hole das vorhandene Cookie mit der Session-ID
-	my $cgi = new CGI;
-
-	#Stelle das alte zugehoerige Session-Objekt zu dem aktuellen Mitarbeiter her
-	my $session = CGI::Session->new($cgi);
-	
-	#Hole die HTML-Tabelle mit den Tickets
-	my $ref_table = MitarbeiterDB::get_UserList();
-	my $table = $$ref_table;
-	
-	print $cgi->h1("Übersicht der Benutzer");
-	$table->setAttr('style="table-layout:fixed"'); #Damit wird der ColWidth Vorrang vor der Länge des Inhalts der Zelle gegeben
-	$table->setClass("table_tickets");
-	print $table->getTable();	
-	
-	
- }
- 
- sub print_show_specUser {
- 	my $cgi = new CGI;
- 	my $session = CGI::Session->new($cgi);
- 	
- 	
- 	my ($User_ID,$Name,$Vorname,$Email) = MitarbeiterDB::get_UserDatabyID($session->param('specificUser'));
- 	my $AccessRights = db_access::get_AccessRights($Email);
- 	
- 
-	my %Rechte = ('0'=>'User', '1'=>'Mitarbeiter', '2'=>'Administrator'); #Kommentar
-	my $ref_Rechte = \%Rechte;
-	my %Level = ('1'=>'Level 1', '2'=>'Level 2', '3'=>'Level 3'); #Kommentar
-	my $ref_Level = \%Level;
-
-
-	print $cgi->h1("Ändern der Benutzerdaten");
-	print $cgi->start_form({-method => "POST",
-	 						-action => "/cgi-bin/rocket/SaveFormData.cgi",
-	 						-target => '_self'
-	 					   });	 
-	print $cgi->hidden(-name=>'Level2',-value=>'submit_changeUser'); 
-	
-	print "<table>";
-	print "<tr>";
-	print "<td>";				   
-	print $cgi->strong("Name:\t");
-	print "</td><td>";		 						
-	print $cgi->textfield(-name=>'input_Name_new',
-						  -value=>$Name,
-	 					  -size=>25,
-	 					  -maxlength=>50);
-	print "</td></tr>";
-	print "<tr>";
-	print "<td>";
-	#print $cgi->br();			
-	 
-	print $cgi->strong("Vorname:\t");	
-	print "</td><td>";	 						
-	print $cgi->textfield(-name=>'input_Vorname_new',
-						  -value=>$Vorname,
-	 					  -size=>25,
-	 					  -maxlength=>50);
-	print "</td></tr>";
-	print "<tr>";
-	print "<td>";	
-	print $cgi->strong("Email:\t");	
-	print "</td><td>";
-	 						
-	print $cgi->textfield(-name=>'input_Email_new',
-						  -value=>$Email,
-	 					  -size=>25,
-	 					  -maxlength=>50);
-	print "</td></tr>";
-	print "<tr>";
-	print "<td>";		
-	print $cgi->strong("Rechte:\t");	
-	print "</td><td>";
-	if($AccessRights ne 'User'){
-		delete $Rechte{'0'};
-	}
-		MitarbeiterContent::print_dropDown("input_AccessRights_new",$ref_Rechte,'Level 3');
-	print "</td></tr>";
-	if($AccessRights){
-		my $ref_Abteilung = UserDB::get_DropDownValues("abteilung");
-		print "<tr><td>";
-		print $cgi->strong("Level:\t");
-		print "</td><td>";
-		MitarbeiterContent::print_dropDown("input_Level_new",$ref_Level,$AccessRights);
-		print "</td></tr>";
-		print "<tr><td>";
-		print $cgi->strong("Abteilung:\t");
-		print "</td><td>";
-		UserContent::print_dropDown("input_Abteilung_new",$ref_Abteilung);
-		print "</td></tr>";
-	}
-	print "<tr>";
-	print "<td></td><td>"; 						
-								 									 
-	print $cgi->submit("Übernehmen");
-	print "</td></tr>";
-	print "</table>";
-
-	print $cgi->end_form();	
- }
- 
- sub print_dropDown
- {	#Dieses Modul soll einfach ein DropDown ausgeben
-  	#
-  	#Beispiel 0 => User
-  	#		  1 => Mitarbeiter
-  	#		  2 => Administrator
-  	my ($name,$ref_Array,$AccessRights) = @_;
-  	my %deref_Array = %$ref_Array;
-  	
-  	#Hier wird jetzt der HTML-Code ausgegeben
-  	print "<select name=\"$name\">";
-  	foreach my $key ( keys %deref_Array ) 
-  	{
-  		if($AccessRights eq $deref_Array{$key}){
-  			print "<option selected='selected' value=\"$key\">$deref_Array{$key}";	
-  		}
-  		else {
-  			print "<option value=\"$key\">$deref_Array{$key}";	
-  		}
- 	}
- 	print "</select> ";
- }
- 
- sub print_submit_changeUser {  #Mitarbeiter schließt angegebenes Ticket
-	my $cgi = new CGI;
- 	my($User_ID) = @_;
- 	my $success = MitarbeiterDB::change_User($User_ID);
- 	if($success != 0)
- 	{
- 		UserContent::print_User_Testseite("Benutzer wurde erfolgreich geändert!");
- 	}
- 	else
- 	{
- 		UserContent::print_User_Testseite("Fehler! Benutzer konnte nicht geändert werden!");
- 	}
- 	#Leite nach 3 Sekunden auf die spezifische Ticketansicht weiter (ueber die Root)
- 	print $cgi->meta({-http_equiv => 'REFRESH', -content => '3; /cgi-bin/rocket/SaveFormData.cgi?Level2=show_User'});
-
- }

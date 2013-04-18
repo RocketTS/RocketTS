@@ -108,69 +108,44 @@ sub get_allclosedTickets {
  return \$table;
 }
 
-sub get_UserList {
- #Liefert eine HTML-Tabllen-Objekt zurueck
- my $UserIdent = $_[0];
- 
- my $ref_Ticketarray = db_access::get_User();
- #Hole das Ticketarray
- my @Ticketarray = @$ref_Ticketarray; #überflüssig?
- #print $ref_Ticketarray;
- #Erstelle das TableObjekt
- my $table = HTML::Table->new( 
-    	-cols    => 6, 
-    	-border  => 0,
-    	-padding => 1,
-    	-width	 => '100%',
-    	-align   => 'center',
-    	-head => ['User_ID','Name','Vorname','Email','Rechte','Aktionen'],
- );
-	
- foreach my $array ( @$ref_Ticketarray ) {
-	 #Jetzt wird aus dem Topic ein Link generiert, welcher verwendet wird um den Nachrichtenverlauf anzuzeigen
-	 my($User_ID,$Name,$Vorname, $Email) = @$array;
-	 my $Rechte = db_access::get_AccessRights($Email); #Überarbeiten da zu viele DB-Abfragen
-	 my $Aktion = "<a href=\"/cgi-bin/rocket/SaveFormData.cgi?input_specificUser=$User_ID&Level2=show_specUser\" target=\"_self\">bearbeiten</a>";
-	  
-	 $table->addRow($User_ID,$Name,$Vorname, $Email, $Rechte, $Aktion);
- }
 
- return \$table;
+
+
+
+
+sub show_specTicketData {
+	#führt DB-Abfragen für die Aktions-Buttons aus, um DB-Abfragen zu reduzieren
+	#Schnittstelle
+	#Übergabeparameter (TicketID, Email)
+	#Rückgabewerte
+	my ($TicketID,$User) = @_;
+	my $TicketStatus = get_TicketStatus($TicketID);	
+	my $TicketPrioritaet = db_access::get_TicketPrioritaet($TicketID);
+	my $is_Authorized = db_access::is_Authorized($User,$TicketID);
+	return ($TicketStatus,$TicketPrioritaet,$is_Authorized);
 }
 
-sub get_UserDatabyID {
-	#Aufruf: get_UserData($User_ID);
-	#liefert Benutzerdaten zu der übergebenen User_ID
-	my($User_ID) = @_;
-	my @array = db_access::get_UserData($User_ID);
-	return @array;
+sub assume_Ticket {
+	#Aufruf assume_Ticket($Username,$Ticket_ID);
+	my ($Username,$Ticket_ID) = @_;
+	my $success = db_access::assume_Ticket($Username,$Ticket_ID);
+	return $success;
 }
-
-sub change_User {
-	#Auswahl  0 => User
-  	#		  1 => Mitarbeiter
-  	#		  2 => Administrator
-	my $cgi = new CGI;
- 	my $session = CGI::Session->new($cgi);
-	my($User_ID) = @_;
-	my @Rechte = ('User','Mitarbeiter','Administrator');
-	
-	my $AccessRights_Alt = db_access::get_AccessRights(db_access::get_Email($User_ID));
-	my $AccessRights_Neu = $session->param('AccessRights_new');
-	my $Name_Neu = $session->param('Name_new');
-	my $Vorname_Neu = $session->param('Vorname_new');
-	my $Email_Neu = $session->param('Email_new');
-	my $Level_Neu = $session->param('Level_new');
-	my $Abteilung_Neu = $session->param('Abteilung_new');
-	my $Email = db_access::get_Email();
-	my $return = 0;
-
-	if($AccessRights_Alt eq $Rechte[$AccessRights_Neu]) { #Wenn keine Änderung der Rechte erfolgt ist
-		$return = db_access::update_User($User_ID,$Name_Neu,$Vorname_Neu, $Email_Neu);
-	}
-	else {
-		db_access::update_User($User_ID,$Name_Neu,$Vorname_Neu, $Email_Neu);
-		$return = db_access::update_AccessRights($User_ID,$AccessRights_Alt,$Rechte[$AccessRights_Neu],$Abteilung_Neu,$Level_Neu);
-	}
-	return $return;
+sub forward_Ticket {
+	#Aufruf assume_Ticket($Username,$Ticket_ID);
+	my ($Username,$Ticket_ID) = @_;
+	my $success = db_access::forward_Ticket($Username,$Ticket_ID);
+	return $success;
+}
+sub release_Ticket {
+	#Aufruf assume_Ticket($Username,$Ticket_ID);
+	my ($Username,$Ticket_ID) = @_;
+	my $success = db_access::release_Ticket($Username,$Ticket_ID);
+	return $success;
+}
+sub close_Ticket {
+	#Aufruf assume_Ticket($Username,$Ticket_ID);
+	my ($Username,$Ticket_ID) = @_;
+	my $success = db_access::close_Ticket($Username,$Ticket_ID);
+	return $success;
 }

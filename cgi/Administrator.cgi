@@ -88,13 +88,6 @@ else
 		    </div>
 		    
 		    <div class="menu-item">
-		      <h4><a href="#">Administration</a></h4>
-		      <ul>
-		        <li><a href="SaveformData.cgi?Level2=show_Mitarbeiter" TARGET="_self">Mitarbeiterverwaltung</a></li>
-		      </ul>
-		    </div>
-		    
-		    <div class="menu-item">
 		      <h4>Logout</h4>
 		      <ul>
 		        <li><a href="SaveformData.cgi?Level1=Logout" TARGET="_self">Abmelden</a></li>
@@ -114,6 +107,8 @@ else
 		when('show_History')			{MitarbeiterContent::print_show_History();}
 		when('show_Statistik')			{MitarbeiterContent::print_Statistik();}
 		when('show_User')				{MitarbeiterContent::print_show_User();}
+		when('show_User')				{MitarbeiterContent::print_UserList();}
+		when('show_specUser')			{MitarbeiterContent::print_show_specUser();}
 		when('show_specTicket')			{MitarbeiterContent::print_show_specTicket();}
 		when('submit_assumeTicket')		{MitarbeiterContent::print_submit_assumeTicket($session->param('UserIdent'),$session->param('specificTicket'));}
 		when('submit_forwardTicket')	{MitarbeiterContent::print_submit_forwardTicket($session->param('UserIdent'),$session->param('specificTicket'));}
@@ -121,7 +116,7 @@ else
 		when('submit_closeTicket')		{MitarbeiterContent::print_submit_closeTicket($session->param('UserIdent'),$session->param('specificTicket'));}
 		when('submit_answerTicket') 	{UsererContent::print_answerTicket($session->param('UserIdent'),$session->param('specificTicket'),$session->param('UserMessage'));}	
 		#Zusatz zu Mitarbeitern für Administatoren
-		when('show_Mitarbeiter')		{AdministratorContent::print_show_Mitarbeiter();}
+		when('show_User')				{AdministratorContent::print_show_Mitarbeiter();}
 		
 		#Von User.cgi übernommen
 		when('show_Einstellungen')	{

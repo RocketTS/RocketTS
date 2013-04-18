@@ -29,8 +29,7 @@ my $cgi = new CGI;
 #Mitarbeiter her
 my $session = CGI::Session->new($cgi);
 
-#Ueberpruefe ob die Rechte des Clienten passen, falls nicht log
-#den Clienten aus und leite zur Root weiter
+#Ueberpruefe ob die Rechte des Clienten passen, falls nicht log den Clienten aus und leite zur Root weiter
 if($session->param('AccessRights') ne "Mitarbeiter")
 {	#Rechte passen nicht, loesche Session (ausloggen)
 	$session->clear();
@@ -60,15 +59,8 @@ else
 	print $cgi->h1($cgi->center("Header! Willkommen Mitarbeiter"));
 	print $cgi->end_div({-id=>'user_header'});
 	print $cgi->start_div({-id=>'user_menu'});
-	
-#	print '<b>Tickets</b><br>';
-#	print '<a href="SaveformData.cgi?Level2=show_newTickets" TARGET="_self">Neue Tickets</a><br>';
-#	print '<a href="SaveformData.cgi?Level2=show_inprocessTickets" TARGET="_self">In Bearbeitung</a><br>';
-#	print '<a href="SaveformData.cgi?Level2=show_History" TARGET="_self">History</a><br>';
-#	print '<a href="SaveformData.cgi?Level2=show_Statistik" TARGET="_self">Statistik</a><br>';
-#	print '<br><br><b>Benutzerverwaltung</b><br>';
-#	print '<a href="SaveformData.cgi?Level2=show_User" TARGET="_self">Übersicht Benutzer</a><br>';
-	
+
+	#Ausgabe des Navigationsbereichs	
 	print '<nav>
 		    <div class="menu-item-static">
 		      <h4>Tickets</h4>
@@ -77,13 +69,6 @@ else
 		      <li><a href="SaveformData.cgi?Level2=show_inprocessTickets" TARGET="_self">in Bearbeitung</a></li>
 		      <li><a href="SaveformData.cgi?Level2=show_History" TARGET="_self">History</a></li>
 		      <li><a href="SaveformData.cgi?Level2=show_Statistik" TARGET="_self">Statistik</a></li>
-		      </ul>
-		    </div>
-		      
-		    <div class="menu-item">
-		      <h4><a href="#">Verwaltung</a></h4>
-		      <ul>
-		        <li><a href="SaveformData.cgi?Level2=show_User" TARGET="_self">Benutzerübersicht</a></li>
 		      </ul>
 		    </div>
 		    
