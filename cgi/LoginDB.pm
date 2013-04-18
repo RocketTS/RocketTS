@@ -41,4 +41,31 @@ our @EXPORT_OK = qw(login_User regist_User);
   return "Invalid";
  }
  
- 
+sub set_SessionID
+{#Die Subroutine setzt in der Datenbank die aktuelle Session-ID zu dem gerade eingeloggten Benutzer
+ #Uebergabeparameter: 1. Userident
+ #					  2. Session_ID
+ my $UserIdent = $_[0];
+ my $SessionID = $_[1];
+ my $result = db_access::set_Hash($UserIdent, $SessionID);
+ return $result;
+}
+
+sub get_AccessRights
+{#Die Subroutine holt über das db_access-Modul die Benutzerrechte des "mitgegebenen Benutzer-ID"
+ #Uebergabeparameter: 1. UserIdent
+ #Rückgabeparameter : Access-Rights von der Datenbank
+ my $UserID = $_[0];
+ my $AccessRights = db_access::get_AccessRights($UserID);
+ return $AccessRights;
+}
+
+sub get_MA_Level
+{#Holt die "Qualifikation" der Mitarbeiter aus der Datenbank
+ #Wird später verwendet um zu bestimmen welcher Mitarbeiter welche Tickets bekommt
+ #Uebergabeparameter: 1: UserIdent
+ #Rueckgabeparameter: Qualifikation vom User (INT) ( Level 1 - 3 )
+ my $UserIdent = $_[0];
+ my $Result = db_access::get_MA_Level($UserIdent);
+ return $Result;
+}

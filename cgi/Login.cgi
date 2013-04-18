@@ -60,15 +60,15 @@ given ($session->param('ShowPage_Level2'))
 							}
 	
 	when('Valid')			{#Zeige das User eingeloggt wurde, setze zugehoehrige Rechte und trage Session-ID in Datenbank ein
-							if(db_access::set_Hash($session->param('UserIdent'),$session->id()) )
+							if(LoginDB::set_SessionID($session->param('UserIdent'),$session->id()) )
 								{#Session-ID wurde erfolgreich gesetzt
 									DebugUtils::html_testseite("Login war erfolgreich");
 									#Hier werden die Rechte von der Datenbank ausgelesen und eingetragen
-									my $AccessRights = db_access::get_AccessRights($session->param('UserIdent'));
+									my $AccessRights = LoginDB::get_AccessRights($session->param('UserIdent'));
 									$session->param('AccessRights', $AccessRights); 
-									#Mitarbeiter-Level wird in Session gespeichert
+									#Mitarbeiter-Level wird in Session gespeichert (Mitarbeiter-Level gibt an, welches Ticket für den MA sichtbar ist)
 									if($AccessRights ne "User") {
-										my $qualification = db_access::get_MA_Level($session->param('UserIdent'));
+										my $qualification = LoginDB::get_MA_Level($session->param('UserIdent'));
 										$session->param('Qualification', $qualification);
 									}
 									$session->param('ShowPage_Level1', $AccessRights);	#Entscheidungsbaum wird anhand der Zugriffsrechte aufgerufen
