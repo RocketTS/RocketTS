@@ -300,4 +300,4 @@ sub print_Statistik{
  	print $cgi->h1("Statistik");
  	print qq!<img src="/rocket/$mygraph" alt="Statistik_TicketStatus"></img>!;
  }
- 
+1;

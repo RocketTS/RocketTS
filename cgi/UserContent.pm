@@ -12,17 +12,9 @@ package UserContent;
 use strict;
 use CGI;
 use CGI::Carp qw(fatalsToBrowser);
-use Exporter;
-use db_access;
-use UserDB 'get_Tickets';
+use UserDB;
 use HTML::Table;
 use feature qw {switch};
-
-
-
-our @EXPORT_OK = qw(print_createTicket print_Index print_submit_createTicket print_show_specTicket print_answerTicket);
-
-
 
 
 sub print_User_Testseite
@@ -365,3 +357,4 @@ sub print_createTicket
  	}
  	print "</select> ";
  }
+ 1;

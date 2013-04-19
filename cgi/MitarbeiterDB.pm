@@ -149,3 +149,4 @@ sub close_Ticket {
 	my $success = db_access::close_Ticket($Username,$Ticket_ID);
 	return $success;
 }
+1;

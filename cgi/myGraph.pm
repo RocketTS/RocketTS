@@ -55,3 +55,4 @@ sub save_chart {
 	
 	return $filename;
 }
+1;

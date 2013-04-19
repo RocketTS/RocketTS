@@ -6,14 +6,9 @@
 
 package LoginDB;
 
-use db_access 'valid_Login','insert_User','exist_User';
+use db_access;
 use strict; 
-use Exporter;
 use Digest::SHA qw(sha256_hex);
-
-our @ISA = qw(Exporter);
-
-our @EXPORT_OK = qw(login_User regist_User);
 
 
  sub login_User
@@ -69,3 +64,4 @@ sub get_MA_Level
  my $Result = db_access::get_MA_Level($UserIdent);
  return $Result;
 }
+1;

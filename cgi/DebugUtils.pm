@@ -5,13 +5,9 @@
 package DebugUtils;
 
 use strict; 
+use Exporter;
 use CGI; 
 use CGI::Carp qw(fatalsToBrowser);  	#Zeige die Fehlermeldungen im Browser an
-use Exporter;
-
-#our @ISA = qw(Exporter);
-
-our @EXPORT_OK = qw(html_testseite);
 
 
 sub html_testseite
@@ -47,6 +43,7 @@ sub html_testseite
 	 
 	 
 	 print $cgi->end_div();
-    print $cgi->end_html();
-  	1;	
+     print $cgi->end_html();
+  	
  }
+ 1;

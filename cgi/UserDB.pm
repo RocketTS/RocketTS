@@ -10,14 +10,12 @@
 
 package UserDB;
 
-use db_access 'valid_Login','insert_User','exist_User','get_Messages_from_Ticket';
+use db_access;
 use feature qw {switch};
 use strict;
-use Exporter;
 use HTML::Table;
 use Digest::SHA qw(sha256_hex);
 
-our @EXPORT_OK = qw(show_Tickets show_Messages_from_Ticket);
 
 sub get_Tickets
 {#1. Uebergabeparameter = UserIdent (Email)
@@ -242,3 +240,4 @@ sub get_TicketStatus{
 	my $Status = db_access::get_TicketStatus($TicketID);
 	return $Status;
 }
+1;

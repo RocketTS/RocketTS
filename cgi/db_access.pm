@@ -496,3 +496,4 @@ sub update_AccessRights {
 	$db = db_disconnect($db);
 	return $result;
 }
+1;

@@ -12,9 +12,6 @@ package LoginContent;
 use strict;
 use CGI;
 use CGI::Carp qw(fatalsToBrowser);
-use Exporter;
-
-our @EXPORT_OK = qw(printIndex);
 
 sub printIndex
 {	
@@ -86,5 +83,6 @@ sub printIndex
 	 print $cgi->end_div();
 
     print $cgi->end_html();
-  	1;
+  	
  }
+1;

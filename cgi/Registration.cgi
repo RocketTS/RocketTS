@@ -13,9 +13,8 @@ use feature qw {switch};
 use strict;
 use CGI;
 use CGI::Carp qw(fatalsToBrowser);
-use DebugUtils 'html_testseite';
-use RegistrationContent 'printIndex';
-use LoginDB 'regist_User';
+use DebugUtils;
+use RegistrationContent;
 use RegistrationDB;
 
 

@@ -15,7 +15,7 @@ use feature qw {switch};
 use strict;
 use CGI;
 use CGI::Carp qw(fatalsToBrowser);
-use DebugUtils 'html_testseite';
+use DebugUtils;
 
 #########################################
 #Instanzvariablen						#

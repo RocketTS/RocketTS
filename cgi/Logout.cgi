@@ -13,8 +13,8 @@ use CGI::Session;
 use strict;
 use CGI;
 use CGI::Carp qw(fatalsToBrowser);
-use DebugUtils 'html_testseite';
-use db_access 'del_Hash';
+use DebugUtils;
+use db_access;
 
 #########################################
 #Instanzvariablen						#
@@ -50,5 +50,5 @@ else
 $session->delete();
 $session->flush();
 
-print $cgi->h1("Sie werden nun ausgeloggt und auf die Startseite weitergeleitet!");
+DebugUtils::html_testseite("Sie werden nun ausgeloggt und auf die Startseite weitergeleitet!");
 print $cgi->meta({-http_equiv => 'REFRESH', -content => '2; /cgi-bin/rocket/Rocket.cgi'});

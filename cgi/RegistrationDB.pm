@@ -12,10 +12,7 @@ package RegistrationDB;
 
 use db_access;
 use strict;
-use Exporter;
 use Digest::SHA qw(sha256_hex);
-
-our @ISA = qw(Exporter);
 
 
  sub regist_User
@@ -61,3 +58,4 @@ our @ISA = qw(Exporter);
   }
  	
  }
+ 1;

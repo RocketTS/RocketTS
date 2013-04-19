@@ -12,9 +12,7 @@ package RegistrationContent;
 use strict;
 use CGI;
 use CGI::Carp qw(fatalsToBrowser);
-use Exporter;
 
-our @EXPORT_OK = qw(printIndex);
 
 sub printIndex
 {
@@ -104,3 +102,4 @@ sub print_register_textfields
  	}
  	1;
  }
+ 1;

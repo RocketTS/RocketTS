@@ -14,9 +14,9 @@ use feature qw {switch};
 use strict;
 use CGI;
 use CGI::Carp qw(fatalsToBrowser);
-use DebugUtils 'html_testseite';
-use LoginContent 'printIndex';
-use LoginDB 'login_User';
+use DebugUtils;
+use LoginContent;
+use LoginDB;
 
 #########################################
 #Instanzvariablen						#
