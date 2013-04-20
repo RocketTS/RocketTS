@@ -10,11 +10,12 @@
 
 package AdministratorDB;
 
-use db_access 'valid_Login','insert_User','exist_User','get_Messages_from_Ticket','get_newTickets','get_TicketsbyStatus';
 use feature qw {switch};
 use strict;
-use Exporter;
 use HTML::Table;
+use CGI;
+use CGI::Session;
+use db_access;
 
 sub change_User {
 	#Auswahl  0 => User
@@ -88,9 +89,6 @@ sub get_AccessRights {
 	my($Email) = @_;
 	my $AccessRights = db_access::get_AccessRights($Email);
 	return $AccessRights;
-<<<<<<< HEAD
 }
+
 1;
-=======
-}
->>>>>>> parent of 4065a8c... bla

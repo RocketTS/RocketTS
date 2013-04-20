@@ -11,10 +11,11 @@ use CGI::Session;
 use feature qw {switch};
 use strict;
 use CGI;
+use CGI::Session;
 use CGI::Carp qw(fatalsToBrowser);
-use DebugUtils 'html_testseite';
-use MitarbeiterContent 'printIndex';
-use LoginDB 'regist_User';
+use DebugUtils;
+use UserContent;
+use MitarbeiterContent;
 
 
 #########################################
@@ -193,8 +194,4 @@ else
      
 	print $cgi->end_html();
 }
-<<<<<<< HEAD
 
-1;
-=======
->>>>>>> parent of 4065a8c... bla

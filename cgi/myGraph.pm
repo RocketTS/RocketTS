@@ -11,12 +11,9 @@ use strict;
 use CGI ':standard';
 use GD::Graph::pie;
 use CGI::Carp qw(fatalsToBrowser);
-use db_access 'get_countTicketbyStatus';
+
+use db_access;
 use feature qw {switch};
-
-
-
-our @EXPORT_OK = qw(print_Statistik_TicketStatus);
 
 sub print_Statistik_TicketStatus {
 	print STDERR "Processing Statistik_TicketStatus ...\n";
@@ -46,7 +43,6 @@ sub save_chart {
 	my $pfad = "";
 	my $filename = $name.".".$ext;
 	
-	#open(OUT, ">../../img/Statistik/$name.$ext") or die "Kann $name.$ext nicht öffnen: $!";
 	open(OUT, ">../../htdocs/rocket/$filename") or die "Kann $filename nicht öffnen: $!";
 	
 	binmode OUT;

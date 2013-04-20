@@ -12,9 +12,11 @@ use feature qw {switch};
 use strict;
 use CGI;
 use CGI::Carp qw(fatalsToBrowser);
-use DebugUtils 'html_testseite';
-use MitarbeiterContent 'printIndex';
-use LoginDB 'regist_User';
+use DebugUtils;
+use UserContent;
+use MitarbeiterContent;
+use AdministratorContent;
+
 
 
 #########################################
@@ -201,8 +203,4 @@ else
      
 	print $cgi->end_html();
 }
-<<<<<<< HEAD
 
-1;
-=======
->>>>>>> parent of 4065a8c... bla

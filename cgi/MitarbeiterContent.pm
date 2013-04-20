@@ -9,18 +9,13 @@ package MitarbeiterContent;
 
 use strict;
 use CGI;
+use CGI::Session;
 use CGI::Carp qw(fatalsToBrowser);
-use Exporter;
-use MitarbeiterDB 'get_allnewTickets','get_allinprocessTickets','get_allclosedTickets';
-use UserContent 'print_Index', 'print_User_Testseite', 'show_Messages_from_Ticket';
 use HTML::Table;
-use myGraph 'print_Statistik_TicketStatus';
-
-
-our @EXPORT_OK = qw(print_show_newTickets print_show_inprocessTickets print_show_History print_show_Statistik print_show_User 
-					print_show_inprocessTickets print_show_History print_Statistik print_submit_assumeTicket 
-					print_submit_forwardTicket print_submit_releaseTicket print_submit_closeTicket);
-
+use UserContent;
+use UserDB;
+use MitarbeiterDB;
+use myGraph;
 
  
  sub print_show_newTickets {
@@ -78,7 +73,7 @@ our @EXPORT_OK = qw(print_show_newTickets print_show_inprocessTickets print_show
 	my $ref_table = MitarbeiterDB::get_allclosedTickets($session->param('UserIdent'));
 	my $table = $$ref_table;
 	
-	print $cgi->h1("Übersicht der Tickets in Bearbeitung");
+	print $cgi->h1("Übersicht der von dir geschlossenen Tickets");
 	$table->setAttr('style="table-layout:fixed"'); #Damit wird der ColWidth Vorrang vor der Länge des Inhalts der Zelle gegeben
 	$table->setClass("table_tickets");
 	print $table->getTable();	

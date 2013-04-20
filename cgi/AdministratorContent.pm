@@ -10,14 +10,15 @@ package AdministratorContent;
 use strict;
 use CGI;
 use CGI::Carp qw(fatalsToBrowser);
-use Exporter;
-use db_access 'create_Ticket','get_TicketStatus','get_TicketPrioritaet','is_Authorized';
-use MitarbeiterDB;
+use CGI::Session;
 use HTML::Table;
+use DebugUtils;
+use UserContent;
+use MitarbeiterContent;
+use UserDB;
+use MitarbeiterDB;
+use AdministratorDB;
 
-
-
-our @EXPORT_OK = qw();
 
 
 sub print_UserList {
@@ -165,4 +166,4 @@ sub print_UserList {
 
  }
 
- 
+1;
