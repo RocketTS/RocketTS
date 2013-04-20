@@ -88,5 +88,9 @@ sub get_AccessRights {
 	my($Email) = @_;
 	my $AccessRights = db_access::get_AccessRights($Email);
 	return $AccessRights;
+<<<<<<< HEAD
 }
 1;
+=======
+}
+>>>>>>> parent of 4065a8c... bla

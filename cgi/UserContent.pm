@@ -12,6 +12,7 @@ package UserContent;
 use strict;
 use CGI;
 use CGI::Carp qw(fatalsToBrowser);
+use UserDB;
 use HTML::Table;
 use feature qw {switch};
 

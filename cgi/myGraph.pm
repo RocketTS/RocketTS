@@ -11,6 +11,7 @@ use strict;
 use CGI ':standard';
 use GD::Graph::pie;
 use CGI::Carp qw(fatalsToBrowser);
+use db_access 'get_countTicketbyStatus';
 use feature qw {switch};
 
 

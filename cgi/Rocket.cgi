@@ -84,4 +84,3 @@ given ($session->param('ShowPage_Level1'))
 							print $cgi->meta({-http_equiv => 'REFRESH', -content => '0; /cgi-bin/rocket/Logout.cgi'});
 							}
 }
-1;

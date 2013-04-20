@@ -193,5 +193,8 @@ else
      
 	print $cgi->end_html();
 }
+<<<<<<< HEAD
 
 1;
+=======
+>>>>>>> parent of 4065a8c... bla
