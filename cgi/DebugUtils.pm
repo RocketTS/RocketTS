@@ -1,6 +1,9 @@
-#!perl -w 
-
-#Test-Modul welches paar Debug-Funktionen bereitstellt
+#!perl -w
+########################################
+#Author: Thomas Dorsch                 #
+#Date: 	 06.03.2013                    #
+########################################
+#Beschreibung: Stellt Subroutinen bereit um das Debuggen des Projektes zu Erleichtern
 
 package DebugUtils;
 
@@ -11,7 +14,10 @@ use CGI::Carp qw(fatalsToBrowser);  	#Zeige die Fehlermeldungen im Browser an
 
 
 sub html_testseite
- {#Uebergabeparameter: Der Text, der als Ueberschrift ausgegeben werden soll	
+{	#Aufruf: 	   html_testseite("Dieser Text soll in einer HTMl-Seite dargestellt werden");
+	#Beschreibung: Der Funktion wird ein Text mitgegeben, welcher in einer kompletten HTML-Seite eingebettet wird.
+	#			   Wurde bei der Entwicklung des Projekts oft verwendet, um den Ablauf der Scripte zu testen
+	#Rückgabewert: Keiner
  	my $text = $_[0];
  	my $cgi = CGI->new();
  	my $session = CGI::Session->new($cgi);

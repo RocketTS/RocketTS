@@ -3,9 +3,7 @@
 #Author: Thomas Dorsch                 #
 #Date: 	 29.03.2013                    #
 ########################################
-#Description: Stellt Funktionen bereit
-#um Inhalte von der Login-Website darzu
-#stellen
+#Beschreibung: Stellt Subroutinen bereit um Inhalte von der Login-Website darzustellen
 
 package LoginContent;
 
@@ -13,8 +11,11 @@ use strict;
 use CGI;
 use CGI::Carp qw(fatalsToBrowser);
 
+
 sub printIndex
-{	
+{	#Aufruf: 	   printIndex();
+	#Beschreibung: Diese Subroutine zeigt die Login-Seite des Projektes
+	#Rückgabewert: Keiner
 	my $cgi = CGI->new();
  	my $session = CGI::Session->new($cgi);               			
  	print $cgi->start_html(-title  =>'Ticketsystem Team Rocket! Login',
@@ -69,7 +70,6 @@ sub printIndex
 	 print $cgi->end_form();
 	 
 	 #2. Form fuer den Registrierungsbutton
-	 #Nur fuer Testzwecke, Todo: Nachschauen wie man einen einzelnen Button mit einer Funktion belegen kann
 	 
 	 print $cgi->start_form({-method => "POST",
 	 						-action => "/cgi-bin/rocket/SaveFormData.cgi",
