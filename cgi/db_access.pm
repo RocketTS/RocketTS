@@ -2,13 +2,19 @@
 #db_access.pm
 #stellt Zugang und Zugriffe auf die Datenbank her und zur Verfügung
 
-package db_access;
-
 use CGI qw(:standard);
 use CGI::Carp qw(warningsToBrowser fatalsToBrowser);
+
+package db_access;
 use DBI;
 use Config::Tiny;			#Modul, um DB-Config aus ini-File auszulesen
+use Exporter;
 use feature qw {switch};
+our @ISA = qw(Exporter);
+our @EXPORT_OK = qw(valid_Login exist_User insert_User get_Hash del_Hash set_Hash db_connect db_disconnect insert_Ticket create_Ticket 
+					answer_Ticket get_AccessRights get_Tickets get_Messages_from_Ticket get_newTickets get_TicketsbyStatus 
+					get_countTicketbyStatus get_MA_Level get_TicketStatus get_TicketPrioritaet is_Authorized assume_Ticket forward_Ticket
+					release_Ticket close_Ticket);
 
 sub db_connect { 
 	#Läd Zugangsdaten aus der INI-Datei

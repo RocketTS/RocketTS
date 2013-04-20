@@ -10,19 +10,22 @@
 
 package MitarbeiterDB;
 
+use db_access 'valid_Login','insert_User','exist_User','get_Messages_from_Ticket','get_newTickets','get_TicketsbyStatus';
 use feature qw {switch};
 use strict;
+use Exporter;
 use HTML::Table;
 
+our @EXPORT_OK = qw(show_Tickets get_allnewTickets get_allinprocessTickets get_allclosedTickets);
 
 sub get_allnewTickets {
  #Liefert ein HTML-Tabellen-Objekt zurueck
  my $UserIdent = $_[0];
  
-  #Hole das Ticketarray
  my $ref_Ticketarray = db_access::get_TicketsbyStatus($UserIdent,'Neu');
- my @Ticketarray = @$ref_Ticketarray; #Überflüssig??
- 
+ #Hole das Ticketarray
+ my @Ticketarray = @$ref_Ticketarray; #überflüssig?
+ #print $ref_Ticketarray;
  #Erstelle das TableObjekt
  my $table = HTML::Table->new( 
     	-cols    => 9, 
@@ -59,17 +62,17 @@ sub get_allinprocessTickets {
     	-padding => 1,
     	-width	 => '100%',
     	-align   => 'center',
-    	-head => ['Ticket_ID','Ersteller','Erstelldatum','Betreff','Auswahlkriterien','Priorität','IP','OS','Status','Bearbeiter','Aktionen'],
+    	-head => ['Ticket_ID','Erstelldatum','Betreff','Auswahlkriterien','Priorität','IP','OS','Status','Bearbeiter','Aktionen'],
  );
 
 my $Ak = db_access::get_Auswahlkriterien($UserIdent);	
 
  foreach my $array ( @$ref_Ticketarray ) {
 	 #Jetzt wird aus dem Topic ein Link generiert, welcher verwendet wird um den Nachrichtenverlauf anzuzeigen
-	 my($ticket_ID,$Ersteller,$Erstelldatum,$Betreff,$Auswahlkriterien,$Prio,$IP,$OS,$Status,$Bearbeiter) = @$array;
+	 my($ticket_ID,$Erstelldatum,$Betreff,$Auswahlkriterien,$Prio,$IP,$OS,$Status,$Bearbeiter) = @$array;
 	 my $aktion = "<a href=\"/cgi-bin/rocket/SaveFormData.cgi?input_specificTicket=$ticket_ID&Level2=show_specTicket\" target=\"_self\">anzeigen</a>";
 	 if($Auswahlkriterien == $Ak) {  
-	 	$table->addRow($ticket_ID,$Ersteller,$Erstelldatum,$Betreff,$Auswahlkriterien,$Prio,$IP,$OS,$Status,$Bearbeiter,$aktion);
+	 	$table->addRow($ticket_ID,$Erstelldatum,$Betreff,$Auswahlkriterien,$Prio,$IP,$OS,$Status,$Bearbeiter,$aktion);
 	 }
 }
 
@@ -91,15 +94,15 @@ sub get_allclosedTickets {
     	-padding => 1,
     	-width	 => '100%',
     	-align   => 'center',
-    	-head => ['Ticket_ID','Ersteller','Erstelldatum','Betreff','Auswahlkriterien','Priorität','IP','OS','Status','Bearbeiter','Aktionen'],
+    	-head => ['Ticket_ID','Erstelldatum','Betreff','Auswahlkriterien','Priorität','IP','OS','Status','Bearbeiter','Aktionen'],
  );
 	
  foreach my $array ( @$ref_Ticketarray ) {
 	 #Jetzt wird aus dem Topic ein Link generiert, welcher verwendet wird um den Nachrichtenverlauf anzuzeigen
-	 my($ticket_ID,$Ersteller,$Erstelldatum,$Betreff,$Auswahlkriterien,$Prio,$IP,$OS,$Status,$Bearbeiter) = @$array;
+	 my($ticket_ID,$Erstelldatum,$Betreff,$Auswahlkriterien,$Prio,$IP,$OS,$Status,$Bearbeiter) = @$array;
 	 my $aktion = "<a href=\"/cgi-bin/rocket/SaveFormData.cgi?input_specificTicket=$ticket_ID&Level2=show_specTicket\" target=\"_self\">anzeigen</a>";
 	  
-	 $table->addRow($ticket_ID,$Ersteller,$Erstelldatum,$Betreff,$Auswahlkriterien,$Prio,$IP,$OS,$Status,$Bearbeiter,$aktion);
+	 $table->addRow($ticket_ID,$Erstelldatum,$Betreff,$Auswahlkriterien,$Prio,$IP,$OS,$Status,$Bearbeiter,$aktion);
  }
 
  return \$table;
@@ -116,7 +119,7 @@ sub show_specTicketData {
 	#Übergabeparameter (TicketID, Email)
 	#Rückgabewerte
 	my ($TicketID,$User) = @_;
-	my $TicketStatus = db_access::get_TicketStatus($TicketID);	
+	my $TicketStatus = get_TicketStatus($TicketID);	
 	my $TicketPrioritaet = db_access::get_TicketPrioritaet($TicketID);
 	my $is_Authorized = db_access::is_Authorized($User,$TicketID);
 	return ($TicketStatus,$TicketPrioritaet,$is_Authorized);
