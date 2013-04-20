@@ -87,3 +87,4 @@ sub get_AccessRights {
 	my $AccessRights = db_access::get_AccessRights($Email);
 	return $AccessRights;
 }
+1;

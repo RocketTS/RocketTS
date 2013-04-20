@@ -190,3 +190,5 @@ else
      
 	print $cgi->end_html();
 }
+
+1;
