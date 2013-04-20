@@ -111,28 +111,28 @@ sub changePassword{
 	
 	if($oldPassword eq "" || $newPassword1 eq "" || $newPassword2 eq "")
 	{
-		return "changePassword_missing";
+		return "missing";
 	}
 	
 	if($newPassword1 ne $newPassword2)
 	{
-		return "changePassword_not_equal";
+		return "not_equal";
 	}
 	
 	#Jetzt wird ueberprueft ob das alte eingegebenen Passwort zu dem UserIdent passt, dessen Passwort geändert werden soll
 	if(! db_access::valid_Login($UserIdent, $oldPassword_hashed))
 	{#Gibt true zurueck falls das Passwort passt, wird negiert
-		return "changePassword_incorrect";
+		return "incorrect";
 	}
 	
 	#Jetzt darf das alte Passwort ueberschrieben werden
 	if( db_access::change_Password($UserIdent, $newPassword1_hashed))
 	{#Falls das setzten des neues Passwortes erfolgreich war
-		return "changePassword_success";
+		return "success";
 	}
 	else
 	{#ansonsten
-		return "changePassword_failed";
+		return "failed";
 	}
 }
 

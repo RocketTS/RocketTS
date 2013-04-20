@@ -252,7 +252,9 @@ sub print_createTicket
 	 								 -target => '_self'
 	 						 								});	 
 	 								 print $cgi->hidden(-name=>'Level2',
-	 				  									-value=>'changePassword'); 				   
+	 				  									-value=>'changePassword');
+	 				  				 print $cgi->hidden(-name=>'Level3',
+	 				  									-value=>'checkPassword'); 	 				   
 	 								 print "<table><tr><td>";
 									 print $cgi->strong("Altes Passwort\t");
 									 print "</td><td>";			 						
