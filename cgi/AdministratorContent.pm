@@ -22,7 +22,9 @@ use AdministratorDB;
 
 
 sub print_UserList {
-	#gibt die Benutzerliste aus
+	#Aufruf: print_UserList()
+	#Ruft AdministratorDB::get_UserList() auf und gibt deren Benutzerliste aus
+	#Ausgabe der Liste auf der Webseite
 	
  	#Erstelle ein neues CGI-Objekt und hole das vorhandene Cookie mit der Session-ID
 	my $cgi = new CGI;
@@ -41,18 +43,21 @@ sub print_UserList {
  }
  
  sub print_show_specUser {
+ 	#Aufruf: print_show_specUser()
  	#wird ausgeführt, wenn Admin einen Benutzer zum bearbeiten ausgewählt hat
+ 	#Rückgabe: Gibt UserDaten auf der Webseite aus
+ 	
  	my $cgi = new CGI;
  	my $session = CGI::Session->new($cgi);
  	
- 	
+ 	#Holen der Userdaten anhand seiner User-ID / AccessRights anhand der DB
  	my ($User_ID,$Name,$Vorname,$Email) = AdministratorDB::get_UserDatabyID($session->param('specificUser'));
  	my $AccessRights = AdministratorContent::get_AccessRights($Email);
  	
  
-	my %Rechte = ('0'=>'User', '1'=>'Mitarbeiter', '2'=>'Administrator'); #Kommentar
+	my %Rechte = ('0'=>'User', '1'=>'Mitarbeiter', '2'=>'Administrator'); #Hash für das Dropdown der Rechte
 	my $ref_Rechte = \%Rechte;
-	my %Level = ('1'=>'Level 1', '2'=>'Level 2', '3'=>'Level 3'); #Kommentar
+	my %Level = ('1'=>'Level 1', '2'=>'Level 2', '3'=>'Level 3'); #Hash für das Dropdown der Level
 	my $ref_Level = \%Level;
 
 
@@ -74,8 +79,7 @@ sub print_UserList {
 	 					  -maxlength=>50);
 	print "</td></tr>";
 	print "<tr>";
-	print "<td>";
-	#print $cgi->br();			
+	print "<td>";		
 	 
 	print $cgi->strong("Vorname:\t");	
 	print "</td><td>";	 						
@@ -99,21 +103,22 @@ sub print_UserList {
 	print $cgi->strong("Rechte:\t");	
 	print "</td><td>";
 	if($AccessRights ne 'User'){
+		#Wenn $AccessRights ungleich User, wird der User-Eintrag aus dem Rechte-Hash entfernt, da kein Admin/MA zu einem User werden soll
 		delete $Rechte{'0'};
 	}
-		MitarbeiterContent::print_dropDown("input_AccessRights_new",$ref_Rechte,'Level 3');
+	print_dropDown("input_AccessRights_new",$ref_Rechte,'Level 3'); #Ausgabe des Level-Dropdowns
 	print "</td></tr>";
 	if($AccessRights){
-		my $ref_Abteilung = UserDB::get_DropDownValues("abteilung");
+		my $ref_Abteilung = UserDB::get_DropDownValues("abteilung"); #Abrufen der Dropdown-Werte für Abteilung
 		print "<tr><td>";
 		print $cgi->strong("Level:\t");
 		print "</td><td>";
-		MitarbeiterContent::print_dropDown("input_Level_new",$ref_Level,$AccessRights);
+		print_dropDown("input_Level_new",$ref_Level,$AccessRights); #Ausgabe des AccessRights-Dropdowns
 		print "</td></tr>";
 		print "<tr><td>";
 		print $cgi->strong("Abteilung:\t");
 		print "</td><td>";
-		UserContent::print_dropDown("input_Abteilung_new",$ref_Abteilung);
+		UserContent::print_dropDown("input_Abteilung_new",$ref_Abteilung); #Ausgabe des Abteilungs-Dropdowns
 		print "</td></tr>";
 	}
 	print "<tr>";
@@ -126,12 +131,11 @@ sub print_UserList {
 	print $cgi->end_form();	
  }
  
- sub print_dropDown
- {	#Dieses Modul soll einfach ein DropDown ausgeben
-  	#
-  	#Beispiel 0 => User
-  	#		  1 => Mitarbeiter
-  	#		  2 => Administrator
+ sub print_dropDown{	
+ 	#Aufruf: print_dropDown( Name der Variablenname für Identifizierung per Session, Daten-Array, Default-Wert )
+ 	#Dieses Modul soll einfach ein DropDown ausgeben
+ 	#Rückgabe: Ausgabe des Dropdown auf der Webseite
+
   	my ($name,$ref_Array,$AccessRights) = @_;
   	my %deref_Array = %$ref_Array;
   	
@@ -149,10 +153,14 @@ sub print_UserList {
  	print "</select> ";
  }
  
- sub print_submit_changeUser {  #Administrator schließt angegebenes Ticket
+ sub print_submit_changeUser {  
+ 	#Aufruf: print_submit_changeUser( User_ID )
+ 	#Anzeige / Aufruf beim Ändern der Benutzerdaten
+ 	#Rückgabe: Ausgabe der Statusmeldung auf der Webseite
+ 	
 	my $cgi = new CGI;
  	my($User_ID) = @_;
- 	my $success = AdministratorDB::change_User($User_ID);
+ 	my $success = AdministratorDB::change_User($User_ID); #boolscher Rückgabewert, ob Änderung erfolgreich war
  	if($success != 0)
  	{
  		UserContent::print_User_Testseite("Benutzer wurde erfolgreich geändert!");

@@ -19,7 +19,9 @@ use myGraph;
 
  
  sub print_show_newTickets {
- 	#gibt die neuen Tickets des Mitarbeiters aus
+ 	#Aufruf print_show_newTickets
+ 	#gibt alle neuen Tickets aus, die der Mitarbeiter laut seinen Rechten und Fähigkeiten sehen kann
+ 	#Rückgabe: Ausgabe auf der Webseite
  	
  
  	#Erstelle ein neues CGI-Objekt und hole das vorhandene Cookie mit der Session-ID
@@ -40,7 +42,9 @@ use myGraph;
 	
  }
   sub print_show_inprocessTickets {
+  	#Aufruf: print_show_inprocessTickets()
   	#gibt die Tickets aus, die vom jeweiligen Mitarbeiter momentan bearbeitet werden
+  	#Rückgabe: Ausgabe auf der Webseite
  
  	#Erstelle ein neues CGI-Objekt und hole das vorhandene Cookie mit der Session-ID
 	my $cgi = new CGI;
@@ -61,7 +65,9 @@ use myGraph;
  }
  
    sub print_show_History {
-   	#gibt die Tickets aus, die vom Mitarbeiter bearbeitet wurden 
+   	#Aufruf: print_show_History()
+   	#gibt die Tickets aus, die vom Mitarbeiter bearbeitet wurden (also Status = Geschlossen)
+   	#Rückgabe: Ausgabe auf der Webseite 
  
  	#Erstelle ein neues CGI-Objekt und hole das vorhandene Cookie mit der Session-ID
 	my $cgi = new CGI;
@@ -82,13 +88,16 @@ use myGraph;
  }
  
  sub print_show_specTicket {
+ 	#Aufruf: print_show_specTicket()
  	#gibt die Informationen des ausgewählten Tickets aus, sowie Bearbeitungsoptionen und der Antwortmöglichkeit für den Mitarbeiter
+ 	#Rückgabe: Ausgabe auf Webseite
  	
  	#Erstelle ein neues CGI-Objekt und hole das vorhandene Cookie mit der Session-ID
 	my $cgi = new CGI;
 
 	#Stelle das alte zugehoerige Session-Objekt zu dem aktuellen User her
 	my $session = CGI::Session->new($cgi);
+	#Bezieht die ausgewählte TicketID aus der Session
 	my $TicketID = $session->param('specificTicket');
 	
 	print $cgi->h1("Das Ticket mit der ID $TicketID wird nachfolgend im \"Verlaufsmodus\" angezeigt!");
@@ -206,11 +215,13 @@ use myGraph;
  
  
  sub print_submit_assumeTicket {  
- 	#wird ausgeführt, wenn Mitarbeiter das angegebenes Ticket übernimmt
- 	#Übergabewerte (Email, TicketID)
+ 	#Aufruf: print_submit_assumeTicket(Email, TicketID)
+ 	#wird ausgeführt, wenn Mitarbeiter das angegebenes Ticket übernimmt (Button-geklickt)
+ 	#Rückgabe: Ausgabe der Statusmeldung auf der Webseite, ob Übernahme erfolgreich
+
 	my $cgi = new CGI;
  	my($Username,$Ticket_ID) = @_;
- 	my $success = MitarbeiterDB::assume_Ticket($Username,$Ticket_ID);
+ 	my $success = MitarbeiterDB::assume_Ticket($Username,$Ticket_ID); # boolscher Wert, ob Übernahme erfolgreich
  	if($success != 0)
  	{
  		UserContent::print_User_Testseite("Ticket wurde erfolgreich uebernommen!");
@@ -224,12 +235,14 @@ use myGraph;
 
  }
  
-  sub print_submit_forwardTicket {  
+  sub print_submit_forwardTicket {
+   	#Aufruf: print_submit_forwardTicket(Email, TicketID)  
   	#wird ausgeführt, wenn Mitarbeiter das angegebenes Ticket weiterleitet
- 	#Übergabewerte (Email, TicketID)
+  	#Rückgabe: Ausgabe der Statusmeldung, ob weiterleiten erfolgreich
+
 	my $cgi = new CGI;
  	my($Username,$Ticket_ID) = @_;
- 	my $success = MitarbeiterDB::forward_Ticket($Username,$Ticket_ID);
+ 	my $success = MitarbeiterDB::forward_Ticket($Username,$Ticket_ID); #boolscher Wert, ob Weiterleitung erfolgreich
 
  	if($success != 0)
  	{
@@ -245,11 +258,13 @@ use myGraph;
  }
  
   sub print_submit_releaseTicket { 
+   	#Aufruf: print_submit_releaseTicket( Email, TicketID )
   	#wird ausgeführt, wenn Mitarbeiter das angegebenes Ticket wieder freigibt
- 	#Übergabewerte (Email, TicketID)
+  	#Rückgabe: Ausgabe der Statusmeldung, ob Freigabe erfolgreich
+
 	my $cgi = new CGI;
  	my($Username,$Ticket_ID) = @_;
- 	my $success = MitarbeiterDB::release_Ticket($Username,$Ticket_ID);
+ 	my $success = MitarbeiterDB::release_Ticket($Username,$Ticket_ID); #boolscher Wert, ob Freigabe erfolgreich
  	
  	if($success != 0)
  	{
@@ -265,11 +280,13 @@ use myGraph;
  }
   
   sub print_submit_closeTicket { 
+  	#Aufruf: print_submit_closeTicket(Email, TicketID)
   	#wird ausgeführt, wenn Mitarbeiter das angegebenes Ticket schließt
- 	#Übergabewerte (Email, TicketID)
+  	#Rückgabe: Anzeige der Statusmeldung, ob schließen erfolgreich
+
 	my $cgi = new CGI;
  	my($Username,$Ticket_ID) = @_;
- 	my $success = MitarbeiterDB::close_Ticket($Username,$Ticket_ID);
+ 	my $success = MitarbeiterDB::close_Ticket($Username,$Ticket_ID); #boolscher Wert, ob schließen des Tickets erfolgreich
 
  	if($success != 0)
  	{
@@ -285,7 +302,9 @@ use myGraph;
  }
  
 sub print_Statistik{
+	#Aufruf: print_Statistik()
 	#gibt die Graphen der Statistik aus
+	#Rückgabe: Ausgabe der Graphen auf der Webseite
  	my $cgi = new CGI;
 	my $session = CGI::Session->new($cgi);
 	

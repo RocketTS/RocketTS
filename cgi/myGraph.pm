@@ -3,7 +3,9 @@
 #Author: Matthias Nagel                #
 #Date: 	 08.04.2013                    #
 ########################################
-#Description: Dieses Script erzeugt anhand ihm übergebener Daten Graphen
+#Description: Dieses Script erzeugt anhand ihm übergebener Daten Graphen für die Mitarbeiter-Statistik
+#Anschließend wird das erzeugte Bild im htdocs-Ordner des Webpfads abgespeichert, da CGI scheinbar Probleme mit dem Bilder anzeigen hat
+
 
 package myGraph;
 
@@ -11,11 +13,13 @@ use strict;
 use CGI ':standard';
 use GD::Graph::pie;
 use CGI::Carp qw(fatalsToBrowser);
-
 use db_access;
-use feature qw {switch};
+
 
 sub print_Statistik_TicketStatus {
+	#Aufruf: von MitarbeiterContent::print_Statistik()
+	#generiert aus der Datenbank gelieferten Werten eine Grafik
+	#Rückgabe: gibt den von save_chart() erzeugten Bildnamen zurück
 	print STDERR "Processing Statistik_TicketStatus ...\n";
 	my @data = (['Neu','in Bearbeitung','Geschlossen'],
 				[db_access::get_countTicketbyStatus('Neu'), db_access::get_countTicketbyStatus('in Bearbeitung'), db_access::get_countTicketbyStatus('Geschlossen')]);
@@ -35,6 +39,10 @@ sub print_Statistik_TicketStatus {
 }
 
 sub save_chart {
+	#Aufruf: save_chart ( erzeugte Grafik, gewünschter Name )
+	#Funktion speichert die übergebene Grafik in eine Datei
+	#Rückgabe: gibt Dateinamen zurück 
+	
 	my $chart = shift or die "Benötige Chart!";
 	my $name = shift or die "Benötige Name!";
 	local(*OUT);

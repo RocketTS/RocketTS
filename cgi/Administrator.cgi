@@ -99,8 +99,8 @@ else
     
 	print $cgi->end_div({-id=>'user_menu'});
 	print $cgi->start_div({-id=>'user_content'});
+	
 	#Hier muss der "richtige" Content ausgewaehlt und angezeigt werden (Level2)
-
 	given ($session->param('ShowPage_Level2'))
 	{
 		when( '' )						{UserContent::print_Index();}
@@ -119,6 +119,7 @@ else
 		when('submit_answerTicket') 	{UsererContent::print_answerTicket($session->param('UserIdent'),$session->param('specificTicket'),$session->param('UserMessage'));}	
 		#Zusatz zu Mitarbeitern für Administatoren
 		when('show_User')				{AdministratorContent::print_show_Mitarbeiter();}
+		when('submit_changeUser')		{AdministratorContent::print_submit_changeUser($session->param('specificUser'));}
 		
 		#Von User.cgi übernommen
 		when('show_Einstellungen')	{
@@ -129,42 +130,50 @@ else
 											when( 'show_delete_Account' )	{UserContent::print_show_Einstellungen("delete_Account");}
 										}
 		}
-		when('changePassword')		{#Das Modul changePassword überprüft nun ob die Änderung eingetragen werden kann, und gibt eine Statusmeldung zurück mit der weitergearbeitet wird
-									 my $status = UserDB::changePassword($session->param('UserIdent'),$session->param('UserPassword'),$session->param('newPassword1'),$session->param('newPassword2'));
-									 $session->param('ShowPage_Level2',$status);
-									 $session->flush();
-									 print $cgi->meta({-http_equiv => 'REFRESH', -content => '0; /cgi-bin/rocket/Rocket.cgi'});
+		when('changePassword')		{given ($session->param('ShowPage_Level3'))
+										{
+											when( 'checkPassword' )	{#Das Modul changePassword überprüft nun ob die Änderung eingetragen werden kann, und gibt eine Statusmeldung zurück mit der weitergearbeitet wird
+																	 my $status = UserDB::changePassword($session->param('UserIdent'),$session->param('UserPassword'),$session->param('newPassword1'),$session->param('newPassword2'));
+																	 $session->param('ShowPage_Level3',$status);
+																	 $session->flush();
+																	 print $cgi->meta({-http_equiv => 'REFRESH', -content => '0; /cgi-bin/rocket/Rocket.cgi'});
+																	}
+											when('missing'){
+																	 print $cgi->h1("Fehler: Nicht alle geforderten Passwörter eingegeben!");	
+																	 $session->param('ShowPage_Level2',"show_Einstellungen");
+																	 $session->param('ShowPage_Level3',"show_Password");
+																	 $session->flush();
+																 	 print $cgi->meta({-http_equiv => 'REFRESH', -content => '3; /cgi-bin/rocket/Rocket.cgi'});
+																	 }
+											when('not_equal'){
+																	print $cgi->h1("Fehler: Die neuen Passwörter waren nicht identisch!");	
+																	$session->param('ShowPage_Level2',"show_Einstellungen");
+																	$session->param('ShowPage_Level3',"show_Password");
+																	$session->flush();
+																	print $cgi->meta({-http_equiv => 'REFRESH', -content => '3; /cgi-bin/rocket/Rocket.cgi'});
+																	 }
+											when('incorrect'){
+																	print $cgi->h1("Fehler: Vorhandene Passwörter stimmen nicht überein!");	
+																	$session->param('ShowPage_Level2',"show_Einstellungen");
+																	$session->param('ShowPage_Level3',"show_Password");
+																	$session->flush();
+																	print $cgi->meta({-http_equiv => 'REFRESH', -content => '3; /cgi-bin/rocket/Rocket.cgi'});
+																	 }
+											when('success'){
+																	print $cgi->h1("Password wurde erfolgreich geändert!");	
+																	$session->param('ShowPage_Level2',"");
+																	$session->flush();
+																	print $cgi->meta({-http_equiv => 'REFRESH', -content => '3; /cgi-bin/rocket/Rocket.cgi'});
+																	 }
+											when('failed'){
+																	print $cgi->h1("Es trat ein Fehler beim Speichern des neues Passwortes auf!");	
+																	$session->param('ShowPage_Level2',"show_Einstellungen");
+																	$session->param('ShowPage_Level3',"show_Password");
+																	$session->flush();
+																	print $cgi->meta({-http_equiv => 'REFRESH', -content => '3; /cgi-bin/rocket/Rocket.cgi'});
+																	 }
+										}
 									}
-		when('changePassword_missing'){
-										print $cgi->h1("Fehler: Nicht alle geforderten Passwörter eingegeben!");	
-										$session->param('ShowPage_Level2',"show_Einstellungen");
-										$session->flush();
-										print $cgi->meta({-http_equiv => 'REFRESH', -content => '3; /cgi-bin/rocket/Rocket.cgi'});
-									 }
-		when('changePassword_not_equal'){
-										print $cgi->h1("Fehler: Die neuen Passwörter waren nicht identisch!");	
-										$session->param('ShowPage_Level2',"show_Einstellungen");
-										$session->flush();
-										print $cgi->meta({-http_equiv => 'REFRESH', -content => '3; /cgi-bin/rocket/Rocket.cgi'});
-									 }
-		when('changePassword_incorrect'){
-										print $cgi->h1("Fehler: Vorhandenen Passwörter stimmen nicht überein!");	
-										$session->param('ShowPage_Level2',"show_Einstellungen");
-										$session->flush();
-										print $cgi->meta({-http_equiv => 'REFRESH', -content => '3; /cgi-bin/rocket/Rocket.cgi'});
-									 }
-		when('changePassword_success'){
-										print $cgi->h1("Password wurde erfolgreich geändert!");	
-										$session->param('ShowPage_Level2',"");
-										$session->flush();
-										print $cgi->meta({-http_equiv => 'REFRESH', -content => '3; /cgi-bin/rocket/Rocket.cgi'});
-									 }
-		when('changePassword_failed'){
-										print $cgi->h1("Es trat ein Fehler beim Speichern des neues Passwortes auf!");	
-										$session->param('ShowPage_Level2',"show_Einstellungen");
-										$session->flush();
-										print $cgi->meta({-http_equiv => 'REFRESH', -content => '3; /cgi-bin/rocket/Rocket.cgi'});
-									 }
 									 
 		when('deleteAccount')		{
 										given ($session->param('ShowPage_Level3'))
