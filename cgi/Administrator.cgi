@@ -108,9 +108,6 @@ else
 		when('show_inprocessTickets')	{MitarbeiterContent::print_show_inprocessTickets();}
 		when('show_History')			{MitarbeiterContent::print_show_History();}
 		when('show_Statistik')			{MitarbeiterContent::print_Statistik();}
-		when('show_User')				{MitarbeiterContent::print_show_User();}
-		when('show_User')				{MitarbeiterContent::print_UserList();}
-		when('show_specUser')			{MitarbeiterContent::print_show_specUser();}
 		when('show_specTicket')			{MitarbeiterContent::print_show_specTicket();}
 		when('submit_assumeTicket')		{MitarbeiterContent::print_submit_assumeTicket($session->param('UserIdent'),$session->param('specificTicket'));}
 		when('submit_forwardTicket')	{MitarbeiterContent::print_submit_forwardTicket($session->param('UserIdent'),$session->param('specificTicket'));}
@@ -118,7 +115,8 @@ else
 		when('submit_closeTicket')		{MitarbeiterContent::print_submit_closeTicket($session->param('UserIdent'),$session->param('specificTicket'));}
 		when('submit_answerTicket') 	{UsererContent::print_answerTicket($session->param('UserIdent'),$session->param('specificTicket'),$session->param('UserMessage'));}	
 		#Zusatz zu Mitarbeitern für Administatoren
-		when('show_User')				{AdministratorContent::print_show_Mitarbeiter();}
+		when('show_User')				{AdministratorContent::print_UserList();}
+		when('show_specUser')			{AdministratorContent::print_show_specUser();}
 		when('submit_changeUser')		{AdministratorContent::print_submit_changeUser($session->param('specificUser'));}
 		
 		#Von User.cgi übernommen

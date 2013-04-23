@@ -52,7 +52,7 @@ sub print_UserList {
  	
  	#Holen der Userdaten anhand seiner User-ID / AccessRights anhand der DB
  	my ($User_ID,$Name,$Vorname,$Email) = AdministratorDB::get_UserDatabyID($session->param('specificUser'));
- 	my $AccessRights = AdministratorContent::get_AccessRights($Email);
+ 	my $AccessRights = AdministratorDB::get_AccessRights($Email);
  	
  
 	my %Rechte = ('0'=>'User', '1'=>'Mitarbeiter', '2'=>'Administrator'); #Hash für das Dropdown der Rechte
