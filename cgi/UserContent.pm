@@ -4,8 +4,7 @@
 #Date: 	 29.03.2013                    #
 ########################################
 #Description: Stellt Funktionen bereit
-#um Inhalte von der User-Website darzu
-#stellen
+#um Inhalte von der User-Website darzustellen
 
 package UserContent;
 
@@ -18,26 +17,32 @@ use feature qw {switch};
 
 
 sub print_User_Testseite
-{#Uebergabeparameter: String der ausgegeben werden soll
- #Diese Subroutine ist für den Content-Bereich der Useransicht angepasst
+{	#Aufruf: 	   print_User_Testseite("Dieser Text soll angezeigt werden");
+	#Beschreibung: Diese Subroutine gibt den übergebenen Text als HTML-Seite auf
+	#Rückgabewert: Keiner
+	
 	my $text = $_[0];
 	my $cgi = CGI->new();
 	print $cgi->h1($text);
-  	1;		
- }
+}
 
 sub print_Index
-{
+{	#Aufruf: 	   printIndex();
+	#Beschreibung: Diese Subroutine zeigt die Startseite des Userbereiches
+	#Rückgabewert: Keiner
 	my $cgi = CGI->new();
 	my $session = CGI::Session->new($cgi);
     #print $cgi->h1( $cgi->center("Startseite von User Rechte: ".$session->param('AccessRights')));
-    print $cgi->h1( $cgi->center("Startseite von " .$session->param('UserIdent') . " Rechte: ".$session->param('AccessRights')));
-    
-	1;  
+    print $cgi->h1( $cgi->center("Startseite von " .$session->param('UserIdent') . " Rechte: ".$session->param('AccessRights'))); 
 }
 
 sub print_createTicket
-{
+{	#Aufruf: 	   print_createTicket();
+	#Beschreibung: Diese Subroutine gibt den HTML-Code für die Ticketerstellung aus
+	#			   Die Punkte für das Dropdown-Menü (Kategorie) wird dabei aus der Datenbank ausgelesen
+	#Rückgabewert: Keiner
+	
+	
 	#Jetzt werden die Values für das Dropdown-Menü aus der Datenbank geholt
 	#Übergabeparameter: Tabellenname, in dem sich die Werte befinden (auswahlkriterien)
 	my $ref_DropDown = UserDB::get_DropDownValues("auswahlkriterien");
@@ -49,8 +54,6 @@ sub print_createTicket
 	print "<table>";
 	print "<tr>";
 	print "<td>";	
-	
-
 	
 	print "</td></tr>";
 	print "<tr>";
@@ -64,9 +67,6 @@ sub print_createTicket
 	 						-action => "/cgi-bin/rocket/SaveFormData.cgi",
 	 						-target => '_self'
 	 						 });
-	
-
-	#print $cgi->br();
  	
  	print $cgi->hidden(-name=>'Level2',
 	 				   -value=>'submit_createTicket');
@@ -77,8 +77,7 @@ sub print_createTicket
 	 					  -value=>'',
 	 					  -size=>50,
 	 					  -maxlength=>50);
-	#print "</td><td>";
-	#print $cgi->br();
+
 	#Gebe das DropDown-Menü aus
 	UserContent::print_dropDown("input_Categorie",$ref_DropDown); 
 	print "</td></tr>";
@@ -91,7 +90,6 @@ sub print_createTicket
 	 						   -value=>'',
 	 						   -cols=>70,
 	 						   -rows=>10);
-	#print $cgi->br();
 	print "</td></tr>";
 	print "<tr><td></td><td>";
 	
@@ -101,8 +99,11 @@ sub print_createTicket
 	print $cgi->end_form();
 }
 
- sub print_submit_createTicket
- {#Subroutine versucht das Ticket in die Datenbank einzutragen
+sub print_submit_createTicket
+{	#Aufruf: 	   print_submit_createTicket("Username", "Betreff", "Nachricht", "Auswahl_ID", "Priorität_ID");
+	#Beschreibung: Diese Subroutine versucht das Ticket in die Datenbank einzutragen, und gibt danach
+	#			   das Ergebnis als HTML-Code aus (Entweder es hat funktioniert oder nicht)
+	#Rückgabewert: Keiner
  	my($Username,$Betreff,$Message,$Auswahl_ID,$Prioritaet_ID) = @_;
  	my $success = UserDB::create_Ticket($Username,$Betreff,$Message,$Auswahl_ID,$Prioritaet_ID);
  	if($success != 0)
@@ -113,11 +114,15 @@ sub print_createTicket
  	{
  		print_User_Testseite("Fehler! Ticket konnte nicht uebermittelt werden!");
  	}
- 	1;
  }
  
-  sub print_answerTicket
- {#Subroutine versucht das Ticket in die Datenbank einzutragen
+sub print_answerTicket
+{	#Aufruf: 	   print_answerTicket("Email", "Ticket_ID", "Nachrichttext");
+	#Beschreibung: Diese Subroutine versucht eine Ticketantwort in die Datenbank einzutragen
+	#			   Dabei wird das Ergebnis (Erfolg oder Misserfolg) in dem Browser ausgegeben und automatisch
+	#			   nach 3 Sekunden auf die Ticketverlaufsansicht weitergeleitet
+	#Rückgabewert: Keiner
+
   	#Erstelle ein neues CGI-Objekt und hole das vorhandene Cookie
 	#mit der Session-ID
 	my $cgi = new CGI;
@@ -134,11 +139,14 @@ sub print_createTicket
  	#Leite nach 3 Sekunden auf die spezifische Ticketansicht weiter (ueber die Root)
  	print $cgi->meta({-http_equiv => 'REFRESH', -content => '3; /cgi-bin/rocket/SaveFormData.cgi?Level2=show_specTicket'});
 
- }
+}
  
- sub print_show_ownTickets
- {#Alle von dem User erstellten Tickets werden anzeigt (Erstmal nur das Ticket ohne nachfolgenden Messages)
-  #Uebergabeparameter 1: Status (Damit ist der Status des Tickets gemeint, bsp Neu, Bearbeitung, Geschlossen, ...
+sub print_show_ownTickets
+{	#Aufruf: 	   print_show_ownTickets("Status");
+	#Beschreibung: Diese Subroutine zeigt alle vom Benutzer erstellten Tickets im Browser an, welche den Status erfüllen,
+	#			   der dieser Subroutine mitgeliefert wurde ("Alle", "Neu", "Bearbeitung", "Geschlossen")
+	#Rückgabewert: Keiner
+
  	#Erstelle ein neues CGI-Objekt und hole das vorhandene Cookie
 	#mit der Session-ID
 	my $cgi = new CGI;
@@ -163,79 +171,83 @@ sub print_createTicket
 	}
 	
 
-	 $table->setAttr('style="table-layout:fixed"'); #Damit wird der ColWidth Vorrang vor der Länge des Inhalts der Zelle gegeben
- 	 $table->setClass("table_tickets");				#Verwende das Definierte Layout das in der CSS-Datei definiert ist
+	$table->setAttr('style="table-layout:fixed"'); #Damit wird der ColWidth Vorrang vor der Länge des Inhalts der Zelle gegeben
+ 	$table->setClass("table_tickets");				#Verwende das Definierte Layout das in der CSS-Datei definiert ist
 	
 	print $table->getTable();	
 	
  }
  
  
- sub print_show_specTicket
-{#Ein bestimmtes von dem User erstellten Tickets wird Verlaufsmäßig angezeigt
- #Dabei soll der User eine neue Message anhängen/antworten können
+sub print_show_specTicket
+{	#Aufruf: 	   print_show_specTicket("Status");
+	#Beschreibung: Diese Subroutine zeigt den Nachrichtenverlauf von genau einem Ticket. Die TicketID, welche angezeigt
+	#			   werden soll, wird aus der Session-Variable "$TicketID" geholt
+	#			   Am Ende der Nachrichten wird ein Antwortfeld angezeigt, wenn das Ticket NICHT geschlossen ist!
+	#Rückgabewert: Keiner
+
  	#Erstelle ein neues CGI-Objekt und hole das vorhandene Cookie
 	#mit der Session-ID
 	my $cgi = new CGI;
 	
-
 	#Stelle das alte zugehoerige Session-Objekt zu dem aktuellen
 	#User her
 	my $session = CGI::Session->new($cgi);
 	my $TicketID = $session->param('specificTicket');
 	my $TicketStatus = UserDB::get_TicketStatus($TicketID);
 	
-	
-	print $cgi->h1("Das Ticket mit der ID $TicketID wird nachfolgend im \"Verlaufsmodus\" angezeigt!");
+	#Hole das Array, welche den Nachrichtenverlauf beinhaltet
 	my $ref_table = UserDB::show_Messages_from_Ticket($TicketID,$session->param('UserIdent'));
 	my $table = $$ref_table;
 	
-	$table->setAttr('style="table-layout:fixed"'); #Damit wird der ColWidth Vorrang vor der Länge des Inhalts der Zelle gegeben
+	$table->setAttr('style="table-layout:fixed"'); 	#Damit wird der ColWidth Vorrang vor der Länge des Inhalts der Zelle gegeben
  	$table->setClass("table_tickets");				#Verwende das Definierte Layout das in der CSS-Datei definiert ist
 	
+	#Gebe den Nachrichtenverlauf aus
 	print $table->getTable();	
 	
 	if($TicketStatus ne "Geschlossen")
 	{ 	
-	#Zeige das "Antwortformular"
-	print "<table><tr><td>";
-	print $cgi->h2("Antwort");
-	print "<table></td></tr><tr><td>";
+		#Zeige das "Antwortformular", wenn der Ticketstatus NICHT "Geschlossen" ist
+		print "<table><tr><td>";
+		print $cgi->h2("Antwort");
+		print "<table></td></tr><tr><td>";
 	
 	 
-	print $cgi->start_form({-method => "POST",
-	 						-action => "/cgi-bin/rocket/SaveFormData.cgi",
-	 						-target => '_self'
-	 						 });
+		print $cgi->start_form({-method => "POST",
+	 							-action => "/cgi-bin/rocket/SaveFormData.cgi",
+	 							-target => '_self'
+	 						 	});
 	 
- 	print $cgi->hidden(-name=>'Level2',
-	 				   -value=>'submit_answerTicket');
-	 				   
-
-		
-	 						
-	print $cgi->textarea(-name=>'input_Message',
-	 						   -value=>'',
-	 						   -cols=>70,
-	 						   -rows=>10);
-	#print $cgi->br();
-	print "</td></tr><tr><td>";
-
-	print $cgi->submit("Abschicken");
-	print "</td></tr></table>";
+ 		print $cgi->hidden(-name=>'Level2',
+	 				    	-value=>'submit_answerTicket');
+	 				   	
+		print $cgi->textarea(-name=>'input_Message',
+	 						 -value=>'',
+	 						 -cols=>70,
+	 						 -rows=>10);
+	
+		print "</td></tr><tr><td>";
+		print $cgi->submit("Abschicken");
+		print "</td></tr></table>";
 	}
 	else
 	{
-	print $cgi->h1("Ticket geschlossen!");
+		print $cgi->h1("Ticket geschlossen!");
 	}
 	print $cgi->end_form();
  }
  
- sub print_show_Einstellungen
- {
+sub print_show_Einstellungen
+{	#Aufruf: 	   print_show_Einstellungen("Bereich");
+	#Beschreibung: Diese Subroutine gibt den "Einstellungsbereich" der Website aus.
+	#			 : Mögliche Bereiche sind "Password", "Email", "delete_Account"
+	#Rückgabewert: Keiner
+ 	
  	#Erstelle ein neues CGI-Objekt und hole das vorhandene Cookie
 	#mit der Session-ID
 	my $cgi = new CGI;
+	#In $Status wird angegeben welcher Einstellungsbereich ausgegeben werden soll
 	my $Status = $_[0];
 		
 	#Stelle das alte zugehoerige Session-Objekt zu dem aktuellen
@@ -244,7 +256,7 @@ sub print_createTicket
 	
 	#Zeige den Menupunkt an, der ausgewaehlt wurde
 	
-		given ($Status)
+	given ($Status)
 	{
 		when( 'Password' )			{print $cgi->h1("Ändern des Passwortes");
 									 print $cgi->start_form({-method => "POST",
@@ -337,17 +349,19 @@ sub print_createTicket
 	 								 print $cgi->submit("Account löschen!");
 									 print $cgi->end_form();
 									}
-	}
-	
- }
+	}	
+}
  
- sub print_dropDown
- {	#Dieses Modul soll einfach ein DropDown ausgeben
-  	#Uebergabeparameter: 1. Der Variablenname mit dem spaeter die Value identifizierbar ist
-  	#					 2. gehashtes Array
-  	#Beispiel 1 => Hans
-  	#		  2 => Karl
-  	#		  3 => Kunz
+sub print_dropDown
+{	#Aufruf: 	   print_dropDown("dropDown-Variablenname", $Referenz_auf_Tabelle);
+	#Beschreibung: Diese Subroutine gibt den HTML-Code eines DropDown-Menüs aus.
+	#			   Unter "dropDown-Variablenname" ist der ausgewählte Wert, später im CGI-Object greifbar (cgi->param("dropDown-Variablenname")
+	#			   Die Tabelle, welche mit den anzuzeigenen Werten übergeben wird muss folgenden Aufbau haben:
+	#			   1 => Hans
+  	#		  	   2 => Karl
+  	#		       3 => Kunz
+	#Rückgabewert: Keiner
+
   	my $name = $_[0];
   	my $ref_Array = $_[1];
   	

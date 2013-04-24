@@ -15,7 +15,10 @@ use CGI::Carp qw(fatalsToBrowser);
 
 
 sub printIndex
-{
+{	#Aufruf: 	   printIndex();
+	#Beschreibung: Diese Subroutine zeigt die Registrierungsseite des Projektes
+	#Rückgabewert: Keiner
+	
 	my $cgi = CGI->new();
                   			
  	print $cgi->start_html(-title  =>'Ticketsystem Team Rocket! Registration',
@@ -53,7 +56,7 @@ sub printIndex
 	 				   -value=>'Check',
 	 				   -override=>'Check');
 	 				   
-	&print_register_textfields("Vorname", "input_Vorname",
+	 &print_register_textfields("Vorname", "input_Vorname",
 								"Nachname", "input_Nachname",
 								"Email", "input_Email",
 								"Passwort", "input_Password1",
@@ -63,17 +66,16 @@ sub printIndex
 	 print $cgi->submit("Registrieren");
 	 print $cgi->end_form();
 	 print $cgi->end_div();
-    print $cgi->end_html();
-  	1;
+     print $cgi->end_html();
 }
 
 
 sub print_register_textfields
- #Uebergabeparameter ist ein (eindimensionales) Array mit folgendem Aufbau
- #Ausgabetext1, Textfeldname1,  
- #Ausgabetext2, Textfeldname2,
- #Hashmap geht nicht, weil die Reihenfolge der Elemente nicht garantiert statisch ist
- {
+{	#Aufruf: 	   print_register_textfields("angezeigter Text","Variablenname");
+	#Beschreibung: Diese Subroutine erzeugt HTML-Code, welcher ein Eingabeformular ausgibt
+	#Rückgabewert: Keiner
+	#Hashmap geht nicht, weil die Reihenfolge der Elemente nicht garantiert statisch ist
+ 
  	my $cgi = CGI->new();
  	my $AnzahlElemente = @_;
  	my $Value;
@@ -90,16 +92,15 @@ sub print_register_textfields
 			 						   -value=>'',
 			 						   -size=>25,
 			 						   -maxlength=>50);
- 		}
- 		else
- 		{
- 			print $cgi->textfield(-name=>"$Value",
-			 					  -value=>'',
-			 					  -size=>25,
-								  -maxlength=>50);
- 		}
-		print $cgi->br();
  	}
- 	1;
+ 	else
+ 	{
+ 		print $cgi->textfield(-name=>"$Value",
+		 					  -value=>'',
+		 					  -size=>25,
+							  -maxlength=>50);
+ 	}
+	print $cgi->br();
+ 	}
  }
  1;
