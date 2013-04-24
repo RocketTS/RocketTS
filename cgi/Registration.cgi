@@ -43,12 +43,14 @@ given ($session->param('ShowPage_Level2'))
 							}
 	
 	when('Check')			{#Pruefe ob der neue Benutzer angelegt werden kann
+							#Level2 enthält den Status, ob der Benutzer angelegt worden ist, oder ob ein Fehler aufgetreten ist
+							#Mögliche Werte sind gleich der Level2-Werte (Valid, Invalid, Textfields_incomplete, User_exists_already)
 							my $Level2 = RegistrationDB::regist_User($session->param('RegistrationVorname'),
-  															 $session->param('RegistrationNachname'),
-  															 $session->param('RegistrationEmail'),
-  															 $session->param('RegistrationPassword1'),
-  															 $session->param('RegistrationPassword2') 
-  																			  		);
+  															 		 $session->param('RegistrationNachname'),
+  															 		 $session->param('RegistrationEmail'),
+  															 		 $session->param('RegistrationPassword1'),
+  															 		 $session->param('RegistrationPassword2') 
+  																	 );
   							$session->param('ShowPage_Level2', $Level2);
   							$session->flush();
 							print $cgi->meta({-http_equiv => 'REFRESH', -content => '0; /cgi-bin/rocket/Rocket.cgi'});

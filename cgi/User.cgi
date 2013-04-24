@@ -28,7 +28,7 @@ my $cgi = new CGI;
 #User her
 my $session = CGI::Session->new($cgi);
 
-#Ueberpruefe ob die Rechte des Clienten passen, falls nicht log
+#Ueberpruefe ob die Rechte des Clienten passen(User-Rechte), falls nicht log
 #den Clienten aus und leite zur Root weiter
 if($session->param('AccessRights') ne "User")
 {	#Rechte passen nicht, loesche Session (ausloggen)
@@ -44,7 +44,7 @@ else
 	print $session->header();
 
 	print $cgi->start_html(-title  =>'Ticketsystem Team Rocket! Userbereich',
-	 						-author =>'beispiel@example.org',
+	 					   -author =>'beispiel@example.org',
 	                       -base   =>'true',
 	                       -target =>'_blank',
 	                       -meta   =>{'keywords'   =>'TeamOne, Test',
@@ -96,6 +96,7 @@ else
 	print $cgi->start_div({-id=>'user_content'});
 
 
+	#Jetzt wird anhand den Level2 und Level3 Werten bestimmt, was im Content-Bereich angezeigt wird
 	given ($session->param('ShowPage_Level2'))
 	{
 		when( '' )					{UserContent::print_Index();}
@@ -169,10 +170,11 @@ else
 									}
 		
 									 
-		when('deleteAccount')		{
+		when('deleteAccount')		{#Hier kann der Account gelöscht werden
 										given ($session->param('ShowPage_Level3'))
 										{
 											when( 'checkPassword' )	{my $status = UserDB::deleteAccount($session->param('UserIdent'),$session->param('UserPassword'));
+																	 #$status bestimmt was als nächstes angezeigt wird, sozusagen die Auswertung des Versuchs den Account zu löschen
 																	 $session->param('ShowPage_Level3',$status);
 																	 $session->flush();
 																	 print $cgi->meta({-http_equiv => 'REFRESH', -content => '0; /cgi-bin/rocket/Rocket.cgi'});
@@ -200,10 +202,11 @@ else
 										}
 									 }
 										
-		when('changeEmail')			{
+		when('changeEmail')			{#Hier kann die Email geändert werden
 										given ($session->param('ShowPage_Level3'))
 										{
 											when( 'checkPassword' )	{my $status = UserDB::changeEmail($session->param('UserIdent'),$session->param('newPassword1'),$session->param('newEmail'));
+																	 #$status bestimmt was als nächstes angezeigt wird, sozusagen die Auswertung des Versuchs die Email zu ändern
 																	 $session->param('ShowPage_Level3',$status);
 																	 $session->flush();
 																	 print $cgi->meta({-http_equiv => 'REFRESH', -content => '3; /cgi-bin/rocket/Rocket.cgi'});

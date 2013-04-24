@@ -54,6 +54,7 @@ given ($session->param('ShowPage_Level2'))
 							{#Eingabe war nicht vollstaending, Level2 wird geloescht und User darf es nochmal probieren
 								$session->param('ShowPage_Level2', '');
 							}
+							#Speichere die Session-Daten ab und rufe wieder die Root auf
 							$session->flush();
 							print $cgi->meta({-http_equiv => 'REFRESH', -content => '0; /cgi-bin/rocket/Rocket.cgi'});
 							}
@@ -71,7 +72,7 @@ given ($session->param('ShowPage_Level2'))
 										$session->param('Qualification', $qualification);
 									}
 									$session->param('ShowPage_Level1', $AccessRights);	#Entscheidungsbaum wird anhand der Zugriffsrechte aufgerufen
-									$session->param('ShowPage_Level2', "");
+									$session->param('ShowPage_Level2', "");				#Mögliche Zugriffsrechte sind "User","Mitarbeiter","Administrator"
 									$session->flush();							
 								}
 							else

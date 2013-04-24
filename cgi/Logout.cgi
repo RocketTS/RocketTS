@@ -50,5 +50,7 @@ else
 $session->delete();
 $session->flush();
 
+#Jetzt wird wieder zur Startseite ("Rocket.cgi") weitergeleitet
+
 DebugUtils::html_testseite("Sie werden nun ausgeloggt und auf die Startseite weitergeleitet!");
 print $cgi->meta({-http_equiv => 'REFRESH', -content => '2; /cgi-bin/rocket/Rocket.cgi'});
