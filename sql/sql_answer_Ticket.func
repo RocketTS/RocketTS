@@ -1,5 +1,4 @@
 DELIMITER //
-USE rocket;
 DROP PROCEDURE IF EXISTS sql_answer_Ticket;
 CREATE PROCEDURE sql_answer_Ticket(p_Email varchar(40), p_TicketID INT, p_Message text)
 BEGIN
