@@ -191,12 +191,12 @@ else
 																	 $session->flush();
 																	 print $cgi->meta({-http_equiv => 'REFRESH', -content => '3; /cgi-bin/rocket/Rocket.cgi'});
 																	}
-											when( 'success' )		{print $cgi->h1("Der Account wurde erfolgreich gelöscht. Sie werden nun ausgeloggt!");	
+											when( 'success' )		{print $cgi->h1("Die Administratorrechte wurden erfolgreich gelöscht. Sie werden nun zur Sicherheit ausgeloggt!");	
 																	 $session->param('ShowPage_Level1',"Logout");
 																	 $session->flush();
 																	 print $cgi->meta({-http_equiv => 'REFRESH', -content => '3; /cgi-bin/rocket/Rocket.cgi'});
 																	}
-											when( 'failed' )		{print $cgi->h1("Fehler: Es trat ein Datenbankfehler beim Löschen auf!");	
+											when( 'failed' )		{print $cgi->h1("Fehler: Es trat ein Datenbankfehler beim Löschen der Rechte auf!");	
 																	 $session->param('ShowPage_Level2',"deleteAccount");
 																	 $session->flush();
 																	 print $cgi->meta({-http_equiv => 'REFRESH', -content => '3; /cgi-bin/rocket/Rocket.cgi'});
