@@ -4,21 +4,21 @@ CREATE PROCEDURE sql_update_AccessRights(p_User_ID INT, p_alt varchar(20),p_neu 
 BEGIN
 	DECLARE CONTINUE HANDLER FOR NOT FOUND SET @err=1;
 	SET @err=0;
-		
+	-- aendern der Zugriffsrechte, nach Gruppe unterschieden
+	-- wenn altes Recht = User
 	IF (p_alt = "User" && (@err=0)) THEN
 		INSERT INTO mitarbeiter VALUES (NULL,p_User_ID,p_Level,p_Abteilung);
 	END IF;
-	
+	-- Upgrade Mitarbeiter zu Administrator
 	IF ((@err=0) && (p_alt = "Mitarbeiter" || p_neu="Administrator") ) THEN
 		SELECT Mitarbeiter_ID FROM mitarbeiter WHERE User_ID = p_User_ID INTO @MID;
 		INSERT INTO administrator VALUES (NULL,@MID);
 	END IF;
-		
+	-- Degradierung von Admin zu Mitarbeiter
 	IF (@err=0) && (p_alt = "Administrator") THEN
 		SELECT Mitarbeiter_ID FROM mitarbeiter WHERE User_ID = p_User_ID INTO @MID;
 		DELETE FROM administrator WHERE Mitarbeiter_ID = @MID;
 	END IF;
 	SET @ret=1;
-END
-//
+END //
 DELIMITER ;

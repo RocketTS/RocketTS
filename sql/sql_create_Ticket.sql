@@ -25,7 +25,5 @@ BEGIN
 	ELSE
 		SET @ret=0;
 	END IF;
-	
-END
-//
+END //
 DELIMITER ;

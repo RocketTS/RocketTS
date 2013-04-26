@@ -68,7 +68,7 @@ sub get_allinprocessTickets {
     	-padding => 1,
     	-width	 => '100%',
     	-align   => 'center',
-    	-head => ['Ticket_ID','Ersteller','Erstelldatum','Betreff','Auswahlkriterien','Priorität','IP','OS','Status','Bearbeiter','Aktionen'],
+    	-head => ['Ticket_ID','Ersteller','Erstelldatum','Betreff','Auswahlkriterien','Priorität','Status','Bearbeiter','Aktionen'],
  );
 
 #my $Ak = db_access::get_Auswahlkriterien($UserIdent);
@@ -78,7 +78,7 @@ sub get_allinprocessTickets {
 	 my($ticket_ID,$Ersteller,$Erstelldatum,$Betreff,$Auswahlkriterien,$Prio,$IP,$OS,$Status,$Bearbeiter) = @$array;
 	 my $aktion = "<a href=\"/cgi-bin/rocket/SaveFormData.cgi?input_specificTicket=$ticket_ID&Level2=show_specTicket\" target=\"_self\">anzeigen</a>";
 	# if($Auswahlkriterien == $Ak) {  
-	 	$table->addRow($ticket_ID,$Ersteller,$Erstelldatum,$Betreff,$Auswahlkriterien,$Prio,$IP,$OS,$Status,$Bearbeiter,$aktion);
+	 	$table->addRow($ticket_ID,$Ersteller,$Erstelldatum,$Betreff,$Auswahlkriterien,$Prio,$Status,$Bearbeiter,$aktion);
 	 #}
 }
 
@@ -104,7 +104,7 @@ my @Ticketarray = @$ref_Ticketarray;
     	-padding => 1,
     	-width	 => '100%',
     	-align   => 'center',
-    	-head => ['Ticket_ID','Ersteller','Erstelldatum','Betreff','Auswahlkriterien','Priorität','IP','OS','Status','Bearbeiter','Aktionen'],
+    	-head => ['Ticket_ID','Ersteller','Erstelldatum','Betreff','Auswahlkriterien','Priorität','Status','Bearbeiter','Aktionen'],
  );
 	
  foreach my $array ( @$ref_Ticketarray ) {
@@ -112,16 +112,11 @@ my @Ticketarray = @$ref_Ticketarray;
 	 my($ticket_ID,$Ersteller,$Erstelldatum,$Betreff,$Auswahlkriterien,$Prio,$IP,$OS,$Status,$Bearbeiter) = @$array;
 	 my $aktion = "<a href=\"/cgi-bin/rocket/SaveFormData.cgi?input_specificTicket=$ticket_ID&Level2=show_specTicket\" target=\"_self\">anzeigen</a>";
 	  
-	 $table->addRow($ticket_ID,$Ersteller,$Erstelldatum,$Betreff,$Auswahlkriterien,$Prio,$IP,$OS,$Status,$Bearbeiter,$aktion);
+	 $table->addRow($ticket_ID,$Ersteller,$Erstelldatum,$Betreff,$Auswahlkriterien,$Prio,$Status,$Bearbeiter,$aktion);
  }
 
  return \$table;
 }
-
-
-
-
-
 
 sub show_specTicketData {
 	#Aufruf show_specTicketData(TicketID, Email)
@@ -142,15 +137,18 @@ sub assume_Ticket {
 	my ($Username,$Ticket_ID) = @_;
 	my $success = db_access::assume_Ticket($Username,$Ticket_ID);
 	return $success;
-}
+} 
+
 sub forward_Ticket {
 	#Aufruf: forward_Ticket( Email, Ticket_ID )
 	#führt Weiterleitung des Tickets durch
 	#Rückgabe: boolscher Wert, ob Weiterleitung erfolgreich
+
 	my ($Username,$Ticket_ID) = @_;
 	my $success = db_access::forward_Ticket($Username,$Ticket_ID);
 	return $success;
 }
+
 sub release_Ticket {
 	#Aufruf: release_Ticket( Email, Ticket_ID)
 	#führt Freigabe des Tickets durch
@@ -160,6 +158,7 @@ sub release_Ticket {
 	my $success = db_access::release_Ticket($Username,$Ticket_ID);
 	return $success;
 }
+
 sub close_Ticket {
 	#Aufruf: close_Ticket( Email, Ticket_ID)
 	#führt Schließen des Ticktes durch
