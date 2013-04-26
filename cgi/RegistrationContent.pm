@@ -55,13 +55,13 @@ sub printIndex
 	 print $cgi->hidden(-name=>'Level2',
 	 				   -value=>'Check',
 	 				   -override=>'Check');
-	 				   
+	 print "<table>"; 				   
 	 &print_register_textfields("Vorname", "input_Vorname",
 								"Nachname", "input_Nachname",
 								"Email", "input_Email",
 								"Passwort", "input_Password1",
 								"Passwort wiederholen", "input_Password2");
-	
+	 print "</table>";
 	
 	 print $cgi->submit("Registrieren");
 	 print $cgi->end_form();
@@ -82,7 +82,9 @@ sub print_register_textfields
  	for(my $i = 0; $i<$AnzahlElemente ; $i++)
  	{
  		$Value = $_[$i];
-	 	print $cgi->strong("$Value");	
+ 		print "<td>";
+	 	print $cgi->strong("$Value");
+	 	print "</td><td>";	
  		#Zeige auf das zugehoerigen Namen fuers Textfeld
  		$i++;
  		$Value = $_[$i];
@@ -101,6 +103,8 @@ sub print_register_textfields
 							  -maxlength=>50);
  	}
 	print $cgi->br();
+	print "</td>";
+	print "</tr>";
  	}
  }
  1;
