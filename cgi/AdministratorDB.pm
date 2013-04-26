@@ -37,7 +37,7 @@ sub change_User {
 	my $Email = db_access::get_Email();
 	my $return = 0;
 
-	if($AccessRights_Alt eq $Rechte[$AccessRights_Neu]) { #Wenn keine Änderung der Rechte erfolgt ist, wird nur Userdaten geupdated
+	if($Rechte[$AccessRights_Neu] eq "User") { #Wenn keine Änderung der Rechte erfolgt ist, wird nur Userdaten geupdated
 		$return = db_access::update_User($User_ID,$Name_Neu,$Vorname_Neu, $Email_Neu);
 	}
 	else {#Wenn Änderung der Rechte, dann updaten der User- und AccessRight-Daten

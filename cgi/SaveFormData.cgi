@@ -159,7 +159,7 @@ print $cgi->header();
 #print $cgi->h1( $session->param('ShowPage_Level2'));
 #print $cgi->h1( $session->param('ShowPage_Level3'));
 #
-#print $cgi->h1( $session->param('specificTicket'));
+#print $cgi->h1( $session->param('AccessRights_new'));
 #
 
 print $cgi->meta({-http_equiv => 'REFRESH', -content => '0; /cgi-bin/rocket/Rocket.cgi'});

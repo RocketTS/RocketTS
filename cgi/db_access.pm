@@ -546,9 +546,9 @@ sub update_AccessRights {
 	#ändert die AccessRights sowie Daten in der Tabelle mitarbeiter für den übergebenen User ab
 	#Rückgabe: boolscher Wert, ob Änderung erfolgreich
 	
-	my ($User_ID,$alt,$neu, $Email_Neu,$Abteilung,$Level) = @_;
+	my ($User_ID,$alt,$neu, $Abteilung,$Level) = @_;
 	my $db = db_connect();
-	my $sql = "CALL sql_update_AccessRights(\'". $User_ID ."\',\'". $alt ."\',\'". $neu ."\',\'". $Abteilung ."\',\'". $Level ."\');";
+	my $sql = "CALL sql_update_AccessRights(\'". $User_ID ."\',\'". $alt ."\',\'". $neu ."\',\'". $Level ."\',\'". $Abteilung ."\');";
 	my $command = $db->prepare($sql);
 	$command->execute();	
 	$command = $db->prepare("SELECT \@ret;");
